@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200805091738_Initial.cs" />
+    <Compile Remove="Migrations\20200805091738_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200805091854_Initial.cs" />
+    <Compile Remove="Migrations\20200805091854_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200805111010_Identity.cs" />
+    <Compile Remove="Migrations\20200805111010_Identity.Designer.cs" />
+    <Compile Remove="Migrations\20200805121407_Identity.cs" />
+    <Compile Remove="Migrations\20200805121407_Identity.Designer.cs" />
+    <Compile Remove="Migrations\20200805133746_Identity.cs" />
+    <Compile Remove="Migrations\20200805133746_Identity.Designer.cs" />
+    <Compile Remove="Migrations\20200805133920_Identity.cs" />
+    <Compile Remove="Migrations\20200805133920_Identity.Designer.cs" />
+    <Compile Remove="Migrations\20200805135123_Identity-seed.cs" />
+    <Compile Remove="Migrations\20200805135123_Identity-seed.Designer.cs" />
+    <Compile Remove="Migrations\20200805135156_Identity-seed.cs" />
+    <Compile Remove="Migrations\20200805135156_Identity-seed.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.6" />
+  </ItemGroup>
+
+</Project>
