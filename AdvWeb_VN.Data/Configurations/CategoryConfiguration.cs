@@ -13,7 +13,7 @@ namespace AdvWeb_VN.Data.Configurations
 		{
 			builder.ToTable("Categories");
 			builder.HasKey(x => x.CategoryID);
-			builder.Property(x => x.CategoryID).IsUnicode(false).HasMaxLength(100);
+			builder.Property(x => x.CategoryID).UseIdentityColumn();
 			builder.Property(x => x.CategoryName).IsRequired()
 				.HasMaxLength(50).IsUnicode();
 		}

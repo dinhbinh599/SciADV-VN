@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AdvWeb_VN.Data\AdvWeb_VN.Data.csproj" />
+    <ProjectReference Include="..\AdvWeb_VN.Utilities\AdvWeb_VN.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>

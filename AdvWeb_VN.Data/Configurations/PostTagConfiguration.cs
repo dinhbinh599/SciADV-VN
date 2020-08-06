@@ -13,7 +13,6 @@ namespace AdvWeb_VN.Data.Configurations
 		{
 			builder.ToTable("PostTags");
 			builder.Property(t => t.PostID).IsUnicode(false).HasMaxLength(100);
-			builder.Property(t => t.TagID).IsUnicode(false).HasMaxLength(100);
 			builder.HasKey(x => new { x.TagID, x.PostID });
 			builder.HasOne(x => x.Post).WithMany(t => t.PostTags)
 				.HasForeignKey(t => t.PostID);

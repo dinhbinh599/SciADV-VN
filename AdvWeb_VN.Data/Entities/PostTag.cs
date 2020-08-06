@@ -8,7 +8,7 @@ namespace AdvWeb_VN.Data.Entities
 	{
 		public string PostID { set; get; }
 		public Post Post { set; get; }
-		public string TagID { set; get; }
+		public int TagID { set; get; }
 		public Tag Tag { set; get; }
 	}
 }

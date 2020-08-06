@@ -39,5 +39,7 @@ namespace AdvWeb_VN.Data.EF
 		public DbSet<Category> Categories { set; get; }
 		public DbSet<Comment> Comments { set; get; }
 		public DbSet<Tag> Tags { set; get; }
+		public DbSet<PostTag> PostTags { set; get; }
+
 	}
 }
