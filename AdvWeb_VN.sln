@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvWeb_VN.Utilities", "AdvW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvWeb_VN.ViewModels", "AdvWeb_VN.ViewModels\AdvWeb_VN.ViewModels.csproj", "{5926D9D2-BD5D-4D01-AA06-418D080C760B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvWeb_VN.BackendApi", "AdvWeb_VN.BackendApi\AdvWeb_VN.BackendApi.csproj", "{0A96C263-C928-404D-9402-40AB30E790E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{5926D9D2-BD5D-4D01-AA06-418D080C760B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5926D9D2-BD5D-4D01-AA06-418D080C760B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5926D9D2-BD5D-4D01-AA06-418D080C760B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A96C263-C928-404D-9402-40AB30E790E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A96C263-C928-404D-9402-40AB30E790E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A96C263-C928-404D-9402-40AB30E790E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A96C263-C928-404D-9402-40AB30E790E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

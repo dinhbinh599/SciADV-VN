@@ -1,4 +1,4 @@
-﻿namespace AdvWeb_VN.ViewModels.Catalog.Posts.Manage
+﻿namespace AdvWeb_VN.ViewModels.Catalog.Posts
 {
 	public class PostCreateRequest
 	{

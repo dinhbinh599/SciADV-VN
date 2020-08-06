@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AdvWeb_VN.Application.Catalog.Posts.Dtos.Public
+namespace AdvWeb_VN.Application.Catalog.Posts.Dtos
 {
 	public class GetPublicPostPagingRequest : PagingRequestBase
 	{

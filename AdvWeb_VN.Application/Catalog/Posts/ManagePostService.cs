@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AdvWeb_VN.Utilities.Dtos;
 using AdvWeb_VN.Utilities.Settings;
-using AdvWeb_VN.ViewModels.Catalog.Posts.Manage;
 using AdvWeb_VN.ViewModels.Common;
+using AdvWeb_VN.ViewModels.Catalog.Posts;
 
 namespace AdvWeb_VN.Application.Catalog.Posts
 {
