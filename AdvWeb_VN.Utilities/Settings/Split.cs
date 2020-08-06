@@ -10,7 +10,7 @@ namespace AdvWeb_VN.Utilities.Settings
 		public SplitResult GetID(string raw, int length)
 		{
 			string categoryName = raw.Substring(0,length);
-			int id = Int32.Parse(raw.Substring(length+1,raw.Length-categoryName.Length));
+			int id = Int32.Parse(raw.Substring(length,raw.Length-length));
 			return  new SplitResult(id,categoryName);
 		}
 	}

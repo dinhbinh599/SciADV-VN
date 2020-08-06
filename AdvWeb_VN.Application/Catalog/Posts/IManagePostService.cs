@@ -9,14 +9,14 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 {
 	public interface IManagePostService
 	{
-		Task<int> Create(PostCreateRequest request);
+		Task<string> Create(PostCreateRequest request);
 
 		Task<int> Update(PostUpdateRequest request);
 
-		Task<int> Delete(int postId);
+		Task<int> Delete(string postId);
 
-		Task AddViewCount(int postId);
-
+		Task AddViewCount(string postId);
+		Task<PostViewModel> GetByID(string postID);
 		Task<PagedResult<PostViewModel>> GetAllPaging(GetManagePostPagingRequest request);
 	}
 }

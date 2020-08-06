@@ -10,7 +10,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 {
 	public interface IPublicPostService
 	{
-		Task<PagedResult<PostViewModel>> GetAllCategoryId(GetPublicPostPagingRequest request);
+		Task<PagedResult<PostViewModel>> GetAllByTagId(GetPublicPostPagingRequest request);
 		Task<List<PostViewModel>> GetAll();
 	}
 }

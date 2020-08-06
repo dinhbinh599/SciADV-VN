@@ -32,6 +32,7 @@ namespace AdvWeb_VN.BackendApi
 			options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
 
 			services.AddTransient<IPublicPostService, PublicPostService>();
+			services.AddTransient<IManagePostService, ManagePostService>();
 			services.AddControllersWithViews();
 
 			services.AddSwaggerGen(c =>

@@ -24,42 +24,54 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			this.context = context;
 		}
 
-		public async Task AddViewCount(int postId)
+		public async Task AddViewCount(string postId)
 		{
 			var post = await context.Posts.FindAsync(postId);
 			post.View += 1;
 			await context.SaveChangesAsync();
 		}
 
-		public async Task<int> Create(PostCreateRequest request)
+		public async Task<string> Create(PostCreateRequest request)
 		{
 			var query = from li in context.Categories
 						where li.CategoryID.Equals(request.CategoryID)
 						select li;
 
+			if (query == null) throw new AdvWebException($"Cannot find a Category : {request.CategoryID}");
+			
 			var query2 = from c in context.Posts
 						 where c.CategoryID.Equals(request.CategoryID)
 						 select c;
 
+			string PostID = "";
 			Category category = query.FirstOrDefault<Category>();
-			Post lastPost = query2.LastOrDefault<Post>();
-
-			SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
+			if (query2.Count() > 0)
+			{
+				Post lastPost = query2.ToList<Post>().Last();
+				SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
+				PostID = splitResult.CategoryName + (splitResult.Number + 1);
+			}
+			else
+			{
+				PostID = category.CategoryName + "1";
+			}
 			var post = new Post()
 			{
-				PostID = splitResult.CategoryName+(splitResult.Number+1),
+				PostID = PostID,
 				PostName = request.PostName,
 				Thumbnail = request.Thumbnail,
 				Contents = request.Contents,
 				View = 0,
+				UserID = request.UserID,
 				CategoryID = request.CategoryID,
 				WriteTime = DateTime.Now,
 			};
 			context.Posts.Add(post);
-			return await context.SaveChangesAsync();
+			await context.SaveChangesAsync();
+			return PostID;
 		}
 
-		public async Task<int> Delete(int postId)
+		public async Task<int> Delete(string postId)
 		{
 			var post = await context.Posts.FindAsync(postId);
 			if (post == null) throw new AdvWebException($"Cannot find a Post : {postId}");
@@ -95,7 +107,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
-					CategoryID = x.p.CategoryID
+					CategoryID = x.p.CategoryID,
+					UserName = x.p.User.UserName
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
@@ -103,6 +116,26 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				Items = data
 			};
 			return pagedResult;
+		}
+
+		public async Task<PostViewModel> GetByID(string postID)
+		{
+			var post = await context.Posts.FindAsync(postID);
+			var user = await context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
+			
+			var postViewModel = new PostViewModel()
+			{
+				PostID = post.PostID,
+				PostName = post.PostName,
+				WriteTime = post.WriteTime,
+				View = post.View,
+				Thumbnail = post.Thumbnail,
+				Contents = post.Contents,
+				CategoryID = post.CategoryID,
+				UserName = user.UserName
+			};
+			
+			return postViewModel;
 		}
 
 		public async Task<int> Update(PostUpdateRequest request)
@@ -114,6 +147,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			post.Thumbnail = request.Thumbnail;
 			post.Contents = request.Contents;
 			post.WriteTime = DateTime.Now;
+			post.CategoryID = request.CategoryID;
+			/*string PostID = "";
 			if (!post.CategoryID.Equals(request.CategoryID))
 			{
 				post.CategoryID = request.CategoryID;
@@ -126,11 +161,18 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 							 select c;
 
 				Category category = query.FirstOrDefault<Category>();
-				Post lastPost = query2.LastOrDefault<Post>();
-
-				SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
-				post.PostID = splitResult.CategoryName + (splitResult.Number + 1);
+				if (query2.Count() > 0)
+				{
+					Post lastPost = query2.ToList<Post>().Last();
+					SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
+					PostID = splitResult.CategoryName + (splitResult.Number + 1);
+				}
+				else
+				{
+					PostID = category.CategoryName + "1";
+				}
 			}
+			post.PostID = PostID;*/
 			return await context.SaveChangesAsync();
 		}
 	}

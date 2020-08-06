@@ -1,4 +1,6 @@
-﻿namespace AdvWeb_VN.ViewModels.Catalog.Posts
+﻿using System;
+
+namespace AdvWeb_VN.ViewModels.Catalog.Posts
 {
 	public class PostCreateRequest
 	{
@@ -7,6 +9,6 @@
 		public string Contents { set; get; }
 		public string Thumbnail { set; get; }
 		public int CategoryID { set; get; }
-
+		public Guid UserID { get; set; }
 	}
 }
