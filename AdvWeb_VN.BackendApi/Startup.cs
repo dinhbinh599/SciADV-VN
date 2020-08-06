@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.OpenApi.Models;
 
 namespace AdvWeb_VN.BackendApi
 {
@@ -33,6 +33,11 @@ namespace AdvWeb_VN.BackendApi
 
 			services.AddTransient<IPublicPostService, PublicPostService>();
 			services.AddControllersWithViews();
+
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger SciAdvWeb", Version = "v1" });
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +59,11 @@ namespace AdvWeb_VN.BackendApi
 			app.UseRouting();
 
 			app.UseAuthorization();
-
+			app.UseSwagger();
+			app.UseSwaggerUI(c =>
+			{
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger SciAdvWeb V1");
+			});
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
