@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AdvWeb_VN.Data\AdvWeb_VN.Data.csproj" />
     <ProjectReference Include="..\AdvWeb_VN.Utilities\AdvWeb_VN.Utilities.csproj" />
+    <ProjectReference Include="..\AdvWeb_VN.ViewModels\AdvWeb_VN.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

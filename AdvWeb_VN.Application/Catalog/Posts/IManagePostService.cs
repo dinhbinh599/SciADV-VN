@@ -1,6 +1,6 @@
 ﻿using AdvWeb_VN.Application.Catalog.Posts.Dtos;
-using AdvWeb_VN.Application.Catalog.Posts.Dtos.Manage;
-using AdvWeb_VN.Application.Dtos;
+using AdvWeb_VN.ViewModels.Catalog.Posts.Manage;
+using AdvWeb_VN.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;

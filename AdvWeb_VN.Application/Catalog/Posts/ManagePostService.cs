@@ -1,6 +1,4 @@
 ﻿using AdvWeb_VN.Application.Catalog.Posts.Dtos;
-using AdvWeb_VN.Application.Catalog.Posts.Dtos.Manage;
-using AdvWeb_VN.Application.Dtos;
 using AdvWeb_VN.Data.EF;
 using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.Utilities.Exceptions;
@@ -10,6 +8,10 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AdvWeb_VN.Utilities.Dtos;
+using AdvWeb_VN.Utilities.Settings;
+using AdvWeb_VN.ViewModels.Catalog.Posts.Manage;
+using AdvWeb_VN.ViewModels.Common;
 
 namespace AdvWeb_VN.Application.Catalog.Posts
 {
@@ -31,13 +33,26 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<int> Create(PostCreateRequest request)
 		{
+			var query = from li in context.Categories
+						where li.CategoryID.Equals(request.CategoryID)
+						select li;
+
+			var query2 = from c in context.Posts
+						 where c.CategoryID.Equals(request.CategoryID)
+						 select c;
+
+			Category category = query.FirstOrDefault<Category>();
+			Post lastPost = query2.LastOrDefault<Post>();
+
+			SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
 			var post = new Post()
 			{
-				PostID = "",
+				PostID = splitResult.CategoryName+(splitResult.Number+1),
 				PostName = request.PostName,
 				Thumbnail = request.Thumbnail,
 				Contents = request.Contents,
 				View = 0,
+				CategoryID = request.CategoryID,
 				WriteTime = DateTime.Now,
 			};
 			context.Posts.Add(post);
@@ -70,7 +85,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			
 			int totalRow = await query.CountAsync();
 
-			var data = query.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -79,11 +94,13 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents
+					Contents = x.p.Contents,
+					CategoryID = x.p.CategoryID
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
-				
+				TotalRecord = totalRow,
+				Items = data
 			};
 			return pagedResult;
 		}
@@ -92,11 +109,28 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		{
 			var post = await context.Posts.FindAsync(request.PostID);
 			if (post == null) throw new AdvWebException($"Cannot find a Post : {request.PostID}");
+			
 			post.PostName = request.PostName;
 			post.Thumbnail = request.Thumbnail;
 			post.Contents = request.Contents;
 			post.WriteTime = DateTime.Now;
-			post.CategoryID = request.CategoryID;
+			if (!post.CategoryID.Equals(request.CategoryID))
+			{
+				post.CategoryID = request.CategoryID;
+				var query = from li in context.Categories
+							where li.CategoryID.Equals(request.CategoryID)
+							select li;
+
+				var query2 = from c in context.Posts
+							 where c.CategoryID.Equals(request.CategoryID)
+							 select c;
+
+				Category category = query.FirstOrDefault<Category>();
+				Post lastPost = query2.LastOrDefault<Post>();
+
+				SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
+				post.PostID = splitResult.CategoryName + (splitResult.Number + 1);
+			}
 			return await context.SaveChangesAsync();
 		}
 	}

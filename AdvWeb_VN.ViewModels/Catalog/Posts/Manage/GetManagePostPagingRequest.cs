@@ -1,9 +1,9 @@
-﻿using AdvWeb_VN.Application.Dtos;
+﻿using AdvWeb_VN.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AdvWeb_VN.Application.Catalog.Posts.Dtos.Manage
+namespace AdvWeb_VN.ViewModels.Catalog.Posts.Manage
 {
 	public class GetManagePostPagingRequest : PagingRequestBase
 	{

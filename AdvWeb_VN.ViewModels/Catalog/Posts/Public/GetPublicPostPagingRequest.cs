@@ -1,4 +1,4 @@
-﻿using AdvWeb_VN.Application.Dtos;
+﻿using AdvWeb_VN.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +7,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts.Dtos.Public
 {
 	public class GetPublicPostPagingRequest : PagingRequestBase
 	{
-		public string CategoryId { set; get; }
+		public int? TagId { set; get; }
 	}
 }
