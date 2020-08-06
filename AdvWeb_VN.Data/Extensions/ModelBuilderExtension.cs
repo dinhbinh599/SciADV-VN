@@ -16,28 +16,28 @@ namespace AdvWeb_VN.Data.Extensions
 			var WRITER_ID = new Guid("5581E8DC-2614-4392-A95C-2E9411BFDB14");
 			var ADMIN_ID = new Guid("0CFE64BD-645B-4F5A-91D1-C3082C132ED8");
 			modelBuilder.Entity<Category>().HasData(
-				new Category
+				new Category()
 				{
-					CategoryID = "Tom1",
+					CategoryID = 1,
 					CategoryName = "Chaos;Head",
 					CreateDate = DateTime.Now,
 				},
-				new Category
+				new Category()
 				{
-					CategoryID = "Tom2",
+					CategoryID = 2,
 					CategoryName = "Chaos;Child",
 					CreateDate = DateTime.Now,
 
 				},
-				new Category
+				new Category()
 				{
-					CategoryID = "Tom3",
+					CategoryID = 3,
 					CategoryName = "Steins;Gate",
 					CreateDate = DateTime.Now
 				},
-				new Category
+				new Category()
 				{
-					CategoryID = "Tom4",
+					CategoryID = 4,
 					CategoryName = "Robotics;Notes",
 					CreateDate = DateTime.Now
 				});
@@ -51,7 +51,7 @@ namespace AdvWeb_VN.Data.Extensions
 					Contents = "Đây là 1 Visual Novel rất hay",
 					Thumbnail = "https://images-na.ssl-images-amazon.com/images/I/91HUMu2XDYL._RI_.jpg",
 					UserID = WRITER_ID,
-					CategoryID = "Tom2"
+					CategoryID = 2
 				},
 				new Post()
 				{
@@ -61,17 +61,17 @@ namespace AdvWeb_VN.Data.Extensions
 					Contents = "Đây là 1 Visual Novel rất hay",
 					Thumbnail = "https://upload.wikimedia.org/wikipedia/vi/3/34/Chaos_Head_game_cover.jpg",
 					UserID = WRITER_ID,
-					CategoryID = "Tom1"
+					CategoryID = 1
 				});
 			modelBuilder.Entity<Tag>().HasData(
 				new Tag()
 				{
-					TagID = "kiki1",
+					TagID = 1,
 					TagName = "Visual Novel",
 				},
 				new Tag()
 				{
-					TagID = "kiki2",
+					TagID = 2,
 					TagName = "Chaos;Head"
 				});
 			modelBuilder.Entity<Comment>().HasData(
@@ -92,31 +92,31 @@ namespace AdvWeb_VN.Data.Extensions
 					PostID = "Chaos;Child1"
 				});
 			modelBuilder.Entity<PostTag>().HasData(
-				new PostTag
+				new PostTag()
 				{
 					PostID = "Chaos;Head1",
-					TagID = "kiki1"
+					TagID = 2
 				}, 
-				new PostTag
+				new PostTag()
 				{
 					PostID = "Chaos;Head1",
-					TagID = "kiki2"
+					TagID = 1
 				},
-				new PostTag
+				new PostTag()
 				{
 					PostID = "Chaos;Child1",
-					TagID = "kiki1"
+					TagID = 1
 				});
 
 
-			modelBuilder.Entity<Role>().HasData(new Role
+			modelBuilder.Entity<Role>().HasData(new Role()
 			{
 				Id = ROLE_ID,
 				Name = "admin",
 				NormalizedName = "admin"
 			});
 
-			modelBuilder.Entity<Role>().HasData(new Role
+			modelBuilder.Entity<Role>().HasData(new Role()
 			{
 				Id = ROLE_ID2,
 				Name = "Writer",
@@ -125,7 +125,7 @@ namespace AdvWeb_VN.Data.Extensions
 
 			var hasher = new PasswordHasher<User>();
 
-			modelBuilder.Entity<User>().HasData(new User
+			modelBuilder.Entity<User>().HasData(new User()
 			{
 				Id = ADMIN_ID,
 				UserName = "admin",
@@ -137,7 +137,7 @@ namespace AdvWeb_VN.Data.Extensions
 				SecurityStamp = string.Empty
 			});
 
-			modelBuilder.Entity<User>().HasData(new User
+			modelBuilder.Entity<User>().HasData(new User()
 			{
 				Id = WRITER_ID,
 				UserName = "hoho303",

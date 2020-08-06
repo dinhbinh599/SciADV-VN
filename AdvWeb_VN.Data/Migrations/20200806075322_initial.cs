@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AdvWeb_VN.Data.Migrations
 {
-    public partial class Identity : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -81,7 +81,8 @@ namespace AdvWeb_VN.Data.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryID = table.Column<string>(unicode: false, maxLength: 100, nullable: false),
+                    CategoryID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CategoryName = table.Column<string>(maxLength: 50, nullable: false),
                     CreateDate = table.Column<DateTime>(nullable: false)
                 },
@@ -108,7 +109,8 @@ namespace AdvWeb_VN.Data.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    TagID = table.Column<string>(unicode: false, maxLength: 100, nullable: false),
+                    TagID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TagName = table.Column<string>(maxLength: 20, nullable: false)
                 },
                 constraints: table =>
@@ -150,7 +152,7 @@ namespace AdvWeb_VN.Data.Migrations
                     WriteTime = table.Column<DateTime>(nullable: false),
                     Contents = table.Column<string>(nullable: false),
                     Thumbnail = table.Column<string>(nullable: false),
-                    CategoryID = table.Column<string>(unicode: false, maxLength: 100, nullable: false),
+                    CategoryID = table.Column<int>(nullable: false),
                     UserID = table.Column<Guid>(nullable: false),
                     View = table.Column<int>(nullable: false, defaultValue: 0)
                 },
@@ -198,7 +200,7 @@ namespace AdvWeb_VN.Data.Migrations
                 columns: table => new
                 {
                     PostID = table.Column<string>(unicode: false, maxLength: 100, nullable: false),
-                    TagID = table.Column<string>(unicode: false, maxLength: 100, nullable: false)
+                    TagID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -215,6 +217,82 @@ namespace AdvWeb_VN.Data.Migrations
                         principalTable: "Tags",
                         principalColumn: "TagID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AppUserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                values: new object[,]
+                {
+                    { new Guid("0cfe64bd-645b-4f5a-91d1-c3082c132ed8"), new Guid("706a7f4f-a6ed-4e24-bd09-df7829865142") },
+                    { new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"), new Guid("d00409db-a6ed-4985-a3b7-4036774572cd") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryID", "CategoryName", "CreateDate" },
+                values: new object[,]
+                {
+                    { 1, "Chaos;Head", new DateTime(2020, 8, 6, 14, 53, 22, 161, DateTimeKind.Local).AddTicks(8301) },
+                    { 2, "Chaos;Child", new DateTime(2020, 8, 6, 14, 53, 22, 162, DateTimeKind.Local).AddTicks(8485) },
+                    { 3, "Steins;Gate", new DateTime(2020, 8, 6, 14, 53, 22, 162, DateTimeKind.Local).AddTicks(8510) },
+                    { 4, "Robotics;Notes", new DateTime(2020, 8, 6, 14, 53, 22, 162, DateTimeKind.Local).AddTicks(8514) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { new Guid("706a7f4f-a6ed-4e24-bd09-df7829865142"), "0312de49-7acb-495e-97fb-d56e5ae0afb4", "admin", "admin" },
+                    { new Guid("d00409db-a6ed-4985-a3b7-4036774572cd"), "f0098992-d4e5-40d4-85bc-a033a18be13a", "Writer", "Writer" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tags",
+                columns: new[] { "TagID", "TagName" },
+                values: new object[,]
+                {
+                    { 1, "Visual Novel" },
+                    { 2, "Chaos;Head" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { new Guid("0cfe64bd-645b-4f5a-91d1-c3082c132ed8"), 0, "328d7c38-3bbe-4e24-a8e8-bc796fe9fddb", "hoangthuan2092003@gmail.com", true, false, null, "hoangthuan2092003@gmail.com", "admin", "AQAAAAEAACcQAAAAEGfqwSyKDVuZUcIU6uujMLvmllAyWpHSaSCflVBEMXg3ynCFIPL3eRADDx0UzuhWBA==", null, false, "", false, "admin" },
+                    { new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"), 0, "6e5faefa-79e2-4fc5-a9f8-7e9d19f49e75", "hoangthuan2092003@gmail.com", true, false, null, "hoangthuan2092003@gmail.com", "hoho303", "AQAAAAEAACcQAAAAEPrCyqTFJow+D01r/232kJqUVISKqGGDkOorfh2meJRO5PUBOnPw1O4uCA3zNuIBGQ==", null, false, "", false, "hoho303" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Posts",
+                columns: new[] { "PostID", "CategoryID", "Contents", "PostName", "Thumbnail", "UserID", "WriteTime" },
+                values: new object[] { "Chaos;Child1", 2, "Đây là 1 Visual Novel rất hay", "Review Visual Novel Chaos;Child", "https://images-na.ssl-images-amazon.com/images/I/91HUMu2XDYL._RI_.jpg", new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"), new DateTime(2020, 8, 6, 14, 53, 22, 164, DateTimeKind.Local).AddTicks(2869) });
+
+            migrationBuilder.InsertData(
+                table: "Posts",
+                columns: new[] { "PostID", "CategoryID", "Contents", "PostName", "Thumbnail", "UserID", "WriteTime" },
+                values: new object[] { "Chaos;Head1", 1, "Đây là 1 Visual Novel rất hay", "Review Visual Novel Chaos;Head", "https://upload.wikimedia.org/wikipedia/vi/3/34/Chaos_Head_game_cover.jpg", new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"), new DateTime(2020, 8, 6, 14, 53, 22, 164, DateTimeKind.Local).AddTicks(5235) });
+
+            migrationBuilder.InsertData(
+                table: "Comments",
+                columns: new[] { "CommentID", "CommentTime", "Commentator", "Commenter", "PostID" },
+                values: new object[,]
+                {
+                    { "hoho2", new DateTime(2020, 8, 6, 14, 53, 22, 164, DateTimeKind.Local).AddTicks(9756), "Bá đạo trên từng hạt gạo", "Bài review rất tệ", "Chaos;Child1" },
+                    { "hoho1", new DateTime(2020, 8, 6, 14, 53, 22, 164, DateTimeKind.Local).AddTicks(8764), "Đẹp trai vô danh", "Bài review rất hay", "Chaos;Head1" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PostTags",
+                columns: new[] { "TagID", "PostID" },
+                values: new object[,]
+                {
+                    { 1, "Chaos;Child1" },
+                    { 2, "Chaos;Head1" },
+                    { 1, "Chaos;Head1" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -21,6 +21,8 @@
     <Compile Remove="Migrations\20200805135123_Identity-seed.Designer.cs" />
     <Compile Remove="Migrations\20200805135156_Identity-seed.cs" />
     <Compile Remove="Migrations\20200805135156_Identity-seed.Designer.cs" />
+    <Compile Remove="Migrations\20200806075129_initial.cs" />
+    <Compile Remove="Migrations\20200806075129_initial.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -21,10 +21,12 @@ namespace AdvWeb_VN.Data.Migrations
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.Category", b =>
                 {
-                    b.Property<string>("CategoryID")
-                        .HasColumnType("varchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(false);
+                    b.Property<int>("CategoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
@@ -42,27 +44,27 @@ namespace AdvWeb_VN.Data.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryID = "Tom1",
+                            CategoryID = 1,
                             CategoryName = "Chaos;Head",
-                            CreateDate = new DateTime(2020, 8, 5, 20, 58, 22, 682, DateTimeKind.Local).AddTicks(4644)
+                            CreateDate = new DateTime(2020, 8, 6, 14, 53, 22, 161, DateTimeKind.Local).AddTicks(8301)
                         },
                         new
                         {
-                            CategoryID = "Tom2",
+                            CategoryID = 2,
                             CategoryName = "Chaos;Child",
-                            CreateDate = new DateTime(2020, 8, 5, 20, 58, 22, 684, DateTimeKind.Local).AddTicks(1319)
+                            CreateDate = new DateTime(2020, 8, 6, 14, 53, 22, 162, DateTimeKind.Local).AddTicks(8485)
                         },
                         new
                         {
-                            CategoryID = "Tom3",
+                            CategoryID = 3,
                             CategoryName = "Steins;Gate",
-                            CreateDate = new DateTime(2020, 8, 5, 20, 58, 22, 684, DateTimeKind.Local).AddTicks(1353)
+                            CreateDate = new DateTime(2020, 8, 6, 14, 53, 22, 162, DateTimeKind.Local).AddTicks(8510)
                         },
                         new
                         {
-                            CategoryID = "Tom4",
+                            CategoryID = 4,
                             CategoryName = "Robotics;Notes",
-                            CreateDate = new DateTime(2020, 8, 5, 20, 58, 22, 684, DateTimeKind.Local).AddTicks(1356)
+                            CreateDate = new DateTime(2020, 8, 6, 14, 53, 22, 162, DateTimeKind.Local).AddTicks(8514)
                         });
                 });
 
@@ -107,7 +109,7 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             CommentID = "hoho1",
-                            CommentTime = new DateTime(2020, 8, 5, 20, 58, 22, 686, DateTimeKind.Local).AddTicks(8331),
+                            CommentTime = new DateTime(2020, 8, 6, 14, 53, 22, 164, DateTimeKind.Local).AddTicks(8764),
                             Commentator = "Đẹp trai vô danh",
                             Commenter = "Bài review rất hay",
                             PostID = "Chaos;Head1",
@@ -116,7 +118,7 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             CommentID = "hoho2",
-                            CommentTime = new DateTime(2020, 8, 5, 20, 58, 22, 686, DateTimeKind.Local).AddTicks(9803),
+                            CommentTime = new DateTime(2020, 8, 6, 14, 53, 22, 164, DateTimeKind.Local).AddTicks(9756),
                             Commentator = "Bá đạo trên từng hạt gạo",
                             Commenter = "Bài review rất tệ",
                             PostID = "Chaos;Child1",
@@ -131,11 +133,8 @@ namespace AdvWeb_VN.Data.Migrations
                         .HasMaxLength(100)
                         .IsUnicode(false);
 
-                    b.Property<string>("CategoryID")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(false);
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Contents")
                         .IsRequired()
@@ -175,33 +174,31 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             PostID = "Chaos;Child1",
-                            CategoryID = "Tom2",
+                            CategoryID = 2,
                             Contents = "Đây là 1 Visual Novel rất hay",
                             PostName = "Review Visual Novel Chaos;Child",
                             Thumbnail = "https://images-na.ssl-images-amazon.com/images/I/91HUMu2XDYL._RI_.jpg",
                             UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             View = 0,
-                            WriteTime = new DateTime(2020, 8, 5, 20, 58, 22, 685, DateTimeKind.Local).AddTicks(9448)
+                            WriteTime = new DateTime(2020, 8, 6, 14, 53, 22, 164, DateTimeKind.Local).AddTicks(2869)
                         },
                         new
                         {
                             PostID = "Chaos;Head1",
-                            CategoryID = "Tom1",
+                            CategoryID = 1,
                             Contents = "Đây là 1 Visual Novel rất hay",
                             PostName = "Review Visual Novel Chaos;Head",
                             Thumbnail = "https://upload.wikimedia.org/wikipedia/vi/3/34/Chaos_Head_game_cover.jpg",
                             UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             View = 0,
-                            WriteTime = new DateTime(2020, 8, 5, 20, 58, 22, 686, DateTimeKind.Local).AddTicks(2950)
+                            WriteTime = new DateTime(2020, 8, 6, 14, 53, 22, 164, DateTimeKind.Local).AddTicks(5235)
                         });
                 });
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.PostTag", b =>
                 {
-                    b.Property<string>("TagID")
-                        .HasColumnType("varchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(false);
+                    b.Property<int>("TagID")
+                        .HasColumnType("int");
 
                     b.Property<string>("PostID")
                         .HasColumnType("varchar(100)")
@@ -217,17 +214,17 @@ namespace AdvWeb_VN.Data.Migrations
                     b.HasData(
                         new
                         {
-                            TagID = "kiki1",
+                            TagID = 2,
                             PostID = "Chaos;Head1"
                         },
                         new
                         {
-                            TagID = "kiki2",
+                            TagID = 1,
                             PostID = "Chaos;Head1"
                         },
                         new
                         {
-                            TagID = "kiki1",
+                            TagID = 1,
                             PostID = "Chaos;Child1"
                         });
                 });
@@ -255,14 +252,14 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             Id = new Guid("706a7f4f-a6ed-4e24-bd09-df7829865142"),
-                            ConcurrencyStamp = "19633fd3-b66f-4b47-ba9c-078a3f9f777f",
+                            ConcurrencyStamp = "0312de49-7acb-495e-97fb-d56e5ae0afb4",
                             Name = "admin",
                             NormalizedName = "admin"
                         },
                         new
                         {
                             Id = new Guid("d00409db-a6ed-4985-a3b7-4036774572cd"),
-                            ConcurrencyStamp = "94188c0a-56e0-4ab7-8052-ce00c6241d89",
+                            ConcurrencyStamp = "f0098992-d4e5-40d4-85bc-a033a18be13a",
                             Name = "Writer",
                             NormalizedName = "Writer"
                         });
@@ -270,10 +267,12 @@ namespace AdvWeb_VN.Data.Migrations
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.Tag", b =>
                 {
-                    b.Property<string>("TagID")
-                        .HasColumnType("varchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(false);
+                    b.Property<int>("TagID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("TagName")
                         .IsRequired()
@@ -288,12 +287,12 @@ namespace AdvWeb_VN.Data.Migrations
                     b.HasData(
                         new
                         {
-                            TagID = "kiki1",
+                            TagID = 1,
                             TagName = "Visual Novel"
                         },
                         new
                         {
-                            TagID = "kiki2",
+                            TagID = 2,
                             TagName = "Chaos;Head"
                         });
                 });
@@ -355,13 +354,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("0cfe64bd-645b-4f5a-91d1-c3082c132ed8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "015746f4-927c-46a4-8243-05e2f778c17e",
+                            ConcurrencyStamp = "328d7c38-3bbe-4e24-a8e8-bc796fe9fddb",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJon30keugd4YPgX6aDwoQ3q27YeKlF1aU16zGPja5tgbCyvQQyBqg3JZsFvp/nlVw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGfqwSyKDVuZUcIU6uujMLvmllAyWpHSaSCflVBEMXg3ynCFIPL3eRADDx0UzuhWBA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -371,13 +370,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3d5a0fb4-ba7e-4113-9c66-caf29eeda7cc",
+                            ConcurrencyStamp = "6e5faefa-79e2-4fc5-a9f8-7e9d19f49e75",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "hoho303",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDrIvmoCKu33p2/ZMif1QwybaVogq83wvLD+G296vNSslLn8m5fEGT4/3Ulsi8M7hg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPrCyqTFJow+D01r/232kJqUVISKqGGDkOorfh2meJRO5PUBOnPw1O4uCA3zNuIBGQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

@@ -9,6 +9,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts.Dtos.Manage
 		public DateTime WriteTime { set; get; }
 		public string Contents { set; get; }
 		public string Thumbnail { set; get; }
-		public string CategoryID { set; get; }
+		public int CategoryID { set; get; }
 	}
 }

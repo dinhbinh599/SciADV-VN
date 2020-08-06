@@ -11,7 +11,7 @@ namespace AdvWeb_VN.Data.Entities
 		public DateTime WriteTime { set; get; }
 		public string Contents { set; get; }
 		public string Thumbnail { set; get; }
-		public string CategoryID { set; get; }
+		public int CategoryID { set; get; }
 		public Guid UserID { set; get; }
 		public int View { set; get; }
 		public User User { set; get; }

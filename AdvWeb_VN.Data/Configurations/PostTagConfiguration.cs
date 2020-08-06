@@ -1,9 +1,6 @@
 ﻿using AdvWeb_VN.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AdvWeb_VN.Data.Configurations
 {
