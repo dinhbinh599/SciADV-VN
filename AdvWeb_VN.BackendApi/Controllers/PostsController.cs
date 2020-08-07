@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Posts;
 using AdvWeb_VN.Application.Catalog.Posts.Dtos;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +13,13 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostController : ControllerBase
+    [Authorize]
+    public class PostsController : ControllerBase
     {
         private readonly IPublicPostService publicPostService;
         private readonly IManagePostService managePostService;
 
-        public PostController(IPublicPostService publicPostService, IManagePostService managePostService)
+        public PostsController(IPublicPostService publicPostService, IManagePostService managePostService)
         {
             this.publicPostService = publicPostService;
             this.managePostService = managePostService;
@@ -44,6 +46,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
             if (posts == null) return BadRequest("Cannot find a post");
             return Ok(posts);
         }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromForm]PostCreateRequest request)
         {

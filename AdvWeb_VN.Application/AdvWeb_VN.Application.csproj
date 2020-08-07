@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AdvWeb_VN.Data\AdvWeb_VN.Data.csproj" />
     <ProjectReference Include="..\AdvWeb_VN.Utilities\AdvWeb_VN.Utilities.csproj" />
     <ProjectReference Include="..\AdvWeb_VN.ViewModels\AdvWeb_VN.ViewModels.csproj" />
