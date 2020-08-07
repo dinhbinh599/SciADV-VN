@@ -7,6 +7,9 @@ using AdvWeb_VN.Application.System.Users;
 using AdvWeb_VN.Data.EF;
 using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.Utilities.Constants;
+using AdvWeb_VN.ViewModels.System.Users;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,7 +49,11 @@ namespace AdvWeb_VN.BackendApi
 			services.AddTransient<RoleManager<Role>, RoleManager<Role>>();
 			services.AddTransient<IUserService, UserService>();
 
-			services.AddControllers();
+			//services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
+			//services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
+
+			services.AddControllers()
+				.AddFluentValidation(fv=>fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
 
 			services.AddSwaggerGen(c =>
 			{

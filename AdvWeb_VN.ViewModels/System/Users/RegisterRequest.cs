@@ -8,7 +8,7 @@ namespace AdvWeb_VN.ViewModels.System.Users
 	{
 		public string UserName { set; get; }
 		public string Password { set; get; }
-		public string ComfirmPassWord { set; get; }
+		public string ConfirmPassWord { set; get; }
 		public string Email { set; get; }
 		public string PhoneNumber { set; get; }
 	}
