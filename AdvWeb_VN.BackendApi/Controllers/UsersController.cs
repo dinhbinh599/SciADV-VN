@@ -12,6 +12,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
@@ -93,6 +94,17 @@ namespace AdvWeb_VN.BackendApi.Controllers
             {
                 return BadRequest(result);
             }
+            return Ok(result);
+        }
+
+        [HttpPut("{id}/roles/{name}")]
+        public async Task<IActionResult> RoleAssign(Guid id, string name)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await userService.RoleAssignByRoleName(id, name);
+            if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
     }

@@ -13,7 +13,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class PostsController : ControllerBase
     {
         private readonly IPublicPostService publicPostService;
@@ -44,7 +44,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         {
             var result = await managePostService.GetByID(id);
             if (!result.IsSuccessed) return BadRequest(result.Message);
-            return Ok(result.ResultObj);
+            return Ok(result);
         }
 
         [HttpPost]

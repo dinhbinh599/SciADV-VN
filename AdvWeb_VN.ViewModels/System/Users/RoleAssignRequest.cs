@@ -7,7 +7,7 @@ namespace AdvWeb_VN.ViewModels.System.Users
 {
     public class RoleAssignRequest
     {
-        public Guid ID { get; set; }
+        //public Guid ID { get; set; }
         public List<SelectItem> Roles { get; set; } = new List<SelectItem>();
     }
 }

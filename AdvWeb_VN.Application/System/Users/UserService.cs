@@ -90,12 +90,6 @@ namespace AdvWeb_VN.Application.System.Users
 			return new ApiSuccessResult<UserViewModel>(userVm);
 		}
 
-		public async Task<IList<string>> GetRolesByID(Guid id)
-		{
-			var user = await userManager.FindByIdAsync(id.ToString());
-			var roles = await userManager.GetRolesAsync(user);
-			return roles;
-		}
 		public async Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging(GetUserPagingRequest request)
 		{
 			var query = userManager.Users;
@@ -149,10 +143,7 @@ namespace AdvWeb_VN.Application.System.Users
 		public async Task<ApiResult<bool>> RoleAssign(Guid id, RoleAssignRequest request)
 		{
 			var user = await userManager.FindByIdAsync(id.ToString());
-			if (user == null)
-			{
-				return new ApiErrorResult<bool>("Tài khoản không tồn tại");
-			}
+			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
 			var removedRoles = request.Roles.Where(x => x.Selected == false).Select(x => x.Name).ToList();
 			foreach (var roleName in removedRoles)
 			{
@@ -172,6 +163,19 @@ namespace AdvWeb_VN.Application.System.Users
 				}
 			}
 
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<ApiResult<bool>> RoleAssignByRoleName(Guid id, string roleName)
+		{
+			var user = await userManager.FindByIdAsync(id.ToString());
+			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+			if(!await roleManager.RoleExistsAsync(roleName)) return new ApiErrorResult<bool>("Role không tồn tại");
+			if (await userManager.IsInRoleAsync(user, roleName) == false)
+			{
+				await userManager.AddToRoleAsync(user, roleName);
+			}
+			else { return new ApiErrorResult<bool>($"User này đã tồn tại role {roleName}"); }
 			return new ApiSuccessResult<bool>();
 		}
 

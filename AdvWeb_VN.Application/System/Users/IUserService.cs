@@ -14,6 +14,7 @@ namespace AdvWeb_VN.Application.System.Users
 		public Task<ApiResult<bool>> Update(Guid id, UserUpdateRequest request);
 		public Task<ApiResult<bool>> Delete(Guid id);
 		public Task<ApiResult<bool>> RoleAssign(Guid id, RoleAssignRequest request);
+		public Task<ApiResult<bool>> RoleAssignByRoleName(Guid id, string roleName);
 		public Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging (GetUserPagingRequest request);
 		public Task<ApiResult<UserViewModel>> GetByID(Guid id);
 	}
