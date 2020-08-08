@@ -13,7 +13,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PostsController : ControllerBase
     {
         private readonly IPublicPostService publicPostService;
@@ -42,9 +42,9 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(string id)
         {
-            var posts = await managePostService.GetByID(id);
-            if (posts == null) return BadRequest("Cannot find a post");
-            return Ok(posts);
+            var result = await managePostService.GetByID(id);
+            if (!result.IsSuccessed) return BadRequest(result.Message);
+            return Ok(result.ResultObj);
         }
 
         [HttpPost]

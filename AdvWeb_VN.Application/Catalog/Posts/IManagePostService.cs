@@ -16,7 +16,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<int> Delete(string postId);
 
 		Task AddViewCount(string postId);
-		Task<PostViewModel> GetByID(string postID);
+		Task<ApiResult<PostViewModel>> GetByID(string postID);
 		Task<PagedResult<PostViewModel>> GetAllPaging(GetManagePostPagingRequest request);
 	}
 }

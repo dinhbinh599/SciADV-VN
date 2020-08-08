@@ -5,17 +5,8 @@ using System.Text;
 
 namespace AdvWeb_VN.ViewModels.System.Users
 {
-	public class RegisterRequest
+	public class UserUpdateRequest
 	{
-		[Display(Name = "Tài khoản")]
-		public string UserName { set; get; }
-
-		[Display(Name = "Mật khẩu")]
-		public string Password { set; get; }
-
-		[Display(Name = "Xác nhận mật khẩu")]
-		public string ConfirmPassWord { set; get; }
-
 		[Display(Name = "Địa chỉ Email")]
 		public string Email { set; get; }
 

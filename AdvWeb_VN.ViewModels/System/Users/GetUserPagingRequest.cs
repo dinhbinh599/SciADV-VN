@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AdvWeb_VN.ViewModels.Catalog.Posts
+namespace AdvWeb_VN.ViewModels.System.Users
 {
-	public class GetManagePostPagingRequest : PagingRequestBase
+	public class GetUserPagingRequest : PagingRequestBase
 	{
 		public string Keyword { set; get; }
-		public List<int> TagIds { set; get; }
 	}
 }

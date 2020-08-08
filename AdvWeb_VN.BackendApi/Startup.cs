@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Posts;
+using AdvWeb_VN.Application.System.Roles;
 using AdvWeb_VN.Application.System.Users;
 using AdvWeb_VN.Data.EF;
 using AdvWeb_VN.Data.Entities;
@@ -48,6 +49,7 @@ namespace AdvWeb_VN.BackendApi
 			services.AddTransient<SignInManager<User>, SignInManager<User>>(); 
 			services.AddTransient<RoleManager<Role>, RoleManager<Role>>();
 			services.AddTransient<IUserService, UserService>();
+			services.AddTransient<IRoleService, RoleService>();
 
 			//services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
 			//services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();

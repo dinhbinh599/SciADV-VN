@@ -28,13 +28,13 @@ namespace AdvWeb_VN.BackendApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var resultToken = await userService.Authenticate(request);
+            var result = await userService.Authenticate(request);
 
-            if (string.IsNullOrEmpty(resultToken))
+            if (string.IsNullOrEmpty(result.ResultObj))
             {
-                return BadRequest("Username or Password is incorrect.");
+                return BadRequest(result);
             }
-            return Ok(new {token = resultToken });
+            return Ok(result);
         }
 
         [HttpPost]
@@ -46,11 +46,54 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
             var result = await userService.Register(request);
 
-            if (!result)
+            if (!result.IsSuccessed)
             {
-                return BadRequest("Register is unsuccessful");
+                return BadRequest(result);
             }
-            return Ok();
+            return Ok(result);
+        }
+
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery]GetUserPagingRequest request)
+        {
+            var users = await userService.GetUsersPaging(request);
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByID(Guid id)
+        {
+            var user = await userService.GetByID(id);
+            return Ok(user);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id,[FromForm]UserUpdateRequest request)
+        {
+            var result = await userService.Update(id ,request);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await userService.Delete(id);
+            if (result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("{id}/roles")]
+        public async Task<IActionResult> RoleAssign(Guid id, [FromForm]RoleAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await userService.RoleAssign(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
     }
 }

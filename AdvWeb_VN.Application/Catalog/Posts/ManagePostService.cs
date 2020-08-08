@@ -86,11 +86,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 						join pic in context.PostTags on p.PostID equals pic.PostID
 						join c in context.Tags on pic.TagID equals c.TagID
 						select new { p, pt, pic };
-			if(!string.IsNullOrEmpty(request.KeyWord))
+			if(!string.IsNullOrEmpty(request.Keyword))
 			{
-				query = query.Where(x => x.pt.Commenter.Contains(request.KeyWord));
+				query = query.Where(x => x.pt.Commenter.Contains(request.Keyword));
 			}
-			if(request.TagIds.Count>0)
+			if(request.TagIds != null && request.TagIds.Count>0)
 			{
 				query = query.Where(x => request.TagIds.Contains(x.pic.TagID));
 			}
@@ -118,11 +118,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return pagedResult;
 		}
 
-		public async Task<PostViewModel> GetByID(string postID)
+		public async Task<ApiResult<PostViewModel>> GetByID(string postID)
 		{
 			var post = await context.Posts.FindAsync(postID);
+			if (post == null) return new ApiErrorResult<PostViewModel>("Không tìm thấy bài viết này!");
 			var user = await context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
-			
 			var postViewModel = new PostViewModel()
 			{
 				PostID = post.PostID,
@@ -135,7 +135,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				UserName = user.UserName
 			};
 			
-			return postViewModel;
+			return new ApiSuccessResult<PostViewModel>(postViewModel);
 		}
 
 		public async Task<int> Update(PostUpdateRequest request)
