@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AdvWeb_VN.ViewModels.Catalog.Categories
 {
-	public class CategoryUpdateRequestValidator : AbstractValidator<CategoryCreateRequest>
+	public class CategoryUpdateRequestValidator : AbstractValidator<CategoryUpdateRequest>
 	{
 		public CategoryUpdateRequestValidator()
 		{
