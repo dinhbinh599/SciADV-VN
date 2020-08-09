@@ -11,6 +11,7 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 		public string UserName { set; get; }
 		public int View { set; get; }
 		public int CategoryID { set; get; }
+		public string CategoryName { set; get; }
 		public DateTime WriteTime { set; get; }
 
 	}

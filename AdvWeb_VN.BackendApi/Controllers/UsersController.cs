@@ -97,13 +97,24 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}/roles/{name}")]
+        [HttpPut("{id}/roles/assign/{name}")]
         public async Task<IActionResult> RoleAssign(Guid id, string name)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var result = await userService.RoleAssignByRoleName(id, name);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("{id}/roles/remove/{name}")]
+        public async Task<IActionResult> RoleRemove(Guid id, string name)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await userService.RoleRemoveByRoleName(id, name);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }

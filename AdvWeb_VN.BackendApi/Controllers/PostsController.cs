@@ -13,63 +13,76 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PostsController : ControllerBase
     {
-        private readonly IPublicPostService publicPostService;
-        private readonly IManagePostService managePostService;
+        private readonly IPostService postService;
 
-        public PostsController(IPublicPostService publicPostService, IManagePostService managePostService)
+        public PostsController(IPostService postService)
         {
-            this.publicPostService = publicPostService;
-            this.managePostService = managePostService;
+            this.postService = postService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var posts = await publicPostService.GetAll();
+            var posts = await postService.GetAll();
             return Ok(posts);
         }
 
-        [HttpGet("public-paging")]
-        public async Task<IActionResult> Get([FromQuery]GetPublicPostPagingRequest request)
+        [HttpGet("paging-tagid")]
+        public async Task<IActionResult> GetByTagID([FromQuery]GetPublicPostPagingRequest request)
         {
-            var posts = await publicPostService.GetAllByTagId(request);
+            var posts = await postService.GetAllByTagID(request);
+            return Ok(posts);
+        }
+
+        [HttpGet("paging-categoryid")]
+        public async Task<IActionResult> GetByCategoryID([FromQuery]GetPublicPostPagingRequest request)
+        {
+            var posts = await postService.GetAllByCategoryID(request);
             return Ok(posts);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(string id)
         {
-            var result = await managePostService.GetByID(id);
-            if (!result.IsSuccessed) return BadRequest(result.Message);
+            var result = await postService.GetByID(id);
+            if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromForm]PostCreateRequest request)
         {
-            var postID = await managePostService.Create(request);
-            if(postID == "") return BadRequest();
-            var post = await managePostService.GetByID(postID);
-            return CreatedAtAction(nameof(GetByID),new { PostID = postID },post);
+            var result = await postService.Create(request);
+            if (!result.IsSuccessed) return BadRequest(result);
+            var post = await postService.GetByID(result.ResultObj);
+            return CreatedAtAction(nameof(GetByID), new { PostID = result.ResultObj }, post.ResultObj);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromForm]PostUpdateRequest request)
         {
-            var result = await managePostService.Update(request);
-            if (result == 0) return BadRequest();
-            return Ok();
+            var result = await postService.Update(request);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AddViewCount(string id)
+        {
+            var result = await postService.AddViewCount(id);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await managePostService.Delete(id);
-            if (result == 0) return BadRequest();
-            return Ok();
+            var result = await postService.Delete(id);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
         }
     }
 }

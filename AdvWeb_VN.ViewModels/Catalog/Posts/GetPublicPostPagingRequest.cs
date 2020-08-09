@@ -7,6 +7,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts.Dtos
 {
 	public class GetPublicPostPagingRequest : PagingRequestBase
 	{
-		public int? TagId { set; get; }
+		public int? Id { set; get; }
 	}
 }

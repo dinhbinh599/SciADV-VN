@@ -15,29 +15,30 @@ using AdvWeb_VN.ViewModels.Catalog.Posts;
 
 namespace AdvWeb_VN.Application.Catalog.Posts
 {
-	public class ManagePostService : IManagePostService
+	public class PostService : IPostService
 	{
 		private readonly AdvWebDbContext context;
-
-		public ManagePostService(AdvWebDbContext context)
+		public PostService(AdvWebDbContext context)
 		{
 			this.context = context;
 		}
 
-		public async Task AddViewCount(string postId)
+		public async Task<ApiResult<bool>> AddViewCount(string postId)
 		{
 			var post = await context.Posts.FindAsync(postId);
+			if (post == null) return new ApiErrorResult<bool>("Không tìm thấy bài viết này!");
 			post.View += 1;
 			await context.SaveChangesAsync();
+			return new ApiSuccessResult<bool>();
 		}
 
-		public async Task<string> Create(PostCreateRequest request)
+		public async Task<ApiResult<string>> Create(PostCreateRequest request)
 		{
 			var query = from li in context.Categories
 						where li.CategoryID.Equals(request.CategoryID)
 						select li;
-
-			if (query == null) throw new AdvWebException($"Cannot find a Category : {request.CategoryID}");
+			var list = await query.ToListAsync<Category>();
+			if (list.Count == 0) return new ApiErrorResult<string>($"Không tìm thấy chuyên mục : {request.CategoryID}");
 			
 			var query2 = from c in context.Posts
 						 where c.CategoryID.Equals(request.CategoryID)
@@ -67,16 +68,19 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				WriteTime = DateTime.Now,
 			};
 			context.Posts.Add(post);
-			await context.SaveChangesAsync();
-			return PostID;
+			var result = await context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<string>("Thêm bài viết thất bại");
+			return new ApiSuccessResult<string>(PostID);
 		}
 
-		public async Task<int> Delete(string postId)
+		public async Task<ApiResult<bool>> Delete(string postId)
 		{
 			var post = await context.Posts.FindAsync(postId);
-			if (post == null) throw new AdvWebException($"Cannot find a Post : {postId}");
+			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postId}");
 			context.Posts.Remove(post);
-			return await context.SaveChangesAsync();
+			var result = await context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<bool>("Xóa bài viết thất bại");
+			return new ApiSuccessResult<bool>();
 		}
 
 		public async Task<PagedResult<PostViewModel>> GetAllPaging(GetManagePostPagingRequest request)
@@ -108,7 +112,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
 					CategoryID = x.p.CategoryID,
-					UserName = x.p.User.UserName
+					UserName = x.p.User.UserName,
+					CategoryName = x.p.Category.CategoryName
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
@@ -123,6 +128,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var post = await context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<PostViewModel>("Không tìm thấy bài viết này!");
 			var user = await context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
+			var category = await context.Categories.FirstOrDefaultAsync(x => x.CategoryID == post.CategoryID);
 			var postViewModel = new PostViewModel()
 			{
 				PostID = post.PostID,
@@ -132,16 +138,17 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				Thumbnail = post.Thumbnail,
 				Contents = post.Contents,
 				CategoryID = post.CategoryID,
-				UserName = user.UserName
+				UserName = user.UserName,
+				CategoryName = category.CategoryName
 			};
 			
 			return new ApiSuccessResult<PostViewModel>(postViewModel);
 		}
 
-		public async Task<int> Update(PostUpdateRequest request)
+		public async Task<ApiResult<bool>> Update(PostUpdateRequest request)
 		{
 			var post = await context.Posts.FindAsync(request.PostID);
-			if (post == null) throw new AdvWebException($"Cannot find a Post : {request.PostID}");
+			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {request.PostID}");
 			
 			post.PostName = request.PostName;
 			post.Thumbnail = request.Thumbnail;
@@ -173,7 +180,103 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}
 			}
 			post.PostID = PostID;*/
-			return await context.SaveChangesAsync();
+			var result = await context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
+			return new ApiSuccessResult<bool>();
+		}
+		public async Task<List<PostViewModel>> GetAll()
+		{
+			var query = from p in context.Posts
+						select p;
+
+			var data = await query.Select(x => new PostViewModel()
+			{
+				PostID = x.PostID,
+				PostName = x.PostName,
+				WriteTime = x.WriteTime,
+				View = x.View,
+				Thumbnail = x.Thumbnail,
+				Contents = x.Contents,
+				CategoryID = x.CategoryID,
+				UserName = x.User.UserName,
+				CategoryName = x.Category.CategoryName
+			}).ToListAsync();
+
+			return data;
+		}
+
+		public async Task<PagedResult<PostViewModel>> GetAllByTagID(GetPublicPostPagingRequest request)
+		{
+			var query = from p in context.Posts
+						join pic in context.PostTags on p.PostID equals pic.PostID
+						join c in context.Tags on pic.TagID equals c.TagID
+						join d in context.Users on p.UserID equals d.Id
+						join e in context.Categories on p.CategoryID equals e.CategoryID
+						select new { p, pic, d, e };
+
+			if (request.Id.HasValue && request.Id.Value > 0)
+			{
+				query = query.Where(x => x.pic.TagID == request.Id);
+			}
+
+			int totalRow = await query.CountAsync();
+
+			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					CategoryID = x.p.CategoryID,
+					UserName = x.d.UserName,
+					CategoryName = x.e.CategoryName
+				}).ToListAsync();
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				TotalRecord = totalRow,
+				Items = data
+			};
+			return pagedResult;
+		}
+
+		public async Task<PagedResult<PostViewModel>> GetAllByCategoryID(GetPublicPostPagingRequest request)
+		{
+			var query = from c in context.Categories
+						join p in context.Posts on c.CategoryID equals p.CategoryID
+						join d in context.Users on p.UserID equals d.Id
+						select new { p, c, d };
+
+			if (request.Id.HasValue && request.Id.Value > 0)
+			{
+				query = query.Where(x => x.c.CategoryID == request.Id);
+			}
+
+			int totalRow = await query.CountAsync();
+
+			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					CategoryID = x.p.CategoryID,
+					UserName = x.d.UserName,
+					CategoryName = x.c.CategoryName
+				}).ToListAsync();
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				TotalRecord = totalRow,
+				Items = data
+			};
+			return pagedResult;
 		}
 	}
 }

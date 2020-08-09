@@ -140,6 +140,18 @@ namespace AdvWeb_VN.Application.System.Users
 			return new ApiErrorResult<bool>("Đăng ký không thành công");
 		}
 
+		public async Task<ApiResult<bool>> RoleRemoveByRoleName(Guid id, string roleName)
+		{
+			var user = await userManager.FindByIdAsync(id.ToString());
+			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+			if (!await roleManager.RoleExistsAsync(roleName)) return new ApiErrorResult<bool>("Role không tồn tại");
+			if (await userManager.IsInRoleAsync(user, roleName) == true)
+			{
+				await userManager.RemoveFromRoleAsync(user, roleName);
+			}
+			return new ApiSuccessResult<bool>();
+		}
+
 		public async Task<ApiResult<bool>> RoleAssign(Guid id, RoleAssignRequest request)
 		{
 			var user = await userManager.FindByIdAsync(id.ToString());

@@ -43,8 +43,7 @@ namespace AdvWeb_VN.BackendApi
 				.AddEntityFrameworkStores<AdvWebDbContext>()
 				.AddDefaultTokenProviders();
 
-			services.AddTransient<IPublicPostService, PublicPostService>();
-			services.AddTransient<IManagePostService, ManagePostService>();
+			services.AddTransient<IPostService, PostService>();
 			services.AddTransient<UserManager<User>, UserManager<User>>();
 			services.AddTransient<SignInManager<User>, SignInManager<User>>(); 
 			services.AddTransient<RoleManager<Role>, RoleManager<Role>>();
