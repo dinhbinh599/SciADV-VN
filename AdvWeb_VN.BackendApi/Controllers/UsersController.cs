@@ -12,7 +12,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;

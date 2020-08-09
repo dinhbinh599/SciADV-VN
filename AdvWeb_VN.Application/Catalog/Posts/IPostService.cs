@@ -1,5 +1,4 @@
-﻿using AdvWeb_VN.Application.Catalog.Posts.Dtos;
-using AdvWeb_VN.ViewModels.Catalog.Posts;
+﻿using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Common;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		Task<ApiResult<bool>> AddViewCount(string postId);
 		Task<ApiResult<PostViewModel>> GetByID(string postID);
-		Task<PagedResult<PostViewModel>> GetAllPaging(GetManagePostPagingRequest request);
+		Task<PagedResult<PostViewModel>> GetAllPagingTagID(GetManagePostPagingRequest request);
+		Task<PagedResult<PostViewModel>> GetAllPagingCategoryID(GetManagePostPagingRequest request);
 		Task<PagedResult<PostViewModel>> GetAllByTagID(GetPublicPostPagingRequest request);
 		Task<PagedResult<PostViewModel>> GetAllByCategoryID(GetPublicPostPagingRequest request);
 		Task<List<PostViewModel>> GetAll();

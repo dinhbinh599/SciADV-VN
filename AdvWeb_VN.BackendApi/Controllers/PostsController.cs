@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Posts;
-using AdvWeb_VN.Application.Catalog.Posts.Dtos;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdvWeb_VN.BackendApi.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     [ApiController]
     //[Authorize]
     public class PostsController : ControllerBase
@@ -31,13 +30,27 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("paging-tagid")]
+        public async Task<IActionResult> GetAllPagingByTagID([FromQuery]GetManagePostPagingRequest request)
+        {
+            var products = await postService.GetAllPagingTagID(request);
+            return Ok(products);
+        }
+
+        [HttpGet("paging-categoryid")]
+        public async Task<IActionResult> GetAllPagingByCategoryID([FromQuery]GetManagePostPagingRequest request)
+        {
+            var products = await postService.GetAllPagingCategoryID(request);
+            return Ok(products);
+        }
+
+        [HttpGet("public-paging-tagid")]
         public async Task<IActionResult> GetByTagID([FromQuery]GetPublicPostPagingRequest request)
         {
             var posts = await postService.GetAllByTagID(request);
             return Ok(posts);
         }
 
-        [HttpGet("paging-categoryid")]
+        [HttpGet("public-paging-categoryid")]
         public async Task<IActionResult> GetByCategoryID([FromQuery]GetPublicPostPagingRequest request)
         {
             var posts = await postService.GetAllByCategoryID(request);

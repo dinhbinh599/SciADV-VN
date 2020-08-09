@@ -1,5 +1,4 @@
-﻿using AdvWeb_VN.Application.Catalog.Posts.Dtos;
-using AdvWeb_VN.Data.EF;
+﻿using AdvWeb_VN.Data.EF;
 using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.Utilities.Exceptions;
 using System;
@@ -83,20 +82,23 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<bool>();
 		}
 
-		public async Task<PagedResult<PostViewModel>> GetAllPaging(GetManagePostPagingRequest request)
+		public async Task<PagedResult<PostViewModel>> GetAllPagingTagID(GetManagePostPagingRequest request)
 		{
 			var query = from p in context.Posts
 						join pt in context.Comments on p.PostID equals pt.PostID
 						join pic in context.PostTags on p.PostID equals pic.PostID
+						join e in context.Categories on p.CategoryID equals e.CategoryID
 						join c in context.Tags on pic.TagID equals c.TagID
-						select new { p, pt, pic };
+						join u in context.Users on p.UserID equals u.Id
+						select new { p, pt, pic, c, e, u};
+
 			if(!string.IsNullOrEmpty(request.Keyword))
 			{
-				query = query.Where(x => x.pt.Commenter.Contains(request.Keyword));
+				query = query.Where(x => x.c.TagName.Contains(request.Keyword));
 			}
-			if(request.TagIds != null && request.TagIds.Count>0)
+			if(request.IDs != null && request.IDs.Count>0)
 			{
-				query = query.Where(x => request.TagIds.Contains(x.pic.TagID));
+				query = query.Where(x => request.IDs.Contains(x.pic.TagID));
 			}
 			
 			int totalRow = await query.CountAsync();
@@ -112,8 +114,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
 					CategoryID = x.p.CategoryID,
-					UserName = x.p.User.UserName,
-					CategoryName = x.p.Category.CategoryName
+					UserName = x.u.UserName,
+					CategoryName = x.e.CategoryName
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
@@ -254,6 +256,47 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			{
 				query = query.Where(x => x.c.CategoryID == request.Id);
 			}
+
+			int totalRow = await query.CountAsync();
+
+			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					CategoryID = x.p.CategoryID,
+					UserName = x.d.UserName,
+					CategoryName = x.c.CategoryName
+				}).ToListAsync();
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				TotalRecord = totalRow,
+				Items = data
+			};
+			return pagedResult;
+		}
+
+		public async Task<PagedResult<PostViewModel>> GetAllPagingCategoryID(GetManagePostPagingRequest request)
+		{
+			var query = from c in context.Categories
+						join p in context.Posts on c.CategoryID equals p.CategoryID
+						join d in context.Users on p.UserID equals d.Id
+						select new { p, c, d };
+
+			if (!string.IsNullOrEmpty(request.Keyword))
+			{
+				query = query.Where(x => x.c.CategoryName.Contains(request.Keyword));
+			}
+
+			/*if (request.ID != null)
+			{
+				query = query.Where(x => request.ID.Equals(x.p.CategoryID));
+			}*/
 
 			int totalRow = await query.CountAsync();
 
