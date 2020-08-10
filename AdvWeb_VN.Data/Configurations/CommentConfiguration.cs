@@ -14,6 +14,7 @@ namespace AdvWeb_VN.Data.Configurations
 			builder.ToTable("Comments");
 			builder.HasKey(x => x.CommentID);
 			builder.Property(x => x.CommentID).IsUnicode(false).HasMaxLength(100);
+			builder.Property(x => x.ParrentID).IsUnicode(false).HasMaxLength(100);
 			builder.Property(x => x.UserID).HasDefaultValue(Guid.Empty);
 			builder.Property(x => x.Commenter).IsRequired().IsUnicode();
 			builder.Property(x => x.Commentator).IsRequired(false).HasMaxLength(50).IsUnicode();

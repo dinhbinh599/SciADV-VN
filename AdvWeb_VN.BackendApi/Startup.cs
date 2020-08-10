@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Categories;
+using AdvWeb_VN.Application.Catalog.Comments;
 using AdvWeb_VN.Application.Catalog.Posts;
 using AdvWeb_VN.Application.Catalog.Tags;
 using AdvWeb_VN.Application.System.Roles;
@@ -14,6 +15,7 @@ using AdvWeb_VN.ViewModels.System.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -45,12 +47,21 @@ namespace AdvWeb_VN.BackendApi
 				.AddEntityFrameworkStores<AdvWebDbContext>()
 				.AddDefaultTokenProviders();
 
+			/*services.AddAuthorization(options =>
+			{
+				options.FallbackPolicy = new AuthorizationPolicyBuilder()
+					.RequireAuthenticatedUser()
+					.Build();
+			});*/
+
+			// Authorization handlers.
 			services.AddTransient<IPostService, PostService>();
 			services.AddTransient<UserManager<User>, UserManager<User>>();
 			services.AddTransient<SignInManager<User>, SignInManager<User>>(); 
 			services.AddTransient<RoleManager<Role>, RoleManager<Role>>();
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IRoleService, RoleService>();
+			services.AddTransient<ICommentService, CommentService>();
 			services.AddTransient<ICategoryService, CategoryService>();
 			services.AddTransient<ITagService, TagService>();
 

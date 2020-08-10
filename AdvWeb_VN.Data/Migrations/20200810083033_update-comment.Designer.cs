@@ -4,14 +4,16 @@ using AdvWeb_VN.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AdvWeb_VN.Data.Migrations
 {
     [DbContext(typeof(AdvWebDbContext))]
-    partial class AdvWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200810083033_update-comment")]
+    partial class updatecomment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,25 +48,25 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             CategoryID = 1,
                             CategoryName = "Chaos;Head",
-                            CreateDate = new DateTime(2020, 8, 10, 17, 9, 7, 337, DateTimeKind.Local).AddTicks(2792)
+                            CreateDate = new DateTime(2020, 8, 10, 15, 30, 32, 323, DateTimeKind.Local).AddTicks(6427)
                         },
                         new
                         {
                             CategoryID = 2,
                             CategoryName = "Chaos;Child",
-                            CreateDate = new DateTime(2020, 8, 10, 17, 9, 7, 338, DateTimeKind.Local).AddTicks(2998)
+                            CreateDate = new DateTime(2020, 8, 10, 15, 30, 32, 324, DateTimeKind.Local).AddTicks(7387)
                         },
                         new
                         {
                             CategoryID = 3,
                             CategoryName = "Steins;Gate",
-                            CreateDate = new DateTime(2020, 8, 10, 17, 9, 7, 338, DateTimeKind.Local).AddTicks(3025)
+                            CreateDate = new DateTime(2020, 8, 10, 15, 30, 32, 324, DateTimeKind.Local).AddTicks(7414)
                         },
                         new
                         {
                             CategoryID = 4,
                             CategoryName = "Robotics;Notes",
-                            CreateDate = new DateTime(2020, 8, 10, 17, 9, 7, 338, DateTimeKind.Local).AddTicks(3028)
+                            CreateDate = new DateTime(2020, 8, 10, 15, 30, 32, 324, DateTimeKind.Local).AddTicks(7417)
                         });
                 });
 
@@ -113,8 +115,8 @@ namespace AdvWeb_VN.Data.Migrations
                     b.HasData(
                         new
                         {
-                            CommentID = "Chaos;Head1-1",
-                            CommentTime = new DateTime(2020, 8, 10, 17, 9, 7, 340, DateTimeKind.Local).AddTicks(3836),
+                            CommentID = "Review Visual Novel Chaos;Head1",
+                            CommentTime = new DateTime(2020, 8, 10, 15, 30, 32, 327, DateTimeKind.Local).AddTicks(2552),
                             Commentator = "Đẹp trai vô danh",
                             Commenter = "Bài review rất hay",
                             PostID = "Chaos;Head1",
@@ -122,28 +124,27 @@ namespace AdvWeb_VN.Data.Migrations
                         },
                         new
                         {
-                            CommentID = "Chaos;Head1-2",
-                            CommentTime = new DateTime(2020, 8, 10, 17, 9, 7, 340, DateTimeKind.Local).AddTicks(5399),
+                            CommentID = "Review Visual Novel Chaos;Head2",
+                            CommentTime = new DateTime(2020, 8, 10, 15, 30, 32, 327, DateTimeKind.Local).AddTicks(3946),
                             Commentator = "Đẹp trai có danh",
                             Commenter = "Ừ bài hay thật",
-                            ParrentID = "Chaos;Head1-1",
+                            ParrentID = "Review Visual Novel Chaos;Head1",
                             PostID = "Chaos;Head1",
                             UserID = new Guid("00000000-0000-0000-0000-000000000000")
                         },
                         new
                         {
-                            CommentID = "Chaos;Head1-3",
-                            CommentTime = new DateTime(2020, 8, 10, 17, 9, 7, 340, DateTimeKind.Local).AddTicks(6082),
-                            Commentator = "hoho303",
+                            CommentID = "Review Visual Novel Chaos;Head3",
+                            CommentTime = new DateTime(2020, 8, 10, 15, 30, 32, 327, DateTimeKind.Local).AddTicks(4502),
                             Commenter = "Cảm ơn các bạn",
-                            ParrentID = "Chaos;Head1-1",
+                            ParrentID = "Review Visual Novel Chaos;Head1",
                             PostID = "Chaos;Head1",
                             UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14")
                         },
                         new
                         {
-                            CommentID = "Chaos;Child1-1",
-                            CommentTime = new DateTime(2020, 8, 10, 17, 9, 7, 340, DateTimeKind.Local).AddTicks(6091),
+                            CommentID = "Review Visual Novel Chaos;Child1",
+                            CommentTime = new DateTime(2020, 8, 10, 15, 30, 32, 327, DateTimeKind.Local).AddTicks(4511),
                             Commentator = "Bá đạo trên từng hạt gạo",
                             Commenter = "Bài review rất tệ",
                             PostID = "Chaos;Child1",
@@ -151,11 +152,10 @@ namespace AdvWeb_VN.Data.Migrations
                         },
                         new
                         {
-                            CommentID = "Chaos;Child1-2",
-                            CommentTime = new DateTime(2020, 8, 10, 17, 9, 7, 340, DateTimeKind.Local).AddTicks(6094),
-                            Commentator = "hoho303",
+                            CommentID = "Review Visual Novel Chaos;Child2",
+                            CommentTime = new DateTime(2020, 8, 10, 15, 30, 32, 327, DateTimeKind.Local).AddTicks(4514),
                             Commenter = "Xin lỗi, mình sẽ cố gắng cải thiện!",
-                            ParrentID = "Chaos;Child1-1",
+                            ParrentID = "Review Visual Novel Chaos;Child1",
                             PostID = "Chaos;Child1",
                             UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14")
                         });
@@ -215,7 +215,7 @@ namespace AdvWeb_VN.Data.Migrations
                             Thumbnail = "https://images-na.ssl-images-amazon.com/images/I/91HUMu2XDYL._RI_.jpg",
                             UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             View = 0,
-                            WriteTime = new DateTime(2020, 8, 10, 17, 9, 7, 339, DateTimeKind.Local).AddTicks(7865)
+                            WriteTime = new DateTime(2020, 8, 10, 15, 30, 32, 326, DateTimeKind.Local).AddTicks(6400)
                         },
                         new
                         {
@@ -226,7 +226,7 @@ namespace AdvWeb_VN.Data.Migrations
                             Thumbnail = "https://upload.wikimedia.org/wikipedia/vi/3/34/Chaos_Head_game_cover.jpg",
                             UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             View = 0,
-                            WriteTime = new DateTime(2020, 8, 10, 17, 9, 7, 340, DateTimeKind.Local).AddTicks(196)
+                            WriteTime = new DateTime(2020, 8, 10, 15, 30, 32, 326, DateTimeKind.Local).AddTicks(8955)
                         });
                 });
 
@@ -287,14 +287,14 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             Id = new Guid("706a7f4f-a6ed-4e24-bd09-df7829865142"),
-                            ConcurrencyStamp = "dd2065fc-183c-4998-a211-2d99e5bfbe7c",
+                            ConcurrencyStamp = "c9c54646-b390-40c7-991e-9a920a82691b",
                             Name = "admin",
                             NormalizedName = "admin"
                         },
                         new
                         {
                             Id = new Guid("d00409db-a6ed-4985-a3b7-4036774572cd"),
-                            ConcurrencyStamp = "aa56d57c-11d8-4558-9d64-4d19161a7d42",
+                            ConcurrencyStamp = "62e687f9-b9dc-45df-8195-cf902ac40cc2",
                             Name = "Writer",
                             NormalizedName = "Writer"
                         });
@@ -389,13 +389,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("0cfe64bd-645b-4f5a-91d1-c3082c132ed8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cc023882-a69f-4d6c-b4f9-73ab62d9f091",
+                            ConcurrencyStamp = "087978e5-ca80-4fd4-a493-5f4c17d3f912",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAoxu/jI+sIXmVbsxOqHPbS08GUPnvTdrpqOUsl5sbkGbPd6VgNM6OswUMu5v9w4tg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEF6HCmAsmp/M3o/iruDGrijd1P/en99Alu6HbKcgEde8CG7sLe/t4dholZZr0bu/rg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -405,13 +405,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "434147f4-4b87-4601-bb28-b4fd239c4a33",
+                            ConcurrencyStamp = "ec7c9df3-ea5a-4b66-a84d-ffdafee4ca3c",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "hoho303",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHqYTHq/ErtMHwKQdMgLyXMrMaQRHtQBSzubFFr/7RYgm2kLHVEC5FrMkB9ESM5X5Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEH+MbRU8rYXKm2vVoQAgd7yLi0Apsc5Ho0CwCtVY/RaYgB/RY1Ub9K3kxcIwpqqLXw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

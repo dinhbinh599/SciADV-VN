@@ -77,7 +77,7 @@ namespace AdvWeb_VN.Data.Extensions
 			modelBuilder.Entity<Comment>().HasData(
 				new Comment()
 				{ 
-					CommentID = "hoho1",
+					CommentID = "Chaos;Head1-1",
 					Commentator = "Đẹp trai vô danh",
 					Commenter = "Bài review rất hay",
 					CommentTime = DateTime.Now,
@@ -85,10 +85,39 @@ namespace AdvWeb_VN.Data.Extensions
 				},
 				new Comment()
 				{
-					CommentID = "hoho2",
+					CommentID = "Chaos;Head1-2",
+					Commentator = "Đẹp trai có danh",
+					Commenter = "Ừ bài hay thật",
+					ParrentID = "Chaos;Head1-1",
+					CommentTime = DateTime.Now,
+					PostID = "Chaos;Head1"
+				},
+				new Comment()
+				{
+					CommentID = "Chaos;Head1-3",
+					Commentator = "hoho303",
+					Commenter = "Cảm ơn các bạn",
+					ParrentID = "Chaos;Head1-1",
+					UserID = WRITER_ID,
+					CommentTime = DateTime.Now,
+					PostID = "Chaos;Head1"
+				},
+				new Comment()
+				{
+					CommentID = "Chaos;Child1-1",
 					Commentator = "Bá đạo trên từng hạt gạo",
 					Commenter = "Bài review rất tệ",
 					CommentTime = DateTime.Now,
+					PostID = "Chaos;Child1"
+				},
+				new Comment()
+				{
+					CommentID = "Chaos;Child1-2",
+					Commentator = "hoho303",
+					Commenter = "Xin lỗi, mình sẽ cố gắng cải thiện!",
+					ParrentID = "Chaos;Child1-1",
+					CommentTime = DateTime.Now,
+					UserID = WRITER_ID,
 					PostID = "Chaos;Child1"
 				});
 			modelBuilder.Entity<PostTag>().HasData(

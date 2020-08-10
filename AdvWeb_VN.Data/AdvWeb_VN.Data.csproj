@@ -23,6 +23,8 @@
     <Compile Remove="Migrations\20200805135156_Identity-seed.Designer.cs" />
     <Compile Remove="Migrations\20200806075129_initial.cs" />
     <Compile Remove="Migrations\20200806075129_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200810082708_update-comment.cs" />
+    <Compile Remove="Migrations\20200810082708_update-comment.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

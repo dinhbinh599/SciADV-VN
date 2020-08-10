@@ -22,9 +22,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			this.context = context;
 		}
 
-		public async Task<ApiResult<bool>> AddViewCount(string postId)
+		public async Task<ApiResult<bool>> AddViewCount(string postID)
 		{
-			var post = await context.Posts.FindAsync(postId);
+			var post = await context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>("Không tìm thấy bài viết này!");
 			post.View += 1;
 			await context.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			{
 				Post lastPost = query2.ToList<Post>().Last();
 				SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
-				PostID = splitResult.CategoryName + (splitResult.Number + 1);
+				PostID = splitResult.name + (splitResult.Number + 1);
 			}
 			else
 			{
@@ -72,10 +72,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<string>(PostID);
 		}
 
-		public async Task<ApiResult<bool>> Delete(string postId)
+		public async Task<ApiResult<bool>> Delete(string postID)
 		{
-			var post = await context.Posts.FindAsync(postId);
-			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postId}");
+			var post = await context.Posts.FindAsync(postID);
+			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
 			context.Posts.Remove(post);
 			var result = await context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Xóa bài viết thất bại");
@@ -130,6 +130,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var post = await context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<PostViewModel>("Không tìm thấy bài viết này!");
 			var user = await context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
+			var tag = await GetTagsAsync(post);
 			var category = await context.Categories.FirstOrDefaultAsync(x => x.CategoryID == post.CategoryID);
 			var postViewModel = new PostViewModel()
 			{
@@ -141,7 +142,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				Contents = post.Contents,
 				CategoryID = post.CategoryID,
 				UserName = user.UserName,
-				CategoryName = category.CategoryName
+				CategoryName = category.CategoryName,
+				Tags = tag
 			};
 			
 			return new ApiSuccessResult<PostViewModel>(postViewModel);
@@ -174,7 +176,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				{
 					Post lastPost = query2.ToList<Post>().Last();
 					SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
-					PostID = splitResult.CategoryName + (splitResult.Number + 1);
+					PostID = splitResult.name + (splitResult.Number + 1);
 				}
 				else
 				{
@@ -320,6 +322,123 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				Items = data
 			};
 			return pagedResult;
+		}
+
+		public async Task<ApiResult<bool>> TagAssignByTagName(string postID, string tagName)
+		{
+			var post = await context.Posts.FindAsync(postID);
+			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
+			if (!await TagExistsAsync(tagName)) return new ApiErrorResult<bool>("Tag không tồn tại");
+			if (await IsInTagAsync(post, tagName) == false)
+			{
+				await AddToTagAsync(post, tagName);
+			}
+			else { return new ApiErrorResult<bool>($"Bài viết này đã tồn tại Tag {tagName}"); }
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<ApiResult<bool>> TagAssign(string id, TagAssignRequest request)
+		{
+			var post = await context.Posts.FindAsync(id);
+			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
+			var removedTags = request.Tags.Where(x => x.Selected == false).Select(x => x.Name).ToList();
+			foreach (var tagName in removedTags)
+			{
+				if (await IsInTagAsync(post, tagName) == true)
+				{
+					await RemoveFromTagAsync(post, tagName);
+				}
+			}
+			await RemoveFromTagAsync(post, removedTags);
+
+			var addedTags = request.Tags.Where(x => x.Selected).Select(x => x.Name).ToList();
+			foreach (var tagName in addedTags)
+			{
+				if (await IsInTagAsync(post, tagName) == false)
+				{
+					await AddToTagAsync(post, tagName);
+				}
+			}
+
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<ApiResult<bool>> TagRemoveByTagName(string postID, string tagName)
+		{
+			var post = await context.Posts.FindAsync(postID);
+			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
+			if (!await TagExistsAsync(tagName)) return new ApiErrorResult<bool>("Tag không tồn tại");
+			if (await IsInTagAsync(post, tagName) == true)
+			{
+				await RemoveFromTagAsync(post, tagName);
+			}
+			else { return new ApiErrorResult<bool>($"Bài viết này không tồn tại Tag {tagName}"); }
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task RemoveFromTagAsync(Post post, List<string> tagNames)
+		{
+			foreach (var tagName in tagNames)
+			{
+				await RemoveFromTagAsync(post, tagName);
+			}
+		}
+
+		public async Task RemoveFromTagAsync(Post post, string tagName)
+		{
+			var query = from c in context.Tags
+						where c.TagName.Equals(tagName)
+						select c;
+			var tag = await query.FirstOrDefaultAsync();
+
+			var postTag = context.PostTags.Where(x=>x.PostID.Equals(post.PostID) && x.TagID.Equals(tag.TagID)).FirstOrDefault();
+
+			context.Remove(postTag);
+			await context.SaveChangesAsync();
+		}
+
+		public async Task AddToTagAsync(Post post, string tagName)
+		{
+			var query = from c in context.Tags
+						where c.TagName.Equals(tagName)
+						select c;
+			var tag = await query.FirstOrDefaultAsync();
+			var postTag = new PostTag()
+			{
+				PostID = post.PostID,
+				TagID = tag.TagID
+			};
+			context.PostTags.Add(postTag);
+			await context.SaveChangesAsync();
+		}
+		public async Task<bool> IsInTagAsync(Post post, string tagName)
+		{
+			var query = from c in context.Tags
+						join d in context.PostTags on c.TagID equals d.TagID
+						select new { c, d};
+			query = query.Where(x => x.c.TagName.Equals(tagName) && x.d.PostID.Equals(post.PostID));
+			var ls = await query.ToListAsync();
+			if (ls.Count == 0) return false;
+			return true;
+		}
+		public async Task<bool> TagExistsAsync(string tagName)
+		{
+			var query = from c in context.Tags where c.TagName.Equals(tagName)
+						select c;
+			var ls = await query.ToListAsync();
+			if (ls.Count == 0) return false;
+			return true;
+		}
+
+		public async Task<IList<string>> GetTagsAsync(Post post)
+		{
+			var query = from c in context.Posts
+						join d in context.PostTags on c.PostID equals d.PostID
+						join e in context.Tags on d.TagID equals e.TagID
+						select new {c,e };
+			var data = await query.Where(x => x.c.PostID.Equals(post.PostID))
+				.Select(x=>x.e.TagName).ToListAsync();
+			return data;
 		}
 	}
 }

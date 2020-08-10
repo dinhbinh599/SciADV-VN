@@ -97,5 +97,41 @@ namespace AdvWeb_VN.BackendApi.Controllers
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
+
+        [HttpPut("{id}/tags")]
+        public async Task<IActionResult> TagAssign(string id, [FromForm]TagAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await postService.TagAssign(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{id}/tags/assign/{name}")]
+        public async Task<IActionResult> TagAssignByTagName(string id, string name)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await postService.TagAssignByTagName(id, name);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("{id}/roles/remove/{name}")]
+        public async Task<IActionResult> TagRemoveByTagName(string id, string name)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await postService.TagRemoveByTagName(id, name);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
     }
 }

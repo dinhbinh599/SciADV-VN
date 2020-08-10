@@ -98,7 +98,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPut("{id}/roles/assign/{name}")]
-        public async Task<IActionResult> RoleAssign(Guid id, string name)
+        public async Task<IActionResult> RoleAssignByRoleName(Guid id, string name)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -109,7 +109,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPut("{id}/roles/remove/{name}")]
-        public async Task<IActionResult> RoleRemove(Guid id, string name)
+        public async Task<IActionResult> RoleRemoveByRoleName(Guid id, string name)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AdvWeb_VN.ViewModels.Catalog.Posts
 {
@@ -13,6 +14,7 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 		public int CategoryID { set; get; }
 		public string CategoryName { set; get; }
 		public DateTime WriteTime { set; get; }
+		public IList<string> Tags { set; get; }
 
 	}
 }
