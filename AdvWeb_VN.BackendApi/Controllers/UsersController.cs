@@ -15,21 +15,21 @@ namespace AdvWeb_VN.BackendApi.Controllers
     [Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 
         public UsersController(IUserService userService)
         {
-            this.userService = userService;
+            _userService = userService;
         }
 
         [HttpPost("authenticate")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromForm]LoginRequest request)
+        public async Task<IActionResult> Authenticate([FromBody]LoginRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await userService.Authenticate(request);
+            var result = await _userService.Authenticate(request);
 
             if (string.IsNullOrEmpty(result.ResultObj))
             {
@@ -40,12 +40,12 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromForm]RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody]RegisterRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await userService.Register(request);
+            var result = await _userService.Register(request);
 
             if (!result.IsSuccessed)
             {
@@ -57,20 +57,20 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [HttpGet("paging")]
         public async Task<IActionResult> GetAllPaging([FromQuery]GetUserPagingRequest request)
         {
-            var users = await userService.GetUsersPaging(request);
+            var users = await _userService.GetUsersPaging(request);
             return Ok(users);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(Guid id)
         {
-            var user = await userService.GetByID(id);
+            var user = await _userService.GetByID(id);
             return Ok(user);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id,[FromForm]UserUpdateRequest request)
+        public async Task<IActionResult> Update(Guid id,[FromBody]UserUpdateRequest request)
         {
-            var result = await userService.Update(id ,request);
+            var result = await _userService.Update(id ,request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
@@ -78,18 +78,18 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await userService.Delete(id);
+            var result = await _userService.Delete(id);
             if (result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPut("{id}/roles")]
-        public async Task<IActionResult> RoleAssign(Guid id, [FromForm]RoleAssignRequest request)
+        public async Task<IActionResult> RoleAssign(Guid id, [FromBody]RoleAssignRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await userService.RoleAssign(id, request);
+            var result = await _userService.RoleAssign(id, request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -103,7 +103,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await userService.RoleAssignByRoleName(id, name);
+            var result = await _userService.RoleAssignByRoleName(id, name);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
@@ -114,7 +114,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await userService.RoleRemoveByRoleName(id, name);
+            var result = await _userService.RoleRemoveByRoleName(id, name);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }

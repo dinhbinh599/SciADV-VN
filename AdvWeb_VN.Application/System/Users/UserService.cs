@@ -18,26 +18,26 @@ namespace AdvWeb_VN.Application.System.Users
 {
 	public class UserService : IUserService
 	{ 
-		private readonly UserManager<User> userManager;
-		private readonly SignInManager<User> signInManager;
-		private readonly RoleManager<Role> roleManager;
-		private readonly IConfiguration configuration;
+		private readonly UserManager<User> _userManager;
+		private readonly SignInManager<User> _signInManager;
+		private readonly RoleManager<Role> _roleManager;
+		private readonly IConfiguration _configuration;
 
 		public UserService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IConfiguration configuration)
 		{
-			this.userManager = userManager;
-			this.signInManager = signInManager;
-			this.roleManager = roleManager;
-			this.configuration = configuration;
+			_userManager = userManager;
+			_signInManager = signInManager;
+			_roleManager = roleManager;
+			_configuration = configuration;
 		}
 
 		public async Task<ApiResult<string>> Authenticate(LoginRequest request)
 		{
-			var user = await userManager.FindByNameAsync(request.UserName);
+			var user = await _userManager.FindByNameAsync(request.UserName);
 			if (user == null) return new ApiErrorResult<string>("Username or Password is wrong");
 			
-			var roles = await userManager.GetRolesAsync(user);
-			var result = await signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, true);
+			var roles = await _userManager.GetRolesAsync(user);
+			var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, true);
 			if(!result.Succeeded) return new ApiErrorResult<string>("Tên đăng nhập hoặc mật khẩu không đúng");
 
 			var claims = new[]
@@ -47,11 +47,11 @@ namespace AdvWeb_VN.Application.System.Users
 				new Claim(ClaimTypes.Role, string.Join(";", roles))
 			};
 
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Tokens:Key"]));
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
 			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-			var token = new JwtSecurityToken(configuration["Tokens:Issuer"],
-				configuration["Tokens:Issuer"],
+			var token = new JwtSecurityToken(_configuration["Tokens:Issuer"],
+				_configuration["Tokens:Issuer"],
 				claims,
 				expires: DateTime.Now.AddHours(3),
 				signingCredentials: creds);
@@ -62,12 +62,12 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> Delete(Guid id)
 		{
-			var user = await userManager.FindByIdAsync(id.ToString());
+			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null)
 			{
 				return new ApiErrorResult<bool>("User không tồn tại");
 			}
-			var reult = await userManager.DeleteAsync(user);
+			var reult = await _userManager.DeleteAsync(user);
 			if (reult.Succeeded)
 				return new ApiSuccessResult<bool>();
 
@@ -76,9 +76,9 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<UserViewModel>> GetByID(Guid id)
 		{
-			var user = await userManager.FindByIdAsync(id.ToString());
+			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<UserViewModel>("User không tồn tại");
-			var roles = await userManager.GetRolesAsync(user);
+			var roles = await _userManager.GetRolesAsync(user);
 			var userVm = new UserViewModel()
 			{
 				Email = user.Email,
@@ -92,7 +92,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging(GetUserPagingRequest request)
 		{
-			var query = userManager.Users;
+			var query = _userManager.Users;
 			if (!string.IsNullOrEmpty(request.Keyword))
 			{
 				query = query.Where(x => x.UserName.Contains(request.Keyword) 
@@ -120,13 +120,13 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> Register(RegisterRequest request)
 		{
-			var user = await userManager.FindByNameAsync(request.UserName);
+			var user = await _userManager.FindByNameAsync(request.UserName);
 			if (user != null) return new ApiErrorResult<bool>("Tài khoản đã tồn tại");
 
-			user = await userManager.FindByNameAsync(request.Email);
+			user = await _userManager.FindByNameAsync(request.Email);
 			if (user != null) return new ApiErrorResult<bool>("Email đã tồn tại");
 
-			user = await userManager.FindByNameAsync(request.PhoneNumber);
+			user = await _userManager.FindByNameAsync(request.PhoneNumber);
 			if (user != null) return new ApiErrorResult<bool>("Số điện thoại đã tồn tại");
 
 			user = new User()
@@ -135,43 +135,43 @@ namespace AdvWeb_VN.Application.System.Users
 				Email = request.Email,
 				PhoneNumber = request.PhoneNumber
 			};
-			var result = await userManager.CreateAsync(user, request.Password);
+			var result = await _userManager.CreateAsync(user, request.Password);
 			if (result.Succeeded) return new ApiSuccessResult<bool>();
 			return new ApiErrorResult<bool>("Đăng ký không thành công");
 		}
 
 		public async Task<ApiResult<bool>> RoleRemoveByRoleName(Guid id, string roleName)
 		{
-			var user = await userManager.FindByIdAsync(id.ToString());
+			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
-			if (!await roleManager.RoleExistsAsync(roleName)) return new ApiErrorResult<bool>("Role không tồn tại");
-			if (await userManager.IsInRoleAsync(user, roleName) == true)
+			if (!await _roleManager.RoleExistsAsync(roleName)) return new ApiErrorResult<bool>("Role không tồn tại");
+			if (await _userManager.IsInRoleAsync(user, roleName) == true)
 			{
-				await userManager.RemoveFromRoleAsync(user, roleName);
+				await _userManager.RemoveFromRoleAsync(user, roleName);
 			}
 			return new ApiSuccessResult<bool>();
 		}
 
 		public async Task<ApiResult<bool>> RoleAssign(Guid id, RoleAssignRequest request)
 		{
-			var user = await userManager.FindByIdAsync(id.ToString());
+			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
 			var removedRoles = request.Roles.Where(x => x.Selected == false).Select(x => x.Name).ToList();
 			foreach (var roleName in removedRoles)
 			{
-				if (await userManager.IsInRoleAsync(user, roleName) == true)
+				if (await _userManager.IsInRoleAsync(user, roleName) == true)
 				{
-					await userManager.RemoveFromRoleAsync(user, roleName);
+					await _userManager.RemoveFromRoleAsync(user, roleName);
 				}
 			}
-			await userManager.RemoveFromRolesAsync(user, removedRoles);
+			await _userManager.RemoveFromRolesAsync(user, removedRoles);
 
 			var addedRoles = request.Roles.Where(x => x.Selected).Select(x => x.Name).ToList();
 			foreach (var roleName in addedRoles)
 			{
-				if (await userManager.IsInRoleAsync(user, roleName) == false)
+				if (await _userManager.IsInRoleAsync(user, roleName) == false)
 				{
-					await userManager.AddToRoleAsync(user, roleName);
+					await _userManager.AddToRoleAsync(user, roleName);
 				}
 			}
 
@@ -180,12 +180,12 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> RoleAssignByRoleName(Guid id, string roleName)
 		{
-			var user = await userManager.FindByIdAsync(id.ToString());
+			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
-			if(!await roleManager.RoleExistsAsync(roleName)) return new ApiErrorResult<bool>("Role không tồn tại");
-			if (await userManager.IsInRoleAsync(user, roleName) == false)
+			if(!await _roleManager.RoleExistsAsync(roleName)) return new ApiErrorResult<bool>("Role không tồn tại");
+			if (await _userManager.IsInRoleAsync(user, roleName) == false)
 			{
-				await userManager.AddToRoleAsync(user, roleName);
+				await _userManager.AddToRoleAsync(user, roleName);
 			}
 			else { return new ApiErrorResult<bool>($"User này đã tồn tại role {roleName}"); }
 			return new ApiSuccessResult<bool>();
@@ -193,15 +193,15 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> Update(Guid id,UserUpdateRequest request)
 		{
-			if (await userManager.Users.AnyAsync(x => x.Email == request.Email && x.Id != id))
+			if (await _userManager.Users.AnyAsync(x => x.Email == request.Email && x.Id != id))
 			{
 				return new ApiErrorResult<bool>("Emai đã tồn tại");
 			}
-			var user = await userManager.FindByIdAsync(id.ToString());
+			var user = await _userManager.FindByIdAsync(id.ToString());
 			user.Email = request.Email;
 			user.PhoneNumber = request.PhoneNumber;
 
-			var result = await userManager.UpdateAsync(user);
+			var result = await _userManager.UpdateAsync(user);
 			if (result.Succeeded)
 			{
 				return new ApiSuccessResult<bool>();

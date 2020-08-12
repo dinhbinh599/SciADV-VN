@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AdvWeb_VN.ManageApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AdvWeb_VN.ManageApp.Controllers
 {
+	[Authorize]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
@@ -20,6 +22,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		public IActionResult Index()
 		{
+			var user = User.Identity.Name;
 			return View();
 		}
 

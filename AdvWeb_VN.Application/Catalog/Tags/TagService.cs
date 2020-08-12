@@ -20,10 +20,10 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 {
 	public class TagService : ITagService
 	{
-		private readonly AdvWebDbContext context;
+		private readonly AdvWebDbContext _context;
 		public TagService(AdvWebDbContext context)
 		{
-			this.context = context;
+			_context = context;
 		}
 
 		public async Task<ApiResult<bool>> Create(TagCreateRequest request)
@@ -32,25 +32,25 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 			{
 				TagName = request.TagName,
 			};
-			context.Tags.Add(tag);
-			var result = await context.SaveChangesAsync();
+			_context.Tags.Add(tag);
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Thêm Tag thất bại");
 			return new ApiSuccessResult<bool>();
 		}
 
 		public async Task<ApiResult<bool>> Delete(int tagID)
 		{
-			var tag = await context.Tags.FindAsync(tagID);
+			var tag = await _context.Tags.FindAsync(tagID);
 			if (tag == null) return new ApiErrorResult<bool>($"Không tìm thấy Tag : {tag.TagName}");
-			context.Tags.Remove(tag);
-			var result = await context.SaveChangesAsync();
+			_context.Tags.Remove(tag);
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Xóa Tag thất bại");
 			return new ApiSuccessResult<bool>();
 		}
 
 		public async Task<List<TagViewModel>> GetAll()
 		{
-			var query = from p in context.Tags
+			var query = from p in _context.Tags
 						select p;
 
 			var data = await query.Select(x => new TagViewModel()
@@ -64,7 +64,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<TagViewModel>> GetByID(int tagID)
 		{
-			var tag = await context.Tags.FindAsync(tagID);
+			var tag = await _context.Tags.FindAsync(tagID);
 			if (tag == null) return new ApiErrorResult<TagViewModel>("Không tìm thấy chuyên mục này!");
 			var tagVM = new TagViewModel()
 			{
@@ -77,11 +77,11 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<bool>> Update(TagUpdateRequest request)
 		{
-			var tag = await context.Tags.FindAsync(request.TagID);
+			var tag = await _context.Tags.FindAsync(request.TagID);
 			if (tag == null) return new ApiErrorResult<bool>($"Không tìm thấy Tag : {request.TagName}");
 
 			tag.TagName = request.TagName;
-			var result = await context.SaveChangesAsync();
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Cập nhật Tag thất bại");
 			return new ApiSuccessResult<bool>();
 		}

@@ -18,10 +18,10 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 {
 	public class CategoryService : ICategoryService
 	{
-		private readonly AdvWebDbContext context;
+		private readonly AdvWebDbContext _context;
 		public CategoryService(AdvWebDbContext context)
 		{
-			this.context = context;
+			_context = context;
 		}
 
 		public async Task<ApiResult<bool>> Create(CategoryCreateRequest request)
@@ -31,25 +31,25 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 				CategoryName = request.CategoryName,
 				CreateDate = DateTime.Now,
 			};
-			context.Categories.Add(category);
-			var result = await context.SaveChangesAsync();
+			_context.Categories.Add(category);
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Thêm chuyên mục thất bại");
 			return new ApiSuccessResult<bool>();
 		}
 
 		public async Task<ApiResult<bool>> Delete(int categoryID)
 		{
-			var category = await context.Categories.FindAsync(categoryID);
+			var category = await _context.Categories.FindAsync(categoryID);
 			if (category == null) return new ApiErrorResult<bool>($"Không tìm thấy chuyên mục : {categoryID}");
-			context.Categories.Remove(category);
-			var result = await context.SaveChangesAsync();
+			_context.Categories.Remove(category);
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Xóa chuyên mục thất bại");
 			return new ApiSuccessResult<bool>();
 		}
 
 		public async Task<List<CategoryViewModel>> GetAll()
 		{
-			var query = from p in context.Categories
+			var query = from p in _context.Categories
 						select p;
 
 			var data = await query.Select(x => new CategoryViewModel()
@@ -64,7 +64,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 		public async Task<ApiResult<CategoryViewModel>> GetByID(int categoryID)
 		{
-			var category = await context.Categories.FindAsync(categoryID);
+			var category = await _context.Categories.FindAsync(categoryID);
 			if (category == null) return new ApiErrorResult<CategoryViewModel>("Không tìm thấy chuyên mục này!");
 			var categoryVM = new CategoryViewModel()
 			{
@@ -78,11 +78,11 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 		public async Task<ApiResult<bool>> Update(CategoryUpdateRequest request)
 		{
-			var category = await context.Categories.FindAsync(request.CategoryID);
+			var category = await _context.Categories.FindAsync(request.CategoryID);
 			if (category == null) return new ApiErrorResult<bool>($"Không tìm thấy chuyên mục : {request.CategoryName}");
 
 			category.CategoryName = request.CategoryName;
-			var result = await context.SaveChangesAsync();
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
 			return new ApiSuccessResult<bool>();
 		}

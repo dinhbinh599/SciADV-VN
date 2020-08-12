@@ -13,40 +13,40 @@ namespace AdvWeb_VN.BackendApi.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ICategoryService categoryService;
+        private readonly ICategoryService _categoryService;
 
         public CategoriesController(ICategoryService categoryService)
         {
-            this.categoryService = categoryService;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var categories = await categoryService.GetAll();
+            var categories = await _categoryService.GetAll();
             return Ok(categories);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int id)
         {
-            var result = await categoryService.GetByID(id);
+            var result = await _categoryService.GetByID(id);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]CategoryCreateRequest request)
+        public async Task<IActionResult> Create([FromBody]CategoryCreateRequest request)
         {
-            var result = await categoryService.Create(request);
+            var result = await _categoryService.Create(request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm]CategoryUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody]CategoryUpdateRequest request)
         {
-            var result = await categoryService.Update(request);
+            var result = await _categoryService.Update(request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
@@ -54,7 +54,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await categoryService.Delete(id);
+            var result = await _categoryService.Delete(id);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }

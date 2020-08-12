@@ -16,30 +16,30 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 {
 	public class PostService : IPostService
 	{
-		private readonly AdvWebDbContext context;
+		private readonly AdvWebDbContext _context;
 		public PostService(AdvWebDbContext context)
 		{
-			this.context = context;
+			_context = context;
 		}
 
 		public async Task<ApiResult<bool>> AddViewCount(string postID)
 		{
-			var post = await context.Posts.FindAsync(postID);
+			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>("Không tìm thấy bài viết này!");
 			post.View += 1;
-			await context.SaveChangesAsync();
+			await _context.SaveChangesAsync();
 			return new ApiSuccessResult<bool>();
 		}
 
 		public async Task<ApiResult<string>> Create(PostCreateRequest request)
 		{
-			var query = from li in context.Categories
+			var query = from li in _context.Categories
 						where li.CategoryID.Equals(request.CategoryID)
 						select li;
 			var list = await query.ToListAsync<Category>();
 			if (list.Count == 0) return new ApiErrorResult<string>($"Không tìm thấy chuyên mục : {request.CategoryID}");
 			
-			var query2 = from c in context.Posts
+			var query2 = from c in _context.Posts
 						 where c.CategoryID.Equals(request.CategoryID)
 						 select c;
 
@@ -66,30 +66,30 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				CategoryID = request.CategoryID,
 				WriteTime = DateTime.Now,
 			};
-			context.Posts.Add(post);
-			var result = await context.SaveChangesAsync();
+			_context.Posts.Add(post);
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<string>("Thêm bài viết thất bại");
 			return new ApiSuccessResult<string>(PostID);
 		}
 
 		public async Task<ApiResult<bool>> Delete(string postID)
 		{
-			var post = await context.Posts.FindAsync(postID);
+			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
-			context.Posts.Remove(post);
-			var result = await context.SaveChangesAsync();
+			_context.Posts.Remove(post);
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Xóa bài viết thất bại");
 			return new ApiSuccessResult<bool>();
 		}
 
 		public async Task<PagedResult<PostViewModel>> GetAllPagingTagID(GetManagePostPagingRequest request)
 		{
-			var query = from p in context.Posts
-						join pt in context.Comments on p.PostID equals pt.PostID
-						join pic in context.PostTags on p.PostID equals pic.PostID
-						join e in context.Categories on p.CategoryID equals e.CategoryID
-						join c in context.Tags on pic.TagID equals c.TagID
-						join u in context.Users on p.UserID equals u.Id
+			var query = from p in _context.Posts
+						join pt in _context.Comments on p.PostID equals pt.PostID
+						join pic in _context.PostTags on p.PostID equals pic.PostID
+						join e in _context.Categories on p.CategoryID equals e.CategoryID
+						join c in _context.Tags on pic.TagID equals c.TagID
+						join u in _context.Users on p.UserID equals u.Id
 						select new { p, pt, pic, c, e, u};
 
 			if(!string.IsNullOrEmpty(request.Keyword))
@@ -127,11 +127,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PostViewModel>> GetByID(string postID)
 		{
-			var post = await context.Posts.FindAsync(postID);
+			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<PostViewModel>("Không tìm thấy bài viết này!");
-			var user = await context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
+			var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
 			var tag = await GetTagsAsync(post);
-			var category = await context.Categories.FirstOrDefaultAsync(x => x.CategoryID == post.CategoryID);
+			var category = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryID == post.CategoryID);
 			var postViewModel = new PostViewModel()
 			{
 				PostID = post.PostID,
@@ -151,7 +151,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> Update(PostUpdateRequest request)
 		{
-			var post = await context.Posts.FindAsync(request.PostID);
+			var post = await _context.Posts.FindAsync(request.PostID);
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {request.PostID}");
 			
 			post.PostName = request.PostName;
@@ -163,11 +163,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			if (!post.CategoryID.Equals(request.CategoryID))
 			{
 				post.CategoryID = request.CategoryID;
-				var query = from li in context.Categories
+				var query = from li in _context.Categories
 							where li.CategoryID.Equals(request.CategoryID)
 							select li;
 
-				var query2 = from c in context.Posts
+				var query2 = from c in _context.Posts
 							 where c.CategoryID.Equals(request.CategoryID)
 							 select c;
 
@@ -184,13 +184,13 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}
 			}
 			post.PostID = PostID;*/
-			var result = await context.SaveChangesAsync();
+			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
 			return new ApiSuccessResult<bool>();
 		}
 		public async Task<List<PostViewModel>> GetAll()
 		{
-			var query = from p in context.Posts
+			var query = from p in _context.Posts
 						select p;
 
 			var data = await query.Select(x => new PostViewModel()
@@ -211,11 +211,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<PagedResult<PostViewModel>> GetAllByTagID(GetPublicPostPagingRequest request)
 		{
-			var query = from p in context.Posts
-						join pic in context.PostTags on p.PostID equals pic.PostID
-						join c in context.Tags on pic.TagID equals c.TagID
-						join d in context.Users on p.UserID equals d.Id
-						join e in context.Categories on p.CategoryID equals e.CategoryID
+			var query = from p in _context.Posts
+						join pic in _context.PostTags on p.PostID equals pic.PostID
+						join c in _context.Tags on pic.TagID equals c.TagID
+						join d in _context.Users on p.UserID equals d.Id
+						join e in _context.Categories on p.CategoryID equals e.CategoryID
 						select new { p, pic, d, e };
 
 			if (request.Id.HasValue && request.Id.Value > 0)
@@ -249,9 +249,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<PagedResult<PostViewModel>> GetAllByCategoryID(GetPublicPostPagingRequest request)
 		{
-			var query = from c in context.Categories
-						join p in context.Posts on c.CategoryID equals p.CategoryID
-						join d in context.Users on p.UserID equals d.Id
+			var query = from c in _context.Categories
+						join p in _context.Posts on c.CategoryID equals p.CategoryID
+						join d in _context.Users on p.UserID equals d.Id
 						select new { p, c, d };
 
 			if (request.Id.HasValue && request.Id.Value > 0)
@@ -285,9 +285,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<PagedResult<PostViewModel>> GetAllPagingCategoryID(GetManagePostPagingRequest request)
 		{
-			var query = from c in context.Categories
-						join p in context.Posts on c.CategoryID equals p.CategoryID
-						join d in context.Users on p.UserID equals d.Id
+			var query = from c in _context.Categories
+						join p in _context.Posts on c.CategoryID equals p.CategoryID
+						join d in _context.Users on p.UserID equals d.Id
 						select new { p, c, d };
 
 			if (!string.IsNullOrEmpty(request.Keyword))
@@ -326,7 +326,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> TagAssignByTagName(string postID, string tagName)
 		{
-			var post = await context.Posts.FindAsync(postID);
+			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
 			if (!await TagExistsAsync(tagName)) return new ApiErrorResult<bool>("Tag không tồn tại");
 			if (await IsInTagAsync(post, tagName) == false)
@@ -339,7 +339,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> TagAssign(string id, TagAssignRequest request)
 		{
-			var post = await context.Posts.FindAsync(id);
+			var post = await _context.Posts.FindAsync(id);
 			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
 			var removedTags = request.Tags.Where(x => x.Selected == false).Select(x => x.Name).ToList();
 			foreach (var tagName in removedTags)
@@ -365,7 +365,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> TagRemoveByTagName(string postID, string tagName)
 		{
-			var post = await context.Posts.FindAsync(postID);
+			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
 			if (!await TagExistsAsync(tagName)) return new ApiErrorResult<bool>("Tag không tồn tại");
 			if (await IsInTagAsync(post, tagName) == true)
@@ -386,20 +386,20 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task RemoveFromTagAsync(Post post, string tagName)
 		{
-			var query = from c in context.Tags
+			var query = from c in _context.Tags
 						where c.TagName.Equals(tagName)
 						select c;
 			var tag = await query.FirstOrDefaultAsync();
 
-			var postTag = context.PostTags.Where(x=>x.PostID.Equals(post.PostID) && x.TagID.Equals(tag.TagID)).FirstOrDefault();
+			var postTag = _context.PostTags.Where(x=>x.PostID.Equals(post.PostID) && x.TagID.Equals(tag.TagID)).FirstOrDefault();
 
-			context.Remove(postTag);
-			await context.SaveChangesAsync();
+			_context.Remove(postTag);
+			await _context.SaveChangesAsync();
 		}
 
 		public async Task AddToTagAsync(Post post, string tagName)
 		{
-			var query = from c in context.Tags
+			var query = from c in _context.Tags
 						where c.TagName.Equals(tagName)
 						select c;
 			var tag = await query.FirstOrDefaultAsync();
@@ -408,13 +408,13 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				PostID = post.PostID,
 				TagID = tag.TagID
 			};
-			context.PostTags.Add(postTag);
-			await context.SaveChangesAsync();
+			_context.PostTags.Add(postTag);
+			await _context.SaveChangesAsync();
 		}
 		public async Task<bool> IsInTagAsync(Post post, string tagName)
 		{
-			var query = from c in context.Tags
-						join d in context.PostTags on c.TagID equals d.TagID
+			var query = from c in _context.Tags
+						join d in _context.PostTags on c.TagID equals d.TagID
 						select new { c, d};
 			query = query.Where(x => x.c.TagName.Equals(tagName) && x.d.PostID.Equals(post.PostID));
 			var ls = await query.ToListAsync();
@@ -423,7 +423,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		}
 		public async Task<bool> TagExistsAsync(string tagName)
 		{
-			var query = from c in context.Tags where c.TagName.Equals(tagName)
+			var query = from c in _context.Tags where c.TagName.Equals(tagName)
 						select c;
 			var ls = await query.ToListAsync();
 			if (ls.Count == 0) return false;
@@ -432,9 +432,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<IList<string>> GetTagsAsync(Post post)
 		{
-			var query = from c in context.Posts
-						join d in context.PostTags on c.PostID equals d.PostID
-						join e in context.Tags on d.TagID equals e.TagID
+			var query = from c in _context.Posts
+						join d in _context.PostTags on c.PostID equals d.PostID
+						join e in _context.Tags on d.TagID equals e.TagID
 						select new {c,e };
 			var data = await query.Where(x => x.c.PostID.Equals(post.PostID))
 				.Select(x=>x.e.TagName).ToListAsync();

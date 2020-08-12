@@ -13,24 +13,24 @@ namespace AdvWeb_VN.BackendApi.Controllers
     [ApiController]
     public class CommentsController : ControllerBase
     {
-        private readonly ICommentService commentService;
+        private readonly ICommentService _commentService;
 
         public CommentsController(ICommentService commentService)
         {
-            this.commentService = commentService;
+            _commentService = commentService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var comments = await commentService.GetAll();
+            var comments = await _commentService.GetAll();
             return Ok(comments);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(string id)
         {
-            var result = await commentService.GetByID(id);
+            var result = await _commentService.GetByID(id);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
@@ -38,22 +38,22 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [HttpGet("parrent/{id}")]
         public async Task<IActionResult> GetByParrentID(string id)
         {
-            var comments = await commentService.GetByParrentID(id);
+            var comments = await _commentService.GetByParrentID(id);
             return Ok(comments);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]CommentCreateRequest request)
+        public async Task<IActionResult> Create([FromBody]CommentCreateRequest request)
         {
-            var result = await commentService.Create(request);
+            var result = await _commentService.Create(request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm]CommentUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody]CommentUpdateRequest request)
         {
-            var result = await commentService.Update(request);
+            var result = await _commentService.Update(request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
@@ -61,7 +61,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await commentService.Delete(id);
+            var result = await _commentService.Delete(id);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }

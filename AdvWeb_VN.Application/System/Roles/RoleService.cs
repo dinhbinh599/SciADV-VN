@@ -12,16 +12,16 @@ namespace AdvWeb_VN.Application.System.Roles
 {
     public class RoleService : IRoleService
     {
-        private readonly RoleManager<Role> roleManager;
+        private readonly RoleManager<Role> _roleManager;
 
         public RoleService(RoleManager<Role> roleManager)
         {
-            this.roleManager = roleManager;
+            _roleManager = roleManager;
         }
 
         public async Task<List<RoleViewModel>> GetAll()
         {
-            var roles = await roleManager.Roles
+            var roles = await _roleManager.Roles
                 .Select(x => new RoleViewModel()
                 {
                     RoleID = x.Id,

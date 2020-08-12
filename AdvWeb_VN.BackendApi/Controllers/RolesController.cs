@@ -14,17 +14,17 @@ namespace AdvWeb_VN.BackendApi.Controllers
     [Authorize]
     public class RolesController : ControllerBase
     {
-        private readonly IRoleService roleService;
+        private readonly IRoleService _roleService;
 
         public RolesController(IRoleService roleService)
         {
-            this.roleService = roleService;
+            _roleService = roleService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var roles = await roleService.GetAll();
+            var roles = await _roleService.GetAll();
             return Ok(roles);
         }
     }
