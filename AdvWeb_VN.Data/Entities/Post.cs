@@ -18,5 +18,6 @@ namespace AdvWeb_VN.Data.Entities
 		public List<PostTag> PostTags { set; get; }
 		public Category Category { set; get; }
 		public List<Comment> Comments {set;get;}
+		public List<PostImage> PostImages { set; get; }
 	}
 }

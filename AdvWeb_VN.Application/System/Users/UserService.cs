@@ -1,7 +1,9 @@
-﻿using AdvWeb_VN.Data.Entities;
+﻿using AdvWeb_VN.Application.Common;
+using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.Utilities.Exceptions;
 using AdvWeb_VN.ViewModels.Common;
 using AdvWeb_VN.ViewModels.System.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,13 +26,22 @@ namespace AdvWeb_VN.Application.System.Users
 		private readonly SignInManager<User> _signInManager;
 		private readonly RoleManager<Role> _roleManager;
 		private readonly IConfiguration _configuration;
+		private readonly IStorageService _storageService;
 
-		public UserService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IConfiguration configuration)
+		public UserService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IConfiguration configuration, IStorageService storageService)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_roleManager = roleManager;
 			_configuration = configuration;
+			_storageService = storageService;
+		}
+		private async Task<string> SaveFile(IFormFile file)
+		{
+			var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+			var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+			await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
+			return fileName;
 		}
 
 		public async Task<ApiResult<string>> Authenticate(LoginRequest request)
@@ -85,7 +98,8 @@ namespace AdvWeb_VN.Application.System.Users
 				PhoneNumber = user.PhoneNumber,
 				UserID = user.Id,
 				UserName = user.UserName,
-				Roles = roles
+				Roles = roles,
+				AvatarImage = user.Avatar
 			};
 			return new ApiSuccessResult<UserViewModel>(userVm);
 		}
@@ -112,7 +126,9 @@ namespace AdvWeb_VN.Application.System.Users
 				}).ToListAsync();
 			var pagedResult = new PagedResult<UserViewModel>()
 			{
-				TotalRecord = totalRow,
+				TotalRecords = totalRow,
+				PageIndex = request.PageIndex,
+				PageSize = request.PageSize,
 				Items = data
 			};
 			return new ApiSuccessResult<PagedResult<UserViewModel>>(pagedResult);
@@ -135,6 +151,10 @@ namespace AdvWeb_VN.Application.System.Users
 				Email = request.Email,
 				PhoneNumber = request.PhoneNumber
 			};
+			if (request.AvatarImage != null)
+			{
+				user.Avatar = await this.SaveFile(request.AvatarImage);
+			}
 			var result = await _userManager.CreateAsync(user, request.Password);
 			if (result.Succeeded) return new ApiSuccessResult<bool>();
 			return new ApiErrorResult<bool>("Đăng ký không thành công");
@@ -200,7 +220,10 @@ namespace AdvWeb_VN.Application.System.Users
 			var user = await _userManager.FindByIdAsync(id.ToString());
 			user.Email = request.Email;
 			user.PhoneNumber = request.PhoneNumber;
-
+			if (request.AvatarImage != null)
+			{
+				user.Avatar = await this.SaveFile(request.AvatarImage);
+			}
 			var result = await _userManager.UpdateAsync(user);
 			if (result.Succeeded)
 			{

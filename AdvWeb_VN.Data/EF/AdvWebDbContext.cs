@@ -22,6 +22,7 @@ namespace AdvWeb_VN.Data.EF
 			modelBuilder.ApplyConfiguration(new PostConfiguration());
 			modelBuilder.ApplyConfiguration(new CommentConfiguration());
 			modelBuilder.ApplyConfiguration(new PostTagConfiguration());
+			modelBuilder.ApplyConfiguration(new PostImageConfiguration());
 			modelBuilder.ApplyConfiguration(new UserConfiguration());
 			modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
@@ -40,6 +41,8 @@ namespace AdvWeb_VN.Data.EF
 		public DbSet<Comment> Comments { set; get; }
 		public DbSet<Tag> Tags { set; get; }
 		public DbSet<PostTag> PostTags { set; get; }
+		public DbSet<PostImage> PostImages { set; get; }
+
 
 	}
 }

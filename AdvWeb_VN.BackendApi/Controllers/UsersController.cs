@@ -12,7 +12,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+//    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -39,8 +39,9 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPost]
+        [Consumes("multipart/form-data")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody]RegisterRequest request)
+        public async Task<IActionResult> Register([FromForm]RegisterRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -67,8 +68,10 @@ namespace AdvWeb_VN.BackendApi.Controllers
             var user = await _userService.GetByID(id);
             return Ok(user);
         }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id,[FromBody]UserUpdateRequest request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(Guid id,[FromForm]UserUpdateRequest request)
         {
             var result = await _userService.Update(id ,request);
             if (!result.IsSuccessed) return BadRequest(result);

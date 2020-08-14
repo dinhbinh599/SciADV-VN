@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
+using AdvWeb_VN.ViewModels.Catalog.ProductImages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +67,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]PostCreateRequest request)
+        public async Task<IActionResult> Create([FromForm]PostCreateRequest request)
         {
             var result = await _postService.Create(request);
             if (!result.IsSuccessed) return BadRequest(result);
@@ -132,6 +133,76 @@ namespace AdvWeb_VN.BackendApi.Controllers
             var result = await _postService.TagRemoveByTagName(id, name);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
+        }
+
+        //Images
+        [HttpPost("{postId}/images")]
+        public async Task<IActionResult> CreateImage(string postId, [FromForm]PostImageCreateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var imageId = await _postService.AddImage(postId, request);
+            if (imageId == 0)
+                return BadRequest();
+
+            var image = await _postService.GetImageByID(imageId);
+
+            return CreatedAtAction(nameof(GetImageById), new { id = imageId }, image);
+        }
+
+        [HttpPost("{postId}/images/url")]
+        public async Task<IActionResult> CreateImageByUrl(string postId, [FromForm]PostImageCreateUrlRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _postService.AddImageByUrl(postId, request);
+            if (!result.IsSuccessed) return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [HttpPut("{postId}/images/{imageId}")]
+        public async Task<IActionResult> UpdateImage(int imageId, [FromForm]PostImageUpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _postService.UpdateImage(imageId, request);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpDelete("{postID}/images/{imageId}")]
+        public async Task<IActionResult> RemoveImage(int imageId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _postService.RemoveImage(imageId);
+            if (result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpGet("{postID}/images/{imageId}")]
+        public async Task<IActionResult> GetImageById(int imageId)
+        {
+            var image = await _postService.GetImageByID(imageId);
+            if (image == null) return BadRequest("Cannot find Image");
+            return Ok(image);
+        }
+
+        [HttpGet("{postID}/images")]
+        public async Task<IActionResult> GetImageByPostId(string postID)
+        {
+            var image = await _postService.GetListImages(postID);
+            if (image == null) return BadRequest("Cannot find post");
+            return Ok(image);
         }
     }
 }

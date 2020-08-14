@@ -1,4 +1,5 @@
 ﻿using AdvWeb_VN.ViewModels.Catalog.Posts;
+using AdvWeb_VN.ViewModels.Catalog.ProductImages;
 using AdvWeb_VN.ViewModels.Common;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,15 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<PagedResult<PostViewModel>> GetAllByTagID(GetPublicPostPagingRequest request);
 		Task<PagedResult<PostViewModel>> GetAllByCategoryID(GetPublicPostPagingRequest request);
 		Task<List<PostViewModel>> GetAll();
-		public Task<ApiResult<bool>> TagAssign(string postID, TagAssignRequest request);
-		public Task<ApiResult<bool>> TagAssignByTagName(string postID, string tagName);
-		public Task<ApiResult<bool>> TagRemoveByTagName(string postID, string tagName);
+		Task<ApiResult<bool>> TagAssign(string postID, TagAssignRequest request);
+		Task<ApiResult<bool>> TagAssignByTagName(string postID, string tagName);
+		Task<ApiResult<bool>> TagRemoveByTagName(string postID, string tagName);
+		Task<int> AddImage(string postID, PostImageCreateRequest request);
+		Task<ApiResult<string>> AddImageByUrl(string postID, PostImageCreateUrlRequest request);
+		Task<ApiResult<bool>> RemoveImage(int imageID);
+		Task<ApiResult<bool>> UpdateImage(int imageID, PostImageUpdateRequest request);
+		Task<ApiResult<PostImageViewModel>> GetImageByID(int imageID);
+		Task<List<PostImageViewModel>> GetListImages(string postID);
+
 	}
 }

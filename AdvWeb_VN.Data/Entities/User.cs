@@ -9,5 +9,6 @@ namespace AdvWeb_VN.Data.Entities
 	{
 		//public List<Comment> Comments { set; get; }
 		public List<Post> Posts { set; get; }
+		public string Avatar { set; get; }
 	}
 }

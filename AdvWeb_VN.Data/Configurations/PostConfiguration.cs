@@ -14,7 +14,7 @@ namespace AdvWeb_VN.Data.Configurations
 			builder.ToTable("Posts");
 			builder.HasKey(x => x.PostID);
 			builder.Property(x => x.PostID).IsUnicode(false).HasMaxLength(100);
-			builder.Property(x => x.Thumbnail).IsRequired();
+			builder.Property(x => x.Thumbnail).IsRequired(false).HasMaxLength(200);
 			builder.Property(x => x.PostName).IsRequired()
 				.HasMaxLength(50).IsUnicode();
 			builder.Property(x => x.Contents).IsRequired().IsUnicode();

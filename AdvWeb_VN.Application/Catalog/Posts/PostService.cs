@@ -11,15 +11,24 @@ using AdvWeb_VN.Utilities.Dtos;
 using AdvWeb_VN.Utilities.Settings;
 using AdvWeb_VN.ViewModels.Common;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
+using AdvWeb_VN.ViewModels.Catalog.ProductImages;
+using AdvWeb_VN.Application.Common;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
+using System.IO;
+using System.Net.Http;
 
 namespace AdvWeb_VN.Application.Catalog.Posts
 {
 	public class PostService : IPostService
 	{
 		private readonly AdvWebDbContext _context;
-		public PostService(AdvWebDbContext context)
+		private readonly IStorageService _storageService;
+
+		public PostService(AdvWebDbContext context, IStorageService storageService)
 		{
 			_context = context;
+			_storageService = storageService;
 		}
 
 		public async Task<ApiResult<bool>> AddViewCount(string postID)
@@ -59,13 +68,27 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			{
 				PostID = PostID,
 				PostName = request.PostName,
-				Thumbnail = request.Thumbnail,
 				Contents = request.Contents,
 				View = 0,
 				UserID = request.UserID,
 				CategoryID = request.CategoryID,
 				WriteTime = DateTime.Now,
 			};
+			if (request.ThumbnailFile != null)
+			{
+				post.PostImages = new List<PostImage>()
+				{
+					new PostImage()
+					{
+						Caption = "Thumbnail image",
+						DateCreated = DateTime.Now,
+						FileSize = request.ThumbnailFile.Length,
+						ImagePath = await this.SaveFile(request.ThumbnailFile),
+						IsDefault = true
+					}
+				};
+				post.Thumbnail = post.PostImages.FirstOrDefault().ImagePath;
+			}
 			_context.Posts.Add(post);
 			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<string>("Thêm bài viết thất bại");
@@ -76,6 +99,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		{
 			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
+			var images = _context.PostImages.Where(i => i.PostID == postID);
+			foreach (var image in images)
+			{
+				await _storageService.DeleteFileAsync(image.ImagePath);
+			}
 			_context.Posts.Remove(post);
 			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Xóa bài viết thất bại");
@@ -119,7 +147,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
-				TotalRecord = totalRow,
+				TotalRecords = totalRow,
+				PageIndex = request.PageIndex,
+				PageSize = request.PageSize,
 				Items = data
 			};
 			return pagedResult;
@@ -184,6 +214,16 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}
 			}
 			post.PostID = PostID;*/
+			if (request.ThumbnailFile != null)
+			{
+				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.PostID == request.PostID);
+				if (thumbnailFile != null)
+				{
+					thumbnailFile.FileSize = request.ThumbnailFile.Length;
+					thumbnailFile.ImagePath = await this.SaveFile(request.ThumbnailFile);
+					_context.PostImages.Update(thumbnailFile);
+				}
+			}
 			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
 			return new ApiSuccessResult<bool>();
@@ -241,7 +281,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
-				TotalRecord = totalRow,
+				TotalRecords = totalRow,
+				PageSize = request.PageSize,
+				PageIndex = request.PageIndex,
 				Items = data
 			};
 			return pagedResult;
@@ -277,7 +319,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
-				TotalRecord = totalRow,
+				TotalRecords = totalRow,
+				PageIndex = request.PageIndex,
+				PageSize = request.PageSize,
 				Items = data
 			};
 			return pagedResult;
@@ -318,7 +362,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
-				TotalRecord = totalRow,
+				TotalRecords = totalRow,
+				PageSize = request.PageSize,
+				PageIndex = request.PageIndex,
 				Items = data
 			};
 			return pagedResult;
@@ -439,6 +485,126 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var data = await query.Where(x => x.c.PostID.Equals(post.PostID))
 				.Select(x=>x.e.TagName).ToListAsync();
 			return data;
+		}
+
+		public async Task<int> AddImage(string postID, PostImageCreateRequest request)
+		{
+			var postImage = new PostImage()
+			{
+				Caption = request.Caption,
+				DateCreated = DateTime.Now,
+				PostID = postID,
+				IsDefault = false
+			};
+
+			if (request.ImageFile != null)
+			{
+				postImage.ImagePath = await this.SaveFile(request.ImageFile);
+				postImage.FileSize = request.ImageFile.Length;
+			}
+			_context.PostImages.Add(postImage);
+			await _context.SaveChangesAsync();
+			return postImage.ID;
+		}
+		private async Task<string> SaveFile(IFormFile file)
+		{
+			var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+			var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+			await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
+			return fileName;
+		}
+
+		public static string GetFileExtensionFromUrl(string url)
+		{
+			url = url.Split('?')[0];
+			url = url.Split('/').Last();
+			return url.Contains('.') ? url.Substring(url.LastIndexOf('.')) : "";
+		}
+
+		private async Task<ImageFileInfo> SaveFileUrl(string url, string postID)
+		{
+			var fileName = $"{Guid.NewGuid()}{postID}{GetFileExtensionFromUrl(url)}";
+			var fileSize = await _storageService.SaveFileByUrlAsync(url, fileName);
+			return new ImageFileInfo(fileName, fileSize);
+		}
+
+		public async Task<ApiResult<bool>> RemoveImage(int imageID)
+		{
+			var postImage = await _context.PostImages.FindAsync(imageID);
+			if (postImage == null) new ApiErrorResult<bool>($"Cannot find an image with id {imageID}");
+			_context.PostImages.Remove(postImage);
+			await _context.SaveChangesAsync();
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<ApiResult<bool>> UpdateImage(int imageID, PostImageUpdateRequest request)
+		{
+			var postImage = await _context.PostImages.FindAsync(imageID);
+			if (postImage == null) return new ApiErrorResult<bool>($"Cannot find an image with id {imageID}");
+
+			postImage.Caption = request.Caption;
+			postImage.DateCreated = DateTime.Now;
+			
+			if (request.ImageFile != null)
+			{
+				postImage.ImagePath = await this.SaveFile(request.ImageFile);
+				postImage.FileSize = request.ImageFile.Length;
+			}
+			_context.PostImages.Update(postImage);
+			await _context.SaveChangesAsync();
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<ApiResult<PostImageViewModel>> GetImageByID(int imageID)
+		{
+			var image = await _context.PostImages.FindAsync(imageID);
+			if (image == null) return new ApiErrorResult<PostImageViewModel>($"Cannot find an image with id {imageID}");
+
+			var viewModel = new PostImageViewModel()
+			{
+				Caption = image.Caption,
+				DateCreated = image.DateCreated,
+				FileSize = image.FileSize,
+				ID = image.ID,
+				ImagePath = image.ImagePath,
+				PostID = image.PostID,
+			};
+			return new ApiSuccessResult<PostImageViewModel>(viewModel);
+		}
+
+		public async Task<List<PostImageViewModel>> GetListImages(string postID)
+		{
+			return await _context.PostImages.Where(x => x.PostID == postID)
+				.Select(i => new PostImageViewModel()
+				{
+					Caption = i.Caption,
+					DateCreated = i.DateCreated,
+					FileSize = i.FileSize,
+					ID = i.ID,
+					ImagePath = i.ImagePath,
+					PostID = i.PostID
+				}).ToListAsync();
+		}
+
+		public async Task<ApiResult<string>> AddImageByUrl(string postID, PostImageCreateUrlRequest request)
+		{
+			var postImage = new PostImage()
+			{
+				Caption = request.Caption,
+				DateCreated = DateTime.Now,
+				PostID = postID,
+				IsDefault = false
+			};
+
+			if (request.ImageUrl != null)
+			{
+				var imageFileInfo = await SaveFileUrl(request.ImageUrl, postID);
+				postImage.ImagePath = imageFileInfo.FileName;
+				postImage.FileSize = imageFileInfo.FileSize;
+			}
+			_context.PostImages.Add(postImage);
+			await _context.SaveChangesAsync();
+			return new ApiSuccessResult<string>(postImage.ImagePath);
 		}
 	}
 }
