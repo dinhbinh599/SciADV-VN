@@ -43,7 +43,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromBody]TagUpdateRequest request)
         {
             var result = await _tagService.Update(request);

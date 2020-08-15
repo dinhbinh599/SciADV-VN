@@ -1,4 +1,4 @@
-﻿@model AdvWeb_VN.ViewModels.System.Users.UserUpdateRequest
+﻿@model AdvWeb_VN.ViewModels.Catalog.Categories.CategoryUpdateRequest
 
 @{
     ViewData["Title"] = "Cập nhật";
@@ -12,12 +12,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <a class="btn btn-outline-primary" asp-action="Index" asp-controller="User">Về danh sách</a>
+                    <a class="btn btn-outline-primary" asp-action="Index" asp-controller="Category">Về danh sách</a>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/Home">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/User">Danh sách thành viên</a></li>
+                        <li class="breadcrumb-item"><a href="/Category">Danh sách thành viên</a></li>
                         <li class="breadcrumb-item active">Thay đổi thông tin thành viên</li>
                     </ol>
                 </div>
@@ -32,35 +32,18 @@
                     <!-- general form elements -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Thay đổi thông tin thành viên</h3>
+                            <h3 class="card-title">Thay đổi thông tin chuyên mục</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form asp-action="Edit" role="form" method="post" enctype="multipart/form-data">
+                        <form asp-action="Edit" role="form" method="post">
                             <div class="card-body">
                                 <div asp-validation-summary="All" class="text-danger"></div>
-                                <input asp-for="ID" type="hidden" class="form-control" />
+                                <input asp-for="CategoryID" type="hidden" class="form-control" />
                                 <div class="form-group">
-                                    <label asp-for="Email" class="control-label"></label>
-                                    <input type="email" asp-for="Email" class="form-control" />
-                                    <span asp-validation-for="Email" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="PhoneNumber" class="control-label"></label>
-                                    <input asp-for="PhoneNumber" class="form-control" />
-                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputFile">File input</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input asp-for="AvatarImage" type="file" class="custom-file-input" id="exampleInputFile">
-                                            <label class="custom-file-label" asp-for="AvatarImage">Choose file</label>
-                                        </div>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="">Upload</span>
-                                        </div>
-                                    </div>
+                                    <label asp-for="CategoryName" class="control-label"></label>
+                                    <input asp-for="CategoryName" class="form-control" />
+                                    <span asp-validation-for="CategoryName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="card-footer">

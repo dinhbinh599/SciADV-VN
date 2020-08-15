@@ -18,5 +18,6 @@ namespace AdvWeb_VN.Application.System.Users
 		public Task<ApiResult<bool>> RoleRemoveByRoleName(Guid id, string roleName);
 		public Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging (GetUserPagingRequest request);
 		public Task<ApiResult<UserViewModel>> GetByID(Guid id);
+		public Task<ApiResult<UserViewModel>> GetByName(string name);
 	}
 }

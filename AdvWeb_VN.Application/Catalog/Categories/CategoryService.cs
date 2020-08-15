@@ -56,6 +56,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 			{
 				CategoryID = x.CategoryID,
 				CategoryName = x.CategoryName,
+				PostCount = x.Posts.Count,
 				CreateDate = x.CreateDate
 			}).ToListAsync();
 
@@ -65,11 +66,13 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 		public async Task<ApiResult<CategoryViewModel>> GetByID(int categoryID)
 		{
 			var category = await _context.Categories.FindAsync(categoryID);
+			var posts = await _context.Posts.Where(x => x.CategoryID.Equals(categoryID)).ToListAsync();
 			if (category == null) return new ApiErrorResult<CategoryViewModel>("Không tìm thấy chuyên mục này!");
 			var categoryVM = new CategoryViewModel()
 			{
 				CategoryID = category.CategoryID,
 				CategoryName = category.CategoryName,
+				PostCount = posts.Count,
 				CreateDate = category.CreateDate
 			};
 

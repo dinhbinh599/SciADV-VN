@@ -96,7 +96,6 @@ namespace AdvWeb_VN.Application.System.Users
 			{
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,
-				UserID = user.Id,
 				UserName = user.UserName,
 				Roles = roles,
 				AvatarImage = user.Avatar
@@ -230,6 +229,23 @@ namespace AdvWeb_VN.Application.System.Users
 				return new ApiSuccessResult<bool>();
 			}
 			return new ApiErrorResult<bool>("Cập nhật không thành công");
+		}
+
+		public async Task<ApiResult<UserViewModel>> GetByName(string name)
+		{
+			var user = await _userManager.FindByNameAsync(name);
+			if (user == null) return new ApiErrorResult<UserViewModel>("User không tồn tại");
+			var roles = await _userManager.GetRolesAsync(user);
+			var userVm = new UserViewModel()
+			{
+				Email = user.Email,
+				PhoneNumber = user.PhoneNumber,
+				UserID = user.Id,
+				UserName = user.UserName,
+				Roles = roles,
+				AvatarImage = user.Avatar
+			};
+			return new ApiSuccessResult<UserViewModel>(userVm);
 		}
 	}
 }

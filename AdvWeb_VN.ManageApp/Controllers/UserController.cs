@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AdvWeb_VN.ManageApp.Services;
 using AdvWeb_VN.Utilities.Constants;
+using AdvWeb_VN.ViewModels.Common;
 using AdvWeb_VN.ViewModels.System.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,12 +16,15 @@ namespace AdvWeb_VN.ManageApp.Controllers
 	{
 		private readonly IUserApiClient _userApiClient;
 		private readonly IConfiguration _configuration;
+		private readonly IRoleApiClient _roleApiClient;
 
-		public UserController(IUserApiClient userApiClient, IConfiguration configuration)
+		public UserController(IUserApiClient userApiClient, IConfiguration configuration, IRoleApiClient roleApiClient)
 		{
 			_userApiClient = userApiClient;
 			_configuration = configuration;
+			_roleApiClient = roleApiClient;
 		}
+
 		public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
 		{
 			var request = new GetUserPagingRequest()
@@ -133,6 +137,50 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 			ModelState.AddModelError("", result.Message);
 			return View(request);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> RoleAssign(Guid id)
+		{
+			var roleAssignRequest = await GetRoleAssignRequest(id);
+			return View(roleAssignRequest);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> RoleAssign(RoleAssignRequest request)
+		{
+			if (!ModelState.IsValid)
+				return View();
+
+			var result = await _userApiClient.RoleAssign(request.ID, request);
+
+			if (result.IsSuccessed)
+			{
+				TempData["result"] = "Cập nhật quyền thành công";
+				return RedirectToAction("Index");
+			}
+
+			ModelState.AddModelError("", result.Message);
+			var roleAssignRequest = await GetRoleAssignRequest(request.ID);
+
+			return View(roleAssignRequest);
+		}
+
+		private async Task<RoleAssignRequest> GetRoleAssignRequest(Guid id)
+		{
+			var userObj = await _userApiClient.GetByID(id);
+			var roleObj = await _roleApiClient.GetAll();
+			var roleAssignRequest = new RoleAssignRequest();
+			foreach (var role in roleObj.ResultObj)
+			{
+				roleAssignRequest.Roles.Add(new SelectItem()
+				{
+					ID = role.RoleID.ToString(),
+					Name = role.Name,
+					Selected = userObj.ResultObj.Roles.Contains(role.Name)
+				});
+			}
+			return roleAssignRequest;
 		}
 	}
 }

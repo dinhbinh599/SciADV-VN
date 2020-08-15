@@ -69,6 +69,13 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(user);
         }
 
+        [HttpGet("name/{name}")]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            var user = await _userService.GetByName(name);
+            return Ok(user);
+        }
+
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update(Guid id,[FromForm]UserUpdateRequest request)

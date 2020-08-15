@@ -1,10 +1,5 @@
-﻿@using  AdvWeb_VN.ViewModels.Common;
-@model PagedResult<AdvWeb_VN.ViewModels.System.Users.UserViewModel>
+﻿@model List<AdvWeb_VN.ViewModels.Catalog.Categories.CategoryViewModel>
 
-@{
-	var pageNow = (Model.PageIndex - 1) * Model.PageSize + 1;
-	var pageLast = pageNow + Model.PageSize - 1;
-}
 @{
 	ViewData["Title"] = "Danh sách";
 	Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,12 +12,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Danh sách thành viên</h1>
+                    <h1>Danh sách chuyên mục</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/Home">Home</a></li>
-                        <li class="breadcrumb-item active">Danh sách thành viên</li>
+                        <li class="breadcrumb-item active">Danh sách chuyên mục</li>
                     </ol>
                 </div>
             </div>
@@ -37,12 +32,12 @@
 
                         <!-- Tên nằm trên đầu bảng -->
                         <div class="card-header">
-                            <a class="btn btn-outline-primary" asp-action="Create" asp-controller="User">Tạo mới</a>
+                            <a class="btn btn-outline-primary" asp-action="Create" asp-controller="Category">Tạo mới</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                <div class="row">
+                                @*<div class="row">
                                     <div class="col-sm-12 col-md-6">
                                         <form asp-action="Index" method="get">
                                             <div class="dataTables_length" id="example1_length">
@@ -71,9 +66,8 @@
                                                 <button type="button" onclick="window.location.href='/User/Index'" class="btn btn-outline-dark">Reset</button>
                                             </div>
                                         </form>
-                                    </div>
-                                    
-                                </div>
+                                    </div>   
+                                </div>*@
                                 <div class="row" style="margin-top:20px">
                                     <div class="col-sm-12">
                                         <table id="example1"
@@ -86,36 +80,35 @@
                                                         ID
                                                     </th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Browser: activate to sort column ascending">Username</th>
+                                                        aria-label="Browser: activate to sort column ascending">Tên Chuyên Mục</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Platform(s): activate to sort column ascending">Email</th>
+                                                        aria-label="Platform(s): activate to sort column ascending">Số Bài Viết</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Engine version: activate to sort column ascending">Số điện thoại</th>
+                                                        aria-label="Platform(s): activate to sort column ascending">Ngày Tạo</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                         aria-label="CSS grade: activate to sort column ascending"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model.Items)
+                                                @foreach (var item in Model)
 												{
                                                     <tr role="row" class="odd">
                                                         <td tabindex="0" class="sorting_1">
-                                                            @Html.DisplayFor(modelItem => item.UserID)
+                                                            @Html.DisplayFor(modelItem => item.CategoryID)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.UserName)
+                                                            @Html.DisplayFor(modelItem => item.CategoryName)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Email)
+                                                            @Html.DisplayFor(modelItem => item.PostCount)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                                            @Html.DisplayFor(modelItem => item.CreateDate)
                                                         </td>
                                                         <td>
-                                                            @Html.ActionLink("Sửa", "Edit", new { id = item.UserID }) |
-                                                            @Html.ActionLink("Xem", "Details", new { id = item.UserID }) |
-                                                            @Html.ActionLink("Xóa", "Delete", new { id = item.UserID }) |
-                                                            @Html.ActionLink("Gán quyền", "RoleAssign", new { id = item.UserID })
+                                                            @Html.ActionLink("Sửa", "Edit", new { id = item.CategoryID }) |
+                                                            @Html.ActionLink("Xem", "Details", new { id = item.CategoryID }) |
+                                                            @Html.ActionLink("Xóa", "Delete", new { id = item.CategoryID })
                                                         </td>
                                                     </tr>
 												}
@@ -123,16 +116,16 @@
                                             <tfoot>
                                                 <tr>
                                                     <th rowspan="1" colspan="1">ID</th>
-                                                    <th rowspan="1" colspan="1">Username</th>
-                                                    <th rowspan="1" colspan="1">Email</th>
-                                                    <th rowspan="1" colspan="1">Số điện thoại</th>
+                                                    <th rowspan="1" colspan="1">Tên Chuyên Mục</th>
+                                                    <th rowspan="1" colspan="1">Số Bài Viết</th>
+                                                    <th rowspan="1" colspan="1">Ngày Tạo</th>
                                                     <th rowspan="1" colspan="1"></th>
                                                 </tr>
                                             </tfoot>
                                         </table>
                                     </div>
                                 </div>
-                                <div class="row">
+                                @*<div class="row">
                                     <div class="col-sm-12 col-md-5">
                                         <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">
                                             Showing @pageNow to @pageLast
@@ -141,6 +134,7 @@
                                     </div>
                                     @await Component.InvokeAsync("Pager", Model)
                                 </div>
+                                    *@
                             </div>
                         </div>
                         <!-- /.card-body -->

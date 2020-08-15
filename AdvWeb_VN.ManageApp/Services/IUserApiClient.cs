@@ -17,6 +17,7 @@ namespace AdvWeb_VN.ManageApp.Services
 		Task<ApiResult<bool>> UpdateUser(Guid id, UserUpdateRequest request);
 
 		Task<ApiResult<UserViewModel>> GetByID(Guid id);
+		Task<ApiResult<UserViewModel>> GetByName(string name);
 
 		Task<ApiResult<bool>> Delete(Guid id);
 
