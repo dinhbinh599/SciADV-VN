@@ -40,20 +40,25 @@ namespace AdvWeb_VN.Application.Common
                 await Task.Run(() => File.Delete(filePath));
             }
         }
-        
+
         public async Task<long> SaveFileByUrlAsync(string url, string fileName)
         {
             var filePath = Path.Combine(_userContentFolder, fileName);
+
             WebClient client = new WebClient();
             client.DownloadFileAsync(new Uri(url), filePath);
-            /*var client = new HttpClient();
-            Stream s = await client.GetStreamAsync(url);
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            Stream contentStream = await (await client.SendAsync(request)).Content.ReadAsStreamAsync(),
-            stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 3145728, true);
-            await contentStream.CopyToAsync(stream);*/
-            FileInfo fi = new FileInfo(filePath);
-            return fi.Length;
+            return await GetFileSizeAsync(url);
+        }
+
+        private async Task<long> GetFileSizeAsync(string url)
+        {
+            var request = WebRequest.CreateHttp(url);
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
+            request.Method = "HEAD";
+            using (var response = await request.GetResponseAsync())
+            {
+                return response.ContentLength;
+            }
         }
     }
 }

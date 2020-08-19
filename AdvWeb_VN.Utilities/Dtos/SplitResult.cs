@@ -14,5 +14,9 @@ namespace AdvWeb_VN.Utilities.Dtos
 			Number = number;
 			this.name = name;
 		}
+
+		public SplitResult()
+		{
+		}
 	}
 }

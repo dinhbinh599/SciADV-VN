@@ -7,9 +7,9 @@ namespace AdvWeb_VN.ViewModels.Catalog.ProductImages
 {
     public class PostImageCreateUrlRequest
     {
-        public string Caption { get; set; }
+        //public string Caption { get; set; }
 
-        public bool IsDefault { get; set; }
+        //public bool IsDefault { get; set; }
 
 //        public int SortOrder { get; set; }
 

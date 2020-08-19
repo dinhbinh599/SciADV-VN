@@ -1,0 +1,109 @@
+﻿@model AdvWeb_VN.ViewModels.Catalog.Posts.PostUpdateRequest
+@{
+    ViewData["Title"] = "Cập nhật";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a class="btn btn-outline-primary" asp-action="Index" asp-controller="Post">Về danh sách</a>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/Home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/Post">Danh sách bài viết</a></li>
+                        <li class="breadcrumb-item active">Sửa bài viết</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Sửa bài viết</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form asp-action="Edit" role="form" method="post" enctype="multipart/form-data">
+                            <div class="card-body">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="PostName" class="control-label"></label>
+                                    <input asp-for="PostName" class="form-control" />
+                                    <span asp-validation-for="PostName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Contents" class="control-label"></label>
+                                    <textarea asp-for="Contents" class="form-control contents"></textarea>
+                                    <span asp-validation-for="Contents" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CategoryID" class="control-label"></label>
+                                    <select asp-for="CategoryID" class="form-control category-select">
+                                        @foreach (var category in Model.Categories)
+                                        {
+                                            <option value="@category.CategoryID">@category.CategoryName</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="CategoryID" class="text-danger"></span>
+                                </div>
+                                @for (int i = 0; i < Model.TagAssignRequest.Tags.Count; i++)
+                                {
+                                    <input type="hidden" asp-for="TagAssignRequest.Tags[i].ID" />
+                                    <input type="hidden" asp-for="TagAssignRequest.Tags[i].Name" />
+                                }
+                                <div class="form-group">
+                                    <label class="control-label">Tags</label>
+                                    <select asp-for="TagAssignRequest.SelectedTags" class="form-control tag-select" multiple="multiple">
+                                        @foreach (var tag in Model.TagAssignRequest.Tags)
+                                        {
+                                            <option value="@tag.Name">@tag.Name</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="TagAssignRequest.SelectedTags" class="text-danger"></span>
+                                </div>
+                                <input type="hidden" asp-for="PostID" />
+                                <div class="form-group">
+                                    <label asp-for="ThumbnailFile">Thumbnail</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input asp-for="ThumbnailFile" type="file" class="custom-file-input" id="custom-file">
+                                            <label class="custom-file-label" for="custom-file">Choose file</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="">Upload</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <img>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-group">
+                                    <input type="submit" value="Lưu lại" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+

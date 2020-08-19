@@ -33,15 +33,15 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [HttpGet("paging-tagid")]
         public async Task<IActionResult> GetAllPagingByTagID([FromQuery]GetManagePostPagingRequest request)
         {
-            var products = await _postService.GetAllPagingTagID(request);
-            return Ok(products);
+            var posts = await _postService.GetAllPagingTagID(request);
+            return Ok(posts);
         }
 
         [HttpGet("paging-categoryid")]
         public async Task<IActionResult> GetAllPagingByCategoryID([FromQuery]GetManagePostPagingRequest request)
         {
-            var products = await _postService.GetAllPagingCategoryID(request);
-            return Ok(products);
+            var posts = await _postService.GetAllPagingCategoryID(request);
+            return Ok(posts);
         }
 
         [HttpGet("public-paging-tagid")]
@@ -67,23 +67,34 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPost]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm]PostCreateRequest request)
         {
             var result = await _postService.Create(request);
             if (!result.IsSuccessed) return BadRequest(result);
             var post = await _postService.GetByID(result.ResultObj);
-            return CreatedAtAction(nameof(GetByID), new { PostID = result.ResultObj }, post.ResultObj);
+            //return CreatedAtAction(nameof(GetByID), new { PostID = result.ResultObj }, post.ResultObj);
+            return Ok(post);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody]PostUpdateRequest request)
+        [HttpPut("{id}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(string id, [FromForm]PostUpdateRequest request)
         {
-            var result = await _postService.Update(request);
+            var result = await _postService.Update(id,request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}/contents")]
+        public async Task<IActionResult> UpdateContents(string id, [FromBody]PostUpdateContentsRequest request)
+        {
+            var result = await _postService.UpdateImageContents(id, request);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("view/{id}")]
         public async Task<IActionResult> AddViewCount(string id)
         {
             var result = await _postService.AddViewCount(id);
@@ -137,6 +148,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         //Images
         [HttpPost("{postId}/images")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateImage(string postId, [FromForm]PostImageCreateRequest request)
         {
             if (!ModelState.IsValid)
@@ -149,11 +161,11 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
             var image = await _postService.GetImageByID(imageId);
 
-            return CreatedAtAction(nameof(GetImageById), new { id = imageId }, image);
+            return Ok(image);
         }
 
         [HttpPost("{postId}/images/url")]
-        public async Task<IActionResult> CreateImageByUrl(string postId, [FromForm]PostImageCreateUrlRequest request)
+        public async Task<IActionResult> CreateImageByUrl(string postId, [FromBody]PostImageCreateUrlRequest request)
         {
             if (!ModelState.IsValid)
             {

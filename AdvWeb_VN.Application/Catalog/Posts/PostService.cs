@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using System.IO;
 using System.Net.Http;
+using AdvWeb_VN.ViewModels.Common.Tags;
+using AdvWeb_VN.Application.Catalog.Tags;
+using AdvWeb_VN.ViewModels.Catalog.Tags;
 
 namespace AdvWeb_VN.Application.Catalog.Posts
 {
@@ -24,11 +27,13 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 	{
 		private readonly AdvWebDbContext _context;
 		private readonly IStorageService _storageService;
+		private readonly ITagService _tagService;
 
-		public PostService(AdvWebDbContext context, IStorageService storageService)
+		public PostService(AdvWebDbContext context, IStorageService storageService, ITagService tagService)
 		{
 			_context = context;
 			_storageService = storageService;
+			_tagService = tagService;
 		}
 
 		public async Task<ApiResult<bool>> AddViewCount(string postID)
@@ -56,9 +61,16 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			Category category = query.FirstOrDefault<Category>();
 			if (query2.Count() > 0)
 			{
-				Post lastPost = query2.ToList<Post>().Last();
-				SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
-				PostID = splitResult.name + (splitResult.Number + 1);
+				SplitResult splitResult = new SplitResult();
+				var posts = await query2.ToListAsync<Post>();
+				splitResult = new Split().GetID(posts.FirstOrDefault().PostID, category.CategoryName.Length);
+				var max = splitResult.Number;
+				foreach (var item in posts)
+				{
+					splitResult = new Split().GetID(item.PostID, category.CategoryName.Length);
+					if (splitResult.Number > max) max = splitResult.Number;
+				}
+				PostID = splitResult.name + (max + 1);
 			}
 			else
 			{
@@ -80,7 +92,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				{
 					new PostImage()
 					{
-						Caption = "Thumbnail image",
+						//Caption = "Thumbnail image",
 						DateCreated = DateTime.Now,
 						FileSize = request.ThumbnailFile.Length,
 						ImagePath = await this.SaveFile(request.ThumbnailFile),
@@ -110,7 +122,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<bool>();
 		}
 
-		public async Task<PagedResult<PostViewModel>> GetAllPagingTagID(GetManagePostPagingRequest request)
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingTagID(GetManagePostPagingRequest request)
 		{
 			var query = from p in _context.Posts
 						join pt in _context.Comments on p.PostID equals pt.PostID
@@ -124,6 +136,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			{
 				query = query.Where(x => x.c.TagName.Contains(request.Keyword));
 			}
+
 			if(request.IDs != null && request.IDs.Count>0)
 			{
 				query = query.Where(x => request.IDs.Contains(x.pic.TagID));
@@ -152,7 +165,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				PageSize = request.PageSize,
 				Items = data
 			};
-			return pagedResult;
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
 
 		public async Task<ApiResult<PostViewModel>> GetByID(string postID)
@@ -179,13 +192,12 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<PostViewModel>(postViewModel);
 		}
 
-		public async Task<ApiResult<bool>> Update(PostUpdateRequest request)
+		public async Task<ApiResult<bool>> Update(string id,PostUpdateRequest request)
 		{
-			var post = await _context.Posts.FindAsync(request.PostID);
+			var post = await _context.Posts.FindAsync(id);
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {request.PostID}");
 			
 			post.PostName = request.PostName;
-			post.Thumbnail = request.Thumbnail;
 			post.Contents = request.Contents;
 			post.WriteTime = DateTime.Now;
 			post.CategoryID = request.CategoryID;
@@ -221,6 +233,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				{
 					thumbnailFile.FileSize = request.ThumbnailFile.Length;
 					thumbnailFile.ImagePath = await this.SaveFile(request.ThumbnailFile);
+					post.Thumbnail = thumbnailFile.ImagePath;
 					_context.PostImages.Update(thumbnailFile);
 				}
 			}
@@ -249,7 +262,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return data;
 		}
 
-		public async Task<PagedResult<PostViewModel>> GetAllByTagID(GetPublicPostPagingRequest request)
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllByTagID(GetPublicPostPagingRequest request)
 		{
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
@@ -286,10 +299,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				PageIndex = request.PageIndex,
 				Items = data
 			};
-			return pagedResult;
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
 
-		public async Task<PagedResult<PostViewModel>> GetAllByCategoryID(GetPublicPostPagingRequest request)
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllByCategoryID(GetPublicPostPagingRequest request)
 		{
 			var query = from c in _context.Categories
 						join p in _context.Posts on c.CategoryID equals p.CategoryID
@@ -324,10 +337,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				PageSize = request.PageSize,
 				Items = data
 			};
-			return pagedResult;
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
 
-		public async Task<PagedResult<PostViewModel>> GetAllPagingCategoryID(GetManagePostPagingRequest request)
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingCategoryID(GetManagePostPagingRequest request)
 		{
 			var query = from c in _context.Categories
 						join p in _context.Posts on c.CategoryID equals p.CategoryID
@@ -339,10 +352,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				query = query.Where(x => x.c.CategoryName.Contains(request.Keyword));
 			}
 
-			/*if (request.ID != null)
+			if (request.ID != null)
 			{
 				query = query.Where(x => request.ID.Equals(x.p.CategoryID));
-			}*/
+			}
 
 			int totalRow = await query.CountAsync();
 
@@ -367,7 +380,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				PageIndex = request.PageIndex,
 				Items = data
 			};
-			return pagedResult;
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
 
 		public async Task<ApiResult<bool>> TagAssignByTagName(string postID, string tagName)
@@ -395,17 +408,22 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					await RemoveFromTagAsync(post, tagName);
 				}
 			}
-			await RemoveFromTagAsync(post, removedTags);
+			//await RemoveFromTagAsync(post, removedTags);
 
-			var addedTags = request.Tags.Where(x => x.Selected).Select(x => x.Name).ToList();
-			foreach (var tagName in addedTags)
+			var addedTags = request.Tags.Where(x => x.Selected).Select(x => new {x.ID ,x.Name }).ToList();
+			foreach (var tag in addedTags)
 			{
-				if (await IsInTagAsync(post, tagName) == false)
+				if (tag.ID.Equals("0")) await _tagService.Create(new TagCreateRequest
 				{
-					await AddToTagAsync(post, tagName);
+					TagName = tag.Name
+				});
+
+				if (await IsInTagAsync(post, tag.Name) == false)
+				{
+					await AddToTagAsync(post, tag.Name);
 				}
 			}
-
+			
 			return new ApiSuccessResult<bool>();
 		}
 
@@ -426,7 +444,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		{
 			foreach (var tagName in tagNames)
 			{
-				await RemoveFromTagAsync(post, tagName);
+				if (await IsInTagAsync(post, tagName) == true)
+				{
+					await RemoveFromTagAsync(post, tagName);
+				}
 			}
 		}
 
@@ -491,7 +512,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		{
 			var postImage = new PostImage()
 			{
-				Caption = request.Caption,
+				//Caption = request.Caption,
 				DateCreated = DateTime.Now,
 				PostID = postID,
 				IsDefault = false
@@ -524,7 +545,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		private async Task<ImageFileInfo> SaveFileUrl(string url, string postID)
 		{
 			var fileName = $"{Guid.NewGuid()}{postID}{GetFileExtensionFromUrl(url)}";
-			var fileSize = await _storageService.SaveFileByUrlAsync(url, fileName);
+			var fileSize =  await _storageService.SaveFileByUrlAsync(url, fileName);
 			return new ImageFileInfo(fileName, fileSize);
 		}
 
@@ -542,7 +563,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var postImage = await _context.PostImages.FindAsync(imageID);
 			if (postImage == null) return new ApiErrorResult<bool>($"Cannot find an image with id {imageID}");
 
-			postImage.Caption = request.Caption;
+			//postImage.Caption = request.Caption;
 			postImage.DateCreated = DateTime.Now;
 			
 			if (request.ImageFile != null)
@@ -562,7 +583,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			var viewModel = new PostImageViewModel()
 			{
-				Caption = image.Caption,
+				//Caption = image.Caption,
 				DateCreated = image.DateCreated,
 				FileSize = image.FileSize,
 				ID = image.ID,
@@ -577,7 +598,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return await _context.PostImages.Where(x => x.PostID == postID)
 				.Select(i => new PostImageViewModel()
 				{
-					Caption = i.Caption,
+					//Caption = i.Caption,
 					DateCreated = i.DateCreated,
 					FileSize = i.FileSize,
 					ID = i.ID,
@@ -590,7 +611,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		{
 			var postImage = new PostImage()
 			{
-				Caption = request.Caption,
+				//Caption = request.Caption,
 				DateCreated = DateTime.Now,
 				PostID = postID,
 				IsDefault = false
@@ -605,6 +626,16 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			_context.PostImages.Add(postImage);
 			await _context.SaveChangesAsync();
 			return new ApiSuccessResult<string>(postImage.ImagePath);
+		}
+
+		public async Task<ApiResult<bool>> UpdateImageContents(string postID, PostUpdateContentsRequest request)
+		{
+			var post = await _context.Posts.FindAsync(postID);
+			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
+			post.Contents = request.Contents;
+			var result = await _context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
+			return new ApiSuccessResult<bool>();
 		}
 	}
 }

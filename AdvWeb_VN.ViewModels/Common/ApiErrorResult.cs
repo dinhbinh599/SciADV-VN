@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AdvWeb_VN.ViewModels.Common
 {
-    public class ApiErrorResult<T> : ApiResult<T>
+	public class ApiErrorResult<T> : ApiResult<T>
     {
         public string[] ValidationErrors { get; set; }
 

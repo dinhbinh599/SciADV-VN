@@ -16,6 +16,7 @@ using AdvWeb_VN.ViewModels.Catalog.Categories;
 using AdvWeb_VN.Application.Catalog.Categories;
 using AdvWeb_VN.ViewModels.Catalog.Comments;
 using Microsoft.AspNetCore.Identity;
+using AdvWeb_VN.ViewModels.Common.Tags;
 
 namespace AdvWeb_VN.Application.Catalog.Comments
 {
@@ -45,9 +46,16 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 			Post post = query.FirstOrDefault<Post>();
 			if (query2.Count() > 0)
 			{
-				Comment commentLast = query2.ToList<Comment>().Last();
-				SplitResult splitResult = new Split().GetID(commentLast.CommentID, post.PostID.Length+1);
-				CommentID = splitResult.name + (splitResult.Number + 1);
+				SplitResult splitResult = new SplitResult();
+				var comments = query2.ToList<Comment>();
+				splitResult = new Split().GetID(comments.FirstOrDefault().CommentID, post.PostName.Length+1);
+				var max = splitResult.Number;
+				foreach (var item in comments)
+				{
+					splitResult = new Split().GetID(item.CommentID, post.PostName.Length+1);
+					if (splitResult.Number > max) max = splitResult.Number;
+				}
+				CommentID = splitResult.name + (max + 1);
 			}
 			else
 			{

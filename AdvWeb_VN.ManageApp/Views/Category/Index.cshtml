@@ -1,8 +1,8 @@
 ﻿@model List<AdvWeb_VN.ViewModels.Catalog.Categories.CategoryViewModel>
 
 @{
-	ViewData["Title"] = "Danh sách";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Danh sách";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!-- Content Wrapper. Contains page content -->
@@ -38,36 +38,36 @@
                         <div class="card-body">
                             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
                                 @*<div class="row">
-                                    <div class="col-sm-12 col-md-6">
-                                        <form asp-action="Index" method="get">
-                                            <div class="dataTables_length" id="example1_length">
-                                                <label>
-                                                    Show entries
-                                                    <select name="pageSize" aria-controls="example1"
-                                                            class="custom-select custom-select-sm form-control form-control-sm">
-                                                        <option value="10">10</option>
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                        <option value="100">100</option>
-                                                    </select>
-                                                </label>
-                                                <button type="submit" class="btn btn-outline-primary">Select</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="col-sm-12 col-md-6"">
-                                        <form asp-action="Index" method="get">
-                                            <div id="example1_filter" class="dataTables_filter">
-                                                <label>
-                                                    Search:<input name="keyword" value="@ViewBag.Keyword" type="search" class="form-control form-control-sm" placeholder=""
-                                                                  aria-controls="example1">
-                                                </label>
-                                                <button type="submit" class="btn btn-outline-primary">Search</button>
-                                                <button type="button" onclick="window.location.href='/User/Index'" class="btn btn-outline-dark">Reset</button>
-                                            </div>
-                                        </form>
-                                    </div>   
-                                </div>*@
+                                        <div class="col-sm-12 col-md-6">
+                                            <form asp-action="Index" method="get">
+                                                <div class="dataTables_length" id="example1_length">
+                                                    <label>
+                                                        Show entries
+                                                        <select name="pageSize" aria-controls="example1"
+                                                                class="custom-select custom-select-sm form-control form-control-sm">
+                                                            <option value="10">10</option>
+                                                            <option value="25">25</option>
+                                                            <option value="50">50</option>
+                                                            <option value="100">100</option>
+                                                        </select>
+                                                    </label>
+                                                    <button type="submit" class="btn btn-outline-primary">Select</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6"">
+                                            <form asp-action="Index" method="get">
+                                                <div id="example1_filter" class="dataTables_filter">
+                                                    <label>
+                                                        Search:<input name="keyword" value="@ViewBag.Keyword" type="search" class="form-control form-control-sm" placeholder=""
+                                                                      aria-controls="example1">
+                                                    </label>
+                                                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                                                    <button type="button" onclick="window.location.href='/User/Index'" class="btn btn-outline-dark">Reset</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>*@
                                 <div class="row" style="margin-top:20px">
                                     <div class="col-sm-12">
                                         <table id="example1"
@@ -91,7 +91,7 @@
                                             </thead>
                                             <tbody>
                                                 @foreach (var item in Model)
-												{
+                                                {
                                                     <tr role="row" class="odd">
                                                         <td tabindex="0" class="sorting_1">
                                                             @Html.DisplayFor(modelItem => item.CategoryID)
@@ -111,7 +111,7 @@
                                                             @Html.ActionLink("Xóa", "Delete", new { id = item.CategoryID })
                                                         </td>
                                                     </tr>
-												}
+                                                }
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -126,15 +126,15 @@
                                     </div>
                                 </div>
                                 @*<div class="row">
-                                    <div class="col-sm-12 col-md-5">
-                                        <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">
-                                            Showing @pageNow to @pageLast
-                                            of @Model.TotalRecords entries
+                                        <div class="col-sm-12 col-md-5">
+                                            <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">
+                                                Showing @pageNow to @pageLast
+                                                of @Model.TotalRecords entries
+                                            </div>
                                         </div>
+                                        @await Component.InvokeAsync("Pager", Model)
                                     </div>
-                                    @await Component.InvokeAsync("Pager", Model)
-                                </div>
-                                    *@
+                                *@
                             </div>
                         </div>
                         <!-- /.card-body -->

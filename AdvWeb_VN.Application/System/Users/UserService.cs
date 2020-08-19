@@ -2,6 +2,7 @@
 using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.Utilities.Exceptions;
 using AdvWeb_VN.ViewModels.Common;
+using AdvWeb_VN.ViewModels.Common.Tags;
 using AdvWeb_VN.ViewModels.System.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -55,6 +56,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 			var claims = new[]
 			{
+				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
 				new Claim(ClaimTypes.Email, user.Email),
 				new Claim(ClaimTypes.Name, user.UserName),
 				new Claim(ClaimTypes.Role, string.Join(";", roles))

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AdvWeb_VN.ViewModels.Common
 {
-    public class ApiSuccessResult<T> : ApiResult<T>
+	public class ApiSuccessResult<T> : ApiResult<T>
     {
         public ApiSuccessResult(T resultObj)
         {

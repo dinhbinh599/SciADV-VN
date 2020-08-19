@@ -27,6 +27,13 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(tags);
         }
 
+        [HttpGet("select2")]
+        public async Task<IActionResult> GetSelect2()
+        {
+            var tags = await _tagService.GetAllSelect2();
+            return Ok(tags);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int id)
         {

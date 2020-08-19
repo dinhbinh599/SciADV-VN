@@ -1,6 +1,6 @@
-﻿using AdvWeb_VN.ViewModels.Catalog.Categories;
-using AdvWeb_VN.ViewModels.Catalog.Tags;
+﻿using AdvWeb_VN.ViewModels.Catalog.Tags;
 using AdvWeb_VN.ViewModels.Common;
+using AdvWeb_VN.ViewModels.Common.Tags;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +14,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 		Task<ApiResult<bool>> Update(TagUpdateRequest request);
 		Task<ApiResult<bool>> Delete(int tagID);
 		Task<ApiResult<TagViewModel>> GetByID(int tagID);
-		Task<List<TagViewModel>> GetAll();
+		Task<ApiResult<List<TagViewModel>>> GetAll();
+		Task<ApiResultSelect2<List<TagViewModelSelect2>>> GetAllSelect2();
 	}
 }

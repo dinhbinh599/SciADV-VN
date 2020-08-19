@@ -1,4 +1,5 @@
 ﻿using AdvWeb_VN.ViewModels.Common;
+using AdvWeb_VN.ViewModels.Common.Tags;
 using AdvWeb_VN.ViewModels.System.Roles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace AdvWeb_VN.ManageApp.Services
 {
-    public class RoleApiClient : IRoleApiClient
+	public class RoleApiClient : IRoleApiClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;

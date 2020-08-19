@@ -13,6 +13,7 @@ using AdvWeb_VN.ViewModels.Common;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.Application.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.Categories;
+using AdvWeb_VN.ViewModels.Common.Tags;
 
 namespace AdvWeb_VN.Application.Catalog.Categories
 {
