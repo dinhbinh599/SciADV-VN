@@ -9,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using AdvWeb_VN.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace AdvWeb_VN
 {
 	public class Startup
@@ -23,7 +26,11 @@ namespace AdvWeb_VN
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllersWithViews();
+			services
+				.AddControllersWithViews()
+				.AddRazorRuntimeCompilation();
+			// services.AddDbContext<AdvWeb>(options => 
+			// 	options.UseSqlite(Configuration.GetConnectionString("")))
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

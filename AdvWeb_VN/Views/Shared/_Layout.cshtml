@@ -5,10 +5,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AdvWeb_VN</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    @* <link rel="stylesheet" href="~/css/site.css" /> *@
+	<link rel="icon" type="image/png" href="images/icons/favicon.png"/>
+	@* <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css"> *@
+	<link rel="stylesheet" type="text/css" href="fonts/fontawesome-5.0.8/css/fontawesome-all.min.css">
+	<link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+	<link rel="stylesheet" type="text/css" href="lib/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="lib/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" type="text/css" href="lib/animsition/css/animsition.min.css">
+	<link rel="stylesheet" type="text/css" href="css/util.min.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
-<body>
-    <header>
+<body class="animsition">
+  <header>
+    <!-- desktop -->
+    <div class="container-menu-desktop">
+      <div class="topbar">
+        <div class="content-topbar container h-100">
+          <div class="left-topbar">
+            <a href="/" class="left-topbar-item">Trang chủ</a>
+            <a href="/Post" class="left-topbar-item">Bài đăng</a>
+            <a href="#" class="left-topbar-item">Quản lý</a>
+          </div>
+          <div class="right-topbar">
+            <a href="#">
+              <span class="fab fa-facebook-f"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- mobile -->
+    <div class="wrap-header-mobile">
+      <div class="logo-mobile">
+        <a href="/"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
+      </div>
+
+      <div class="btn-show-menu-mobile hamburger hamburger--squeeze m-r--8">
+        <span class="hamburger-box">
+          <span class="hamburger-inner"></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="menu-mobile">
+      <ul class="topbar-mobile">
+        <li class="left-topbar">
+          <a href="/" class="left-topbar-item">Trang chủ</a>
+          <a href="/Post" class="left-topbar-item">Bài đăng</a>
+          <a href="#" class="left-topbar-item">Quản lý</a>
+        </li>
+        <li class="right-topbar">
+          <a href="#">
+            <span class="fab fa-facebook-f"></span>
+          </a>
+        </li>
+      </ul>
+      <ul class="main-menu-m">
+        <li>
+          <a href="/">Home</a>
+          <ul class="sub-menu-m">
+            <li><a href="/Category/1">Category 1</a></li>
+            <li><a href="/Category/2">Category 2</a></li>
+            <li><a href="/Category/3">Category 3</a></li>
+          </ul>
+          <span class="arrow-main-menu-m">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+
+    <div class="wrap-logo no-banner container">
+      <div class="logo">
+        <a href="/">
+          <img src="images/icons/logo-01.png" alt="LOGO">
+        </a>
+      </div>
+    </div>
+
+    <div class="wrap-main-nav">
+      <div class="main-nav">
+        <!-- Menu desktop-->
+        <nav class="menu-desktop">
+          <a href="/" class="logo-stick">
+            <img src="images/icons/logo-01.png" alt="LOGO">
+          </a>
+
+          <ul class="main-menu justify-content-center">
+            @* <li class="main-menu-active">
+              <a href="/">Home</a>
+            </li> *@
+            <li class="mega-menu-item">
+              <a href="/Category/1">Chuyên mục 1</a>
+              @* 
+              sub-mega-menu
+                nav
+                  nav-link (active)...
+                tab-content
+                  tab-pane
+              *@
+              <div class="sub-mega-menu">
+
+                <div class="nav flex-column nav-pills" role="tablist">
+                  <a class="nav-link active" data-toggle="pill" href="#cat1-0" role="tab">Tất cả</a>
+                  <a 
+                    class="nav-link"
+                    data-toggle="pill"
+                    href="#cat1-1"
+                    role="tab"
+                  >Tag 1</a>
+                  <a class="nav-link" data-toggle="pill" href="#cat1-2" role="tab">Tag 2</a>
+                  <a class="nav-link" data-toggle="pill" href="#cat1-3" role="tab">Tag 3</a>
+                </div>
+
+                <div class="tab-content">
+                  <div class="tab-pane show active" id="cat1-0" role="tabpanel">
+                    <!-- Tab content -->
+                    <div class="row">
+                      <div class="col-3">
+                        <div>
+                          <a href="/Post/1" class="wrap-pic-w hov1 trans-03">
+                            <img src="images/post-05.jpg" alt="IMG">
+                          </a>
+
+                          <div class="p-t-10">
+                            <h5 class="p-b-5">
+                              <a href="blog-detail-01.html" class="f1-s-5 cl3 hov-cl10 trans-03">
+                                Tiêu đề
+                              </a>
+                            </h5>
+
+                            <span class="cl8">
+                              <a href="#" class="f1-s-6 cl8 hov-cl10 trans-03">Chuyên mục</a>
+                              <span class="f1-s-3 m-rl-3">  -</span>
+                              <span class="f1-s-3">Feb 18</span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-3">asd</div>
+                      <div class="col-3">asd</div>
+                      <div class="col-3">asd</div>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="cat1-1" role="tabpanel">
+                    <div class="row">
+                      <div class="col-3">sdfg</div>
+                      <div class="col-3">sdfg</div>
+                      <div class="col-3">sdfg</div>
+                      <div class="col-3">sdfg</div>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="cat1-2" role="tabpanel">
+                    <div class="row">
+                      <div class="col-3">wef</div>
+                      <div class="col-3">wef</div>
+                      <div class="col-3">wef</div>
+                      <div class="col-3">wef</div>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="cat1-3" role="tabpanel">
+                    <div class="row">
+                      <div class="col-3">qwer</div>
+                      <div class="col-3">qwer</div>
+                      <div class="col-3">qwer</div>
+                      <div class="col-3">qwer</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </li>
+            <li class="mega-menu-item">
+              <a href="/Category/3">Chuyên mục 2</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <main role="main" class="pb-3">
+      @RenderBody()
+    </main>
+  </div>
+    @* <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AdvWeb_VN</a>
@@ -39,10 +224,13 @@
         <div class="container">
             &copy; 2020 - AdvWeb_VN - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer> *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="lib/animsition/js/animsition.min.js"></script>
+    <script src="lib/bootstrap/dist/js/popper.js"></script>
+    <script src="js/main.js"></script>
+    @* <script src="~/js/site.js" asp-append-version="true"></script> *@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
