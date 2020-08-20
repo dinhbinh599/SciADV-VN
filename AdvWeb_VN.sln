@@ -21,7 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Domain", "2. Domain", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Hosts", "3. Hosts", "{B7661BB7-9654-4538-8A77-28B0A4858600}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvWeb_VN.ManageApp", "AdvWeb_VN.ManageApp\AdvWeb_VN.ManageApp.csproj", "{EBE9E779-79C0-439E-A0E0-C36E9BDCE964}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvWeb_VN.ManageApp", "AdvWeb_VN.ManageApp\AdvWeb_VN.ManageApp.csproj", "{EBE9E779-79C0-439E-A0E0-C36E9BDCE964}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvWeb_VN.WriterApp", "AdvWeb_VN.WriterApp\AdvWeb_VN.WriterApp.csproj", "{38998D78-E7F6-4EE7-835D-E4D84CF69221}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{EBE9E779-79C0-439E-A0E0-C36E9BDCE964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBE9E779-79C0-439E-A0E0-C36E9BDCE964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBE9E779-79C0-439E-A0E0-C36E9BDCE964}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38998D78-E7F6-4EE7-835D-E4D84CF69221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38998D78-E7F6-4EE7-835D-E4D84CF69221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38998D78-E7F6-4EE7-835D-E4D84CF69221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38998D78-E7F6-4EE7-835D-E4D84CF69221}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{5926D9D2-BD5D-4D01-AA06-418D080C760B} = {5520C892-0CB6-47C4-858F-AABEC5347F63}
 		{0A96C263-C928-404D-9402-40AB30E790E2} = {B7661BB7-9654-4538-8A77-28B0A4858600}
 		{EBE9E779-79C0-439E-A0E0-C36E9BDCE964} = {B7661BB7-9654-4538-8A77-28B0A4858600}
+		{38998D78-E7F6-4EE7-835D-E4D84CF69221} = {B7661BB7-9654-4538-8A77-28B0A4858600}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36A2063B-A626-4CA8-8F99-87B884A9C91D}

@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using System.IO;
 using System.Net.Http;
-using AdvWeb_VN.ViewModels.Common.Tags;
 using AdvWeb_VN.Application.Catalog.Tags;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
 
@@ -201,31 +200,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			post.Contents = request.Contents;
 			post.WriteTime = DateTime.Now;
 			post.CategoryID = request.CategoryID;
-			/*string PostID = "";
-			if (!post.CategoryID.Equals(request.CategoryID))
-			{
-				post.CategoryID = request.CategoryID;
-				var query = from li in _context.Categories
-							where li.CategoryID.Equals(request.CategoryID)
-							select li;
-
-				var query2 = from c in _context.Posts
-							 where c.CategoryID.Equals(request.CategoryID)
-							 select c;
-
-				Category category = query.FirstOrDefault<Category>();
-				if (query2.Count() > 0)
-				{
-					Post lastPost = query2.ToList<Post>().Last();
-					SplitResult splitResult = new Split().GetID(lastPost.PostID, category.CategoryName.Length);
-					PostID = splitResult.name + (splitResult.Number + 1);
-				}
-				else
-				{
-					PostID = category.CategoryName + "1";
-				}
-			}
-			post.PostID = PostID;*/
 			if (request.ThumbnailFile != null)
 			{
 				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.PostID == request.PostID);
@@ -349,12 +323,12 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			if (!string.IsNullOrEmpty(request.Keyword))
 			{
-				query = query.Where(x => x.c.CategoryName.Contains(request.Keyword));
+				query = query.Where(x => x.c.CategoryName.Contains(request.Keyword)||x.p.PostName.Contains(request.Keyword));
 			}
 
 			if (request.ID != null)
 			{
-				query = query.Where(x => request.ID.Equals(x.p.CategoryID));
+				query = query.Where(x => request.ID.Equals(x.p.CategoryID)||request.ID.ToString().Contains(x.p.PostID));
 			}
 
 			int totalRow = await query.CountAsync();
@@ -635,6 +609,205 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			post.Contents = request.Contents;
 			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<ApiResult<bool>> UpdateAuthenticate(string id, Guid userID, PostUpdateRequest request)
+		{
+			var post = await _context.Posts.Where(x=>x.PostID.Equals(id)&&x.UserID.Equals(userID)).FirstOrDefaultAsync();
+			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {request.PostID}");
+
+			post.PostName = request.PostName;
+			post.Contents = request.Contents;
+			post.WriteTime = DateTime.Now;
+			post.CategoryID = request.CategoryID;
+
+			if (request.ThumbnailFile != null)
+			{
+				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.PostID == request.PostID);
+				if (thumbnailFile != null)
+				{
+					thumbnailFile.FileSize = request.ThumbnailFile.Length;
+					thumbnailFile.ImagePath = await this.SaveFile(request.ThumbnailFile);
+					post.Thumbnail = thumbnailFile.ImagePath;
+					_context.PostImages.Update(thumbnailFile);
+				}
+			}
+			var result = await _context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<ApiResult<bool>> DeleteAuthenticate(string postID, Guid userID)
+		{
+			var post = await _context.Posts.Where(x=>x.PostID.Equals(postID) &&x.UserID.Equals(userID)).FirstOrDefaultAsync();
+			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
+			var images = _context.PostImages.Where(i => i.PostID == postID);
+			foreach (var image in images)
+			{
+				await _storageService.DeleteFileAsync(image.ImagePath);
+			}
+			_context.Posts.Remove(post);
+			var result = await _context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<bool>("Xóa bài viết thất bại");
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<ApiResult<PostViewModel>> GetByIDAuthenticate(string postID, Guid userID)
+		{
+			var post = await _context.Posts.Where(x=>x.PostID.Equals(postID)&&x.UserID.Equals(userID)).FirstOrDefaultAsync();
+			if (post == null) return new ApiErrorResult<PostViewModel>("Không tìm thấy bài viết này!");
+			var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
+			var tag = await GetTagsAsync(post);
+			var category = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryID == post.CategoryID);
+			var postViewModel = new PostViewModel()
+			{
+				PostID = post.PostID,
+				PostName = post.PostName,
+				WriteTime = post.WriteTime,
+				View = post.View,
+				Thumbnail = post.Thumbnail,
+				Contents = post.Contents,
+				CategoryID = post.CategoryID,
+				UserName = user.UserName,
+				CategoryName = category.CategoryName,
+				Tags = tag
+			};
+
+			return new ApiSuccessResult<PostViewModel>(postViewModel);
+		}
+
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingCategoryIDAuthenticate(Guid userID, GetManagePostPagingRequest request)
+		{
+			var query = from c in _context.Categories
+						join p in _context.Posts on c.CategoryID equals p.CategoryID
+						join d in _context.Users on p.UserID equals d.Id
+						select new { p, c, d };
+
+			query = query.Where(x => x.p.UserID.Equals(userID));
+
+			if (!string.IsNullOrEmpty(request.Keyword))
+			{
+				query = query.Where(x => x.c.CategoryName.Contains(request.Keyword) || x.p.PostName.Contains(request.Keyword));
+			}
+
+			if (request.ID != null)
+			{
+				query = query.Where(x => request.ID.Equals(x.p.CategoryID) || request.ID.ToString().Contains(x.p.PostID));
+			}
+
+			int totalRow = await query.CountAsync();
+
+			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					CategoryID = x.p.CategoryID,
+					UserName = x.d.UserName,
+					CategoryName = x.c.CategoryName
+				}).ToListAsync();
+
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				TotalRecords = totalRow,
+				PageSize = request.PageSize,
+				PageIndex = request.PageIndex,
+				Items = data
+			};
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
+		}
+
+		public async Task<ApiResult<string>> AddImageByUrlAuthenticate(string postID, Guid userID, PostImageCreateUrlRequest request)
+		{
+			var post = await _context.Posts.FindAsync(postID);
+			if(!post.UserID.Equals(userID)) return new ApiErrorResult<string>("Bạn không có quyền!!!");
+
+			var postImage = new PostImage()
+			{
+				//Caption = request.Caption,
+				DateCreated = DateTime.Now,
+				PostID = postID,
+				IsDefault = false
+			};
+
+			if (request.ImageUrl != null)
+			{
+				var imageFileInfo = await SaveFileUrl(request.ImageUrl, postID);
+				postImage.ImagePath = imageFileInfo.FileName;
+				postImage.FileSize = imageFileInfo.FileSize;
+			}
+			_context.PostImages.Add(postImage);
+			await _context.SaveChangesAsync();
+			return new ApiSuccessResult<string>(postImage.ImagePath);
+		}
+
+		public async Task<ApiResult<bool>> UpdateImageContentsAuthenticate(string postID, Guid userID, PostUpdateContentsRequest request)
+		{
+			var post = await _context.Posts.FindAsync(postID);
+			if (!post.UserID.Equals(userID)) return new ApiErrorResult<bool>("Bạn không có quyền!!!");
+			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
+			post.Contents = request.Contents;
+			var result = await _context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
+			return new ApiSuccessResult<bool>();
+		}
+
+		public async Task<int> AddImageAuthenticate(string postID, Guid userID, PostImageCreateRequest request)
+		{
+			var post = await _context.Posts.FindAsync(postID);
+			if (!post.UserID.Equals(userID)) throw new AdvWebException("Bạn không có quyền!!!");
+			var postImage = new PostImage()
+			{
+				//Caption = request.Caption,
+				DateCreated = DateTime.Now,
+				PostID = postID,
+				IsDefault = false
+			};
+
+			if (request.ImageFile != null)
+			{
+				postImage.ImagePath = await this.SaveFile(request.ImageFile);
+				postImage.FileSize = request.ImageFile.Length;
+			}
+			_context.PostImages.Add(postImage);
+			await _context.SaveChangesAsync();
+			return postImage.ID;
+		}
+
+		public async Task<ApiResult<bool>> TagAssignAuthenticate(string postID, Guid userID, TagAssignRequest request)
+		{
+			var post = await _context.Posts.Where(x=>x.PostID.Equals(postID)&&x.UserID.Equals(userID)).FirstOrDefaultAsync();
+			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
+			var removedTags = request.Tags.Where(x => x.Selected == false).Select(x => x.Name).ToList();
+			foreach (var tagName in removedTags)
+			{
+				if (await IsInTagAsync(post, tagName) == true)
+				{
+					await RemoveFromTagAsync(post, tagName);
+				}
+			}
+			//await RemoveFromTagAsync(post, removedTags);
+
+			var addedTags = request.Tags.Where(x => x.Selected).Select(x => new { x.ID, x.Name }).ToList();
+			foreach (var tag in addedTags)
+			{
+				if (tag.ID.Equals("0")) await _tagService.Create(new TagCreateRequest
+				{
+					TagName = tag.Name
+				});
+
+				if (await IsInTagAsync(post, tag.Name) == false)
+				{
+					await AddToTagAsync(post, tag.Name);
+				}
+			}
+
 			return new ApiSuccessResult<bool>();
 		}
 	}

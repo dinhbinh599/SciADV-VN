@@ -1,7 +1,6 @@
 ﻿using AdvWeb_VN.Utilities.Constants;
 using AdvWeb_VN.ViewModels.Catalog.Categories;
 using AdvWeb_VN.ViewModels.Common;
-using AdvWeb_VN.ViewModels.Common.Tags;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;

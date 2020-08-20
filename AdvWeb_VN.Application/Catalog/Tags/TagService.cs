@@ -11,7 +11,6 @@ using AdvWeb_VN.Utilities.Dtos;
 using AdvWeb_VN.Utilities.Settings;
 using AdvWeb_VN.ViewModels.Common;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
-using AdvWeb_VN.ViewModels.Common.Tags;
 
 namespace AdvWeb_VN.Application.Catalog.Tags
 {
@@ -60,19 +59,39 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 			return new ApiSuccessResult<List<TagViewModel>>(data);
 		}
 
-		public async Task<ApiResultSelect2<List<TagViewModelSelect2>>> GetAllSelect2()
+		public async Task<ApiResult<PagedResult<TagViewModel>>> GetAllPagingTagID(GetTagPagingRequest request)
 		{
-			var query = from p in _context.Tags
-						select p;
+			var query = from c in _context.Tags
+						select c;
 
-			var data = await query.Select(x => new TagViewModelSelect2()
+			if (!string.IsNullOrEmpty(request.Keyword))
 			{
-				id = x.TagID,
-				text = x.TagName,
-				selected = false
-			}).ToListAsync();
+				query = query.Where(x => x.TagName.Contains(request.Keyword));
+			}
 
-			return new ApiSuccessResultSelect2<List<TagViewModelSelect2>>(data);
+			if (request.ID != null)
+			{
+				query = query.Where(x => request.ID.Equals(x.TagID));
+			}
+
+			int totalRow = await query.CountAsync();
+
+			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new TagViewModel()
+				{
+					TagID = x.TagID,
+					TagName = x.TagName,
+					PostCount = x.PostTags.Count
+				}).ToListAsync();
+			var pagedResult = new PagedResult<TagViewModel>()
+			{
+				TotalRecords = totalRow,
+				PageSize = request.PageSize,
+				PageIndex = request.PageIndex,
+				Items = data
+			};
+			return new ApiSuccessResult<PagedResult<TagViewModel>>(pagedResult);
 		}
 
 		public async Task<ApiResult<TagViewModel>> GetByID(int tagID)

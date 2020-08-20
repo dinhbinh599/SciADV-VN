@@ -27,19 +27,19 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(tags);
         }
 
-        [HttpGet("select2")]
-        public async Task<IActionResult> GetSelect2()
-        {
-            var tags = await _tagService.GetAllSelect2();
-            return Ok(tags);
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int id)
         {
             var result = await _tagService.GetByID(id);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
+        }
+
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery]GetTagPagingRequest request)
+        {
+            var tags = await _tagService.GetAllPagingTagID(request);
+            return Ok(tags);
         }
 
         [HttpPost]

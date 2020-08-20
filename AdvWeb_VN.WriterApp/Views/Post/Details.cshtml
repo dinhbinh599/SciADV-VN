@@ -1,0 +1,93 @@
+﻿@model AdvWeb_VN.ViewModels.System.Users.UserViewModel
+@{
+    ViewData["Title"] = "Chi tiết";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ 
+	var imagePath = "https://www.mycustomer.com/sites/all/themes/pp/img/default-user.png";
+	if (Model.AvatarImage != null)
+	{
+		imagePath = "https://localhost:5002/user-content/" + Model.AvatarImage;
+	}
+}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a class="btn btn-outline-primary" asp-action="Index" asp-controller="User">Về danh sách</a>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/Home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/User">Danh sách thành viên</a></li>
+                        <li class="breadcrumb-item active">Thông tin thành viên</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Thông tin thành viên</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <dl class="row">
+                                    <dt class="col-sm-2">
+                                        @Html.DisplayNameFor(model => model.UserID)
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        @Html.DisplayFor(model => model.UserID)
+                                    </dd>
+                                    <dt class="col-sm-2">
+                                        @Html.DisplayNameFor(model => model.UserName)
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        @Html.DisplayFor(model => model.UserName)
+                                    </dd>
+                                    <dt class="col-sm-2">
+                                        @Html.DisplayNameFor(model => model.Email)
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        @Html.DisplayFor(model => model.Email)
+                                    </dd>
+                                    <dt class="col-sm-2">
+                                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        @Html.DisplayFor(model => model.PhoneNumber)
+                                    </dd>
+                                    <dt class="col-sm-2" style="margin-top:20px">
+                                        @Html.DisplayNameFor(model => model.Roles)
+                                    </dt>
+                                    <dd class="col-sm-10" style="margin-top:20px">
+                                        @foreach (var role in Model.Roles)
+										{
+                                        <button class="btn btn-outline-danger">@role</button>
+										}
+                                    </dd>
+                                        <dt class="col-sm-2 avatar" style="margin-top:20px">
+                                            @Html.DisplayNameFor(model => model.AvatarImage)
+                                        </dt>
+                                        <dd class="col-sm-10" style="margin-top:20px">
+                                            <img style="width:100px;height:100px" src="@imagePath" alt="image" />
+                                        </dd>
+                                    </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

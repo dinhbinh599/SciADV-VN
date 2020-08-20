@@ -2,7 +2,6 @@
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.ProductImages;
 using AdvWeb_VN.ViewModels.Common;
-using AdvWeb_VN.ViewModels.Common.Tags;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -162,7 +161,7 @@ namespace AdvWeb_VN.ManageApp.Services
                     data = br.ReadBytes((int)request.ThumbnailFile.OpenReadStream().Length);
                 }
                 ByteArrayContent bytes = new ByteArrayContent(data);
-                requestContent.Add(bytes, "avatarImage", request.ThumbnailFile.FileName);
+                requestContent.Add(bytes, "thumbnailFile", request.ThumbnailFile.FileName);
             }
 
             requestContent.Add(new StringContent(request.PostName), "postName");

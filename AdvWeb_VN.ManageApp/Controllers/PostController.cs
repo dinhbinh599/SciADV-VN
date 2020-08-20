@@ -103,10 +103,12 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			return View(request);
 		}
 
+
 		[HttpGet]
 		public async Task<IActionResult> Edit(string id)
 		{
 			var result = await _postApiClient.GetByID(id);
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 
 			if (result.IsSuccessed)
 			{

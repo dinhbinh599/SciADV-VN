@@ -1,7 +1,6 @@
 ﻿using AdvWeb_VN.Utilities.Constants;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
 using AdvWeb_VN.ViewModels.Common;
-using AdvWeb_VN.ViewModels.Common.Tags;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -103,8 +102,22 @@ namespace AdvWeb_VN.ManageApp.Services
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/tags");
             var body = await response.Content.ReadAsStringAsync();
-            var categories = JsonConvert.DeserializeObject<ApiResult<List<TagViewModel>>>(body);
-            return categories;
+            var tags = JsonConvert.DeserializeObject<ApiResult<List<TagViewModel>>>(body);
+            return tags;
+        }
+
+        public async Task<ApiResult<PagedResult<TagViewModel>>> GetTagsPagings(GetTagPagingRequest request)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.GetAsync($"/api/tags/paging?pageIndex=" +
+                $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");
+            var body = await response.Content.ReadAsStringAsync();
+            var tags = JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<TagViewModel>>>(body);
+            return tags;
         }
     }
 }

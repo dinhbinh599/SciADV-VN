@@ -4,7 +4,9 @@
     ViewData["Title"] = "Cập nhật";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@{
+    var thumbnail = ViewData["BaseAddress"] + "/user-content/" + Model.AvatarImagePath;
+}
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -54,13 +56,17 @@
                                     <label for="exampleInputFile">File input</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input asp-for="AvatarImage" type="file" class="custom-file-input" id="exampleInputFile">
-                                            <label class="custom-file-label" asp-for="AvatarImage">Choose file</label>
+                                            <input asp-for="AvatarImage" type="file" class="custom-file-input" id="custom-file">
+                                            <label class="custom-file-label" for="custom-file">Choose file</label>
                                         </div>
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="">Upload</span>
                                         </div>
                                     </div>
+                                    <span asp-validation-for="AvatarImage" class="text-danger"></span>
+                                </div>
+                                <div style="text-align:center">
+                                    <img src="@thumbnail" class="img-circle elevation-2" style="width:100px;height:100px" id="image-thumbnail" />
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -79,7 +85,26 @@
     </section>
     <!-- /.content -->
 </div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section scripts{
+    <script type="text/javascript">
+		// Add the following code if you want the name of the file appear on select
+		$(".custom-file-input").on("change", function () {
+			var fileName = $(this).val().split("\\").pop();
+			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		});
+		$("#custom-file").change(function () {
+			readData(this);
+		});
+		function readData(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					$('#image-thumbnail').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+    </script>
+}
+
 

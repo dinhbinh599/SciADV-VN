@@ -4,7 +4,9 @@
     ViewData["Title"] = "Tạo mới";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@{
+    var imagePath = "https://www.mycustomer.com/sites/all/themes/pp/img/default-user.png";
+}
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -38,50 +40,54 @@
                         <!-- form start -->
                         <form asp-action="Create" role="form" method="post" enctype="multipart/form-data">
                             <div class="card-body">
-                                    <div asp-validation-summary="All" class="text-danger"></div>
-                                    <div class="form-group">
-                                        <label asp-for="UserName" class="control-label"></label>
-                                        <input asp-for="UserName" class="form-control" />
-                                        <span asp-validation-for="UserName" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Password" class="control-label"></label>
-                                        <input asp-for="Password" class="form-control" />
-                                        <span asp-validation-for="Password" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="ConfirmPassWord" class="control-label"></label>
-                                        <input asp-for="ConfirmPassWord" class="form-control" />
-                                        <span asp-validation-for="ConfirmPassWord" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Email" class="control-label"></label>
-                                        <input asp-for="Email" class="form-control" />
-                                        <span asp-validation-for="Email" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="PhoneNumber" class="control-label"></label>
-                                        <input asp-for="PhoneNumber" class="form-control" />
-                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputFile">File input</label>
-                                        <div class="input-group">
-                                            <div class="custom-file">
-                                                <input  asp-for="AvatarImage" type="file" class="custom-file-input" id="exampleInputFile">
-                                                <label class="custom-file-label" asp-for="AvatarImage">Choose file</label>
-                                            </div>
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" id="">Upload</span>
-                                            </div>
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="UserName" class="control-label"></label>
+                                    <input asp-for="UserName" class="form-control" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Password" class="control-label"></label>
+                                    <input asp-for="Password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="ConfirmPassWord" class="control-label"></label>
+                                    <input asp-for="ConfirmPassWord" class="form-control" />
+                                    <span asp-validation-for="ConfirmPassWord" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Email" class="control-label"></label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber" class="control-label"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">File input</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input asp-for="AvatarImage" type="file" class="custom-file-input" id="custom-file">
+                                            <label class="custom-file-label" for="custom-file">Choose file</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="">Upload</span>
                                         </div>
                                     </div>
+                                    <span asp-validation-for="AvatarImage" class="text-danger"></span>
                                 </div>
-                                    <div class="card-footer">
-										<div class="form-group">
-											<input type="submit" value="Lưu lại" class="btn btn-primary" />
-										</div>
-                                    </div>
+                                <div style="text-align:center">
+                                    <img src="@imagePath" class="img-circle elevation-2" style="width:100px;height:100px" id="image-thumbnail" />
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-group">
+                                    <input type="submit" value="Lưu lại" class="btn btn-primary" />
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <!-- /.card -->
@@ -93,7 +99,25 @@
     </section>
     <!-- /.content -->
 </div>
-        <div>
-            <a asp-action="Index">Back to List</a>
-        </div>
+@section scripts{
+    <script type="text/javascript">
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+        $("#custom-file").change(function () {
+            readData(this);
+        });
+        function readData(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#image-thumbnail').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}
 

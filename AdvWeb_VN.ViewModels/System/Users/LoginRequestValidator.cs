@@ -12,7 +12,6 @@ namespace AdvWeb_VN.ViewModels.System.Users
 			RuleFor(x => x.UserName).NotEmpty().WithMessage("Username is required");
 			RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required")
 				.MinimumLength(6).WithMessage("Password is at least 6 characters");
-
 		}
 	}
 }

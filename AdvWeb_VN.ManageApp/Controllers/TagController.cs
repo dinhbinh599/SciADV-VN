@@ -20,10 +20,21 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			_tagApiClient = tagApiClient;
 			_configuration = configuration;
 		}
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
 		{
-			var data = await _tagApiClient.GetAll();
-			return View(data);
+			var request = new GetTagPagingRequest()
+			{
+				Keyword = keyword,
+				PageIndex = pageIndex,
+				PageSize = pageSize
+			};
+			var data = await _tagApiClient.GetTagsPagings(request);
+			ViewBag.Keyword = keyword;
+			if (TempData["result"] != null)
+			{
+				ViewBag.SuccessMsg = TempData["result"];
+			}
+			return View(data.ResultObj);
 		}
 
 		// GET: /<controller>/

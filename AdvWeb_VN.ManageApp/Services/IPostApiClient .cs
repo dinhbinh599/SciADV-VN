@@ -1,7 +1,6 @@
 ﻿using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.ProductImages;
 using AdvWeb_VN.ViewModels.Common;
-using AdvWeb_VN.ViewModels.Common.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;

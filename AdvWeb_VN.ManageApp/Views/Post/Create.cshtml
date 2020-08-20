@@ -36,7 +36,7 @@
 						<!-- form start -->
 						<form asp-action="Create" role="form" method="post" enctype="multipart/form-data">
 							<div class="card-body">
-								<div asp-validation-summary="All" class="text-danger"></div>
+								<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 								<div class="form-group">
 									<label asp-for="PostName" class="control-label"></label>
 									<input asp-for="PostName" class="form-control" />
@@ -55,27 +55,29 @@
 											<option value="@category.CategoryID">@category.CategoryName</option>
 										}
 									</select>
+									<span asp-validation-for="CategoryID" class="text-danger"></span>
 								</div>
 								@for (int i = 0; i < Model.TagAssignRequest.Tags.Count; i++)
 								{
 									<input type="hidden" asp-for="TagAssignRequest.Tags[i].ID" />
 									<input type="hidden" asp-for="TagAssignRequest.Tags[i].Name" />
 								}
-								<div class="form-group">
-									<label class="control-label">Tags</label>
-									<select asp-for="TagAssignRequest.SelectedTags" class="form-control tag-select" multiple="multiple">
-										@foreach (var tag in Model.TagAssignRequest.Tags)
-										{
-											<option value="@tag.Name">@tag.Name</option>
-										}
-									</select>
-								</div>
+							<div class="form-group">
+								<label class="control-label">Tags</label>
+								<select asp-for="TagAssignRequest.SelectedTags" class="form-control tag-select" multiple="multiple">
+									@foreach (var tag in Model.TagAssignRequest.Tags)
+									{
+										<option value="@tag.Name">@tag.Name</option>
+									}
+								</select>
+							</div>
 								<div class="form-group">
 									<label for="exampleInputFile">Thumbnail</label>
 									<div class="input-group">
 										<div class="custom-file">
 											<input asp-for="ThumbnailFile" type="file" class="custom-file-input" id="custom-file">
 											<label class="custom-file-label" for="custom-file">Choose file</label>
+											<span asp-validation-for="ThumbnailFile" class="text-danger"></span>
 										</div>
 										<div class="input-group-append">
 											<span class="input-group-text" id="">Upload</span>
@@ -86,8 +88,17 @@
 								<input type="hidden" asp-for="UserID" class="form-control" />
 							</div>
 							<div class="card-footer">
-								<div class="form-group">
-									<input type="submit" value="Lưu lại" class="btn btn-primary" />
+								<div class="row">
+									<div class="col-1">
+										<div class="form-group">
+											<input type="submit" value="Lưu lại" class="btn btn-outline-primary" />
+										</div>
+									</div>
+									<div class="col-1">
+										<div class="form-group">
+											<input type="submit" value="Xem trước" class="btn btn-outline-info" />
+										</div>
+									</div>
 								</div>
 							</div>
 						</form>

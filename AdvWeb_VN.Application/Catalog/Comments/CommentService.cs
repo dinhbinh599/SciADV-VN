@@ -16,7 +16,6 @@ using AdvWeb_VN.ViewModels.Catalog.Categories;
 using AdvWeb_VN.Application.Catalog.Categories;
 using AdvWeb_VN.ViewModels.Catalog.Comments;
 using Microsoft.AspNetCore.Identity;
-using AdvWeb_VN.ViewModels.Common.Tags;
 
 namespace AdvWeb_VN.Application.Catalog.Comments
 {

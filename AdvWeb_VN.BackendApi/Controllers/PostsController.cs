@@ -44,6 +44,13 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("{userID}/paging-categoryid")]
+        public async Task<IActionResult> GetAllPagingByCategoryID(Guid userID,[FromQuery]GetManagePostPagingRequest request)
+        {
+            var posts = await _postService.GetAllPagingCategoryIDAuthenticate(userID, request);
+            return Ok(posts);
+        }
+
         [HttpGet("public-paging-tagid")]
         public async Task<IActionResult> GetByTagID([FromQuery]GetPublicPostPagingRequest request)
         {
@@ -62,6 +69,14 @@ namespace AdvWeb_VN.BackendApi.Controllers
         public async Task<IActionResult> GetByID(string id)
         {
             var result = await _postService.GetByID(id);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpGet("{userID}/{id}")]
+        public async Task<IActionResult> GetByID(Guid userID,string id)
+        {
+            var result = await _postService.GetByIDAuthenticate(id, userID);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
@@ -86,10 +101,27 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(result);
         }
 
+        [HttpPut("{userID}/{id}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(Guid userID, string id,[FromForm]PostUpdateRequest request)
+        {
+            var result = await _postService.UpdateAuthenticate(id, userID, request);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
         [HttpPut("{id}/contents")]
         public async Task<IActionResult> UpdateContents(string id, [FromBody]PostUpdateContentsRequest request)
         {
             var result = await _postService.UpdateImageContents(id, request);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("{userID}/{id}/contents")]
+        public async Task<IActionResult> UpdateContents(Guid userID, string id, [FromBody]PostUpdateContentsRequest request)
+        {
+            var result = await _postService.UpdateImageContentsAuthenticate(id, userID, request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
@@ -110,6 +142,14 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("{userID}/{id}")]
+        public async Task<IActionResult> Delete(Guid userID, string id)
+        {
+            var result = await _postService.DeleteAuthenticate(id, userID);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
         [HttpPut("{id}/tags")]
         public async Task<IActionResult> TagAssign(string id, [FromBody]TagAssignRequest request)
         {
@@ -117,6 +157,20 @@ namespace AdvWeb_VN.BackendApi.Controllers
                 return BadRequest(ModelState);
 
             var result = await _postService.TagAssign(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{userID}/{id}/tags")]
+        public async Task<IActionResult> TagAssign(Guid userID, string id, [FromBody]TagAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _postService.TagAssignAuthenticate(id, userID, request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -164,6 +218,23 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(image);
         }
 
+        [HttpPost("{userID}/{postId}/images")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreateImage(Guid userID, string postId, [FromForm]PostImageCreateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var imageId = await _postService.AddImageAuthenticate(postId, userID, request);
+            if (imageId == 0)
+                return BadRequest();
+
+            var image = await _postService.GetImageByID(imageId);
+
+            return Ok(image);
+        }
+
         [HttpPost("{postId}/images/url")]
         public async Task<IActionResult> CreateImageByUrl(string postId, [FromBody]PostImageCreateUrlRequest request)
         {
@@ -172,6 +243,19 @@ namespace AdvWeb_VN.BackendApi.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _postService.AddImageByUrl(postId, request);
+            if (!result.IsSuccessed) return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [HttpPost("{userID}/{postId}/images/url")]
+        public async Task<IActionResult> CreateImageByUrl(Guid userID, string postId, [FromBody]PostImageCreateUrlRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _postService.AddImageByUrlAuthenticate(postId, userID, request);
             if (!result.IsSuccessed) return BadRequest(result);
 
             return Ok(result);
