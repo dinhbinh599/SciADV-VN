@@ -124,12 +124,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingTagID(GetManagePostPagingRequest request)
 		{
 			var query = from p in _context.Posts
-						join pt in _context.Comments on p.PostID equals pt.PostID
 						join pic in _context.PostTags on p.PostID equals pic.PostID
 						join e in _context.Categories on p.CategoryID equals e.CategoryID
 						join c in _context.Tags on pic.TagID equals c.TagID
 						join u in _context.Users on p.UserID equals u.Id
-						select new { p, pt, pic, c, e, u};
+						select new { p, pic, c, e, u};
 
 			if(!string.IsNullOrEmpty(request.Keyword))
 			{
@@ -357,19 +356,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
 
-		public async Task<ApiResult<bool>> TagAssignByTagName(string postID, string tagName)
-		{
-			var post = await _context.Posts.FindAsync(postID);
-			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
-			if (!await TagExistsAsync(tagName)) return new ApiErrorResult<bool>("Tag không tồn tại");
-			if (await IsInTagAsync(post, tagName) == false)
-			{
-				await AddToTagAsync(post, tagName);
-			}
-			else { return new ApiErrorResult<bool>($"Bài viết này đã tồn tại Tag {tagName}"); }
-			return new ApiSuccessResult<bool>();
-		}
-
 		public async Task<ApiResult<bool>> TagAssign(string id, TagAssignRequest request)
 		{
 			var post = await _context.Posts.FindAsync(id);
@@ -398,19 +384,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}
 			}
 			
-			return new ApiSuccessResult<bool>();
-		}
-
-		public async Task<ApiResult<bool>> TagRemoveByTagName(string postID, string tagName)
-		{
-			var post = await _context.Posts.FindAsync(postID);
-			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
-			if (!await TagExistsAsync(tagName)) return new ApiErrorResult<bool>("Tag không tồn tại");
-			if (await IsInTagAsync(post, tagName) == true)
-			{
-				await RemoveFromTagAsync(post, tagName);
-			}
-			else { return new ApiErrorResult<bool>($"Bài viết này không tồn tại Tag {tagName}"); }
 			return new ApiSuccessResult<bool>();
 		}
 

@@ -45,35 +45,35 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             CategoryID = 1,
-                            CategoryName = "Chaos;Head",
-                            CreateDate = new DateTime(2020, 8, 13, 12, 10, 38, 203, DateTimeKind.Local).AddTicks(864)
+                            CategoryName = "News",
+                            CreateDate = new DateTime(2020, 8, 21, 10, 41, 34, 895, DateTimeKind.Local).AddTicks(4615)
                         },
                         new
                         {
                             CategoryID = 2,
-                            CategoryName = "Chaos;Child",
-                            CreateDate = new DateTime(2020, 8, 13, 12, 10, 38, 204, DateTimeKind.Local).AddTicks(5802)
+                            CategoryName = "Review",
+                            CreateDate = new DateTime(2020, 8, 21, 10, 41, 34, 896, DateTimeKind.Local).AddTicks(4994)
                         },
                         new
                         {
                             CategoryID = 3,
-                            CategoryName = "Steins;Gate",
-                            CreateDate = new DateTime(2020, 8, 13, 12, 10, 38, 204, DateTimeKind.Local).AddTicks(5842)
+                            CategoryName = "Project",
+                            CreateDate = new DateTime(2020, 8, 21, 10, 41, 34, 896, DateTimeKind.Local).AddTicks(5022)
                         },
                         new
                         {
                             CategoryID = 4,
-                            CategoryName = "Robotics;Notes",
-                            CreateDate = new DateTime(2020, 8, 13, 12, 10, 38, 204, DateTimeKind.Local).AddTicks(5845)
+                            CategoryName = "Donate",
+                            CreateDate = new DateTime(2020, 8, 21, 10, 41, 34, 896, DateTimeKind.Local).AddTicks(5025)
                         });
                 });
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.Comment", b =>
                 {
                     b.Property<string>("CommentID")
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(true);
 
                     b.Property<DateTime>("CommentTime")
                         .HasColumnType("datetime2");
@@ -89,15 +89,15 @@ namespace AdvWeb_VN.Data.Migrations
                         .IsUnicode(true);
 
                     b.Property<string>("ParrentID")
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(true);
 
                     b.Property<string>("PostID")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(true);
 
                     b.Property<Guid>("UserID")
                         .ValueGeneratedOnAdd()
@@ -109,64 +109,14 @@ namespace AdvWeb_VN.Data.Migrations
                     b.HasIndex("PostID");
 
                     b.ToTable("Comments");
-
-                    b.HasData(
-                        new
-                        {
-                            CommentID = "Chaos;Head1-1",
-                            CommentTime = new DateTime(2020, 8, 13, 12, 10, 38, 207, DateTimeKind.Local).AddTicks(7443),
-                            Commentator = "Đẹp trai vô danh",
-                            Commenter = "Bài review rất hay",
-                            PostID = "Chaos;Head1",
-                            UserID = new Guid("00000000-0000-0000-0000-000000000000")
-                        },
-                        new
-                        {
-                            CommentID = "Chaos;Head1-2",
-                            CommentTime = new DateTime(2020, 8, 13, 12, 10, 38, 207, DateTimeKind.Local).AddTicks(9600),
-                            Commentator = "Đẹp trai có danh",
-                            Commenter = "Ừ bài hay thật",
-                            ParrentID = "Chaos;Head1-1",
-                            PostID = "Chaos;Head1",
-                            UserID = new Guid("00000000-0000-0000-0000-000000000000")
-                        },
-                        new
-                        {
-                            CommentID = "Chaos;Head1-3",
-                            CommentTime = new DateTime(2020, 8, 13, 12, 10, 38, 208, DateTimeKind.Local).AddTicks(563),
-                            Commentator = "hoho303",
-                            Commenter = "Cảm ơn các bạn",
-                            ParrentID = "Chaos;Head1-1",
-                            PostID = "Chaos;Head1",
-                            UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14")
-                        },
-                        new
-                        {
-                            CommentID = "Chaos;Child1-1",
-                            CommentTime = new DateTime(2020, 8, 13, 12, 10, 38, 208, DateTimeKind.Local).AddTicks(574),
-                            Commentator = "Bá đạo trên từng hạt gạo",
-                            Commenter = "Bài review rất tệ",
-                            PostID = "Chaos;Child1",
-                            UserID = new Guid("00000000-0000-0000-0000-000000000000")
-                        },
-                        new
-                        {
-                            CommentID = "Chaos;Child1-2",
-                            CommentTime = new DateTime(2020, 8, 13, 12, 10, 38, 208, DateTimeKind.Local).AddTicks(577),
-                            Commentator = "hoho303",
-                            Commenter = "Xin lỗi, mình sẽ cố gắng cải thiện!",
-                            ParrentID = "Chaos;Child1-1",
-                            PostID = "Chaos;Child1",
-                            UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14")
-                        });
                 });
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.Post", b =>
                 {
                     b.Property<string>("PostID")
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(true);
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
@@ -178,12 +128,14 @@ namespace AdvWeb_VN.Data.Migrations
 
                     b.Property<string>("PostName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200)
                         .IsUnicode(true);
 
                     b.Property<string>("Thumbnail")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
@@ -203,30 +155,6 @@ namespace AdvWeb_VN.Data.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Posts");
-
-                    b.HasData(
-                        new
-                        {
-                            PostID = "Chaos;Child1",
-                            CategoryID = 2,
-                            Contents = "Đây là 1 Visual Novel rất hay",
-                            PostName = "Review Visual Novel Chaos;Child",
-                            Thumbnail = "https://images-na.ssl-images-amazon.com/images/I/91HUMu2XDYL._RI_.jpg",
-                            UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
-                            View = 0,
-                            WriteTime = new DateTime(2020, 8, 13, 12, 10, 38, 206, DateTimeKind.Local).AddTicks(7743)
-                        },
-                        new
-                        {
-                            PostID = "Chaos;Head1",
-                            CategoryID = 1,
-                            Contents = "Đây là 1 Visual Novel rất hay",
-                            PostName = "Review Visual Novel Chaos;Head",
-                            Thumbnail = "https://upload.wikimedia.org/wikipedia/vi/3/34/Chaos_Head_game_cover.jpg",
-                            UserID = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
-                            View = 0,
-                            WriteTime = new DateTime(2020, 8, 13, 12, 10, 38, 207, DateTimeKind.Local).AddTicks(1740)
-                        });
                 });
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.PostImage", b =>
@@ -258,9 +186,9 @@ namespace AdvWeb_VN.Data.Migrations
 
                     b.Property<string>("PostID")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(true);
 
                     b.HasKey("ID");
 
@@ -275,32 +203,15 @@ namespace AdvWeb_VN.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PostID")
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(true);
 
                     b.HasKey("TagID", "PostID");
 
                     b.HasIndex("PostID");
 
                     b.ToTable("PostTags");
-
-                    b.HasData(
-                        new
-                        {
-                            TagID = 2,
-                            PostID = "Chaos;Head1"
-                        },
-                        new
-                        {
-                            TagID = 1,
-                            PostID = "Chaos;Head1"
-                        },
-                        new
-                        {
-                            TagID = 1,
-                            PostID = "Chaos;Child1"
-                        });
                 });
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.Role", b =>
@@ -326,14 +237,14 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             Id = new Guid("706a7f4f-a6ed-4e24-bd09-df7829865142"),
-                            ConcurrencyStamp = "0c7e34af-ee56-4160-8ac4-efe39ca6d149",
+                            ConcurrencyStamp = "44f4debc-1aa6-48f7-9796-9c6811a383ff",
                             Name = "admin",
                             NormalizedName = "admin"
                         },
                         new
                         {
                             Id = new Guid("d00409db-a6ed-4985-a3b7-4036774572cd"),
-                            ConcurrencyStamp = "5dfab554-d03a-4c1c-929b-ac26623fcfbc",
+                            ConcurrencyStamp = "1334d8c3-5384-44c1-88ca-de253bfbe736",
                             Name = "Writer",
                             NormalizedName = "Writer"
                         });
@@ -433,13 +344,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("0cfe64bd-645b-4f5a-91d1-c3082c132ed8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5c9ce0fa-aa73-4792-a0d8-b61179d53a3b",
+                            ConcurrencyStamp = "0fd00d60-056c-43ec-8403-54f3c11134ca",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM9KOV7pE4QnB7eEGHg0n8uRX2likjeclE9ZEaYhbkPE4AoL7zJUBuqRC2ZdED1vbQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGWf5nZV7/efV3s/czmyPogqZKkMJzQT/slAlxnBIaqQ5Ad/lC9I7yv2/1z5EQoRHQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -449,13 +360,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7dba8790-27d7-4e3b-9d6c-b29049708a1a",
+                            ConcurrencyStamp = "6bcb461f-4603-42a0-9800-ff0e4b6e45c1",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "hoho303",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBH4s8CG6FAGfFvKi8KbW7I+rRqk7uA0uQEp4iXJ6S6MfcOu9T8ahKnnV+FNYh+ekg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDGpxmpHGzlWdwVkRJxhS3pd916zglrIcVPbXExRfBwKH3Qg7p6EX27WXJe8uUQMcg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

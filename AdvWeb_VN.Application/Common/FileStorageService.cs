@@ -46,6 +46,7 @@ namespace AdvWeb_VN.Application.Common
             var filePath = Path.Combine(_userContentFolder, fileName);
 
             WebClient client = new WebClient();
+            client.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36");
             client.DownloadFileAsync(new Uri(url), filePath);
             return await GetFileSizeAsync(url);
         }

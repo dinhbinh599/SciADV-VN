@@ -178,28 +178,6 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}/tags/assign/{name}")]
-        public async Task<IActionResult> TagAssignByTagName(string id, string name)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await _postService.TagAssignByTagName(id, name);
-            if (!result.IsSuccessed) return BadRequest(result);
-            return Ok(result);
-        }
-
-        [HttpPut("{id}/roles/remove/{name}")]
-        public async Task<IActionResult> TagRemoveByTagName(string id, string name)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await _postService.TagRemoveByTagName(id, name);
-            if (!result.IsSuccessed) return BadRequest(result);
-            return Ok(result);
-        }
-
         //Images
         [HttpPost("{postId}/images")]
         [Consumes("multipart/form-data")]

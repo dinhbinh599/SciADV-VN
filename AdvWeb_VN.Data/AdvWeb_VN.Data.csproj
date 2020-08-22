@@ -25,6 +25,14 @@
     <Compile Remove="Migrations\20200806075129_initial.Designer.cs" />
     <Compile Remove="Migrations\20200810082708_update-comment.cs" />
     <Compile Remove="Migrations\20200810082708_update-comment.Designer.cs" />
+    <Compile Remove="Migrations\20200821032203_update-post-data.cs" />
+    <Compile Remove="Migrations\20200821032203_update-post-data.Designer.cs" />
+    <Compile Remove="Migrations\20200821032434_update-post-data.cs" />
+    <Compile Remove="Migrations\20200821032434_update-post-data.Designer.cs" />
+    <Compile Remove="Migrations\20200821032744_update-post-data.cs" />
+    <Compile Remove="Migrations\20200821032744_update-post-data.Designer.cs" />
+    <Compile Remove="Migrations\20200821033304_update-post-data.cs" />
+    <Compile Remove="Migrations\20200821033304_update-post-data.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

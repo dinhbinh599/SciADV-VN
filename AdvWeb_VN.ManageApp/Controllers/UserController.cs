@@ -79,6 +79,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Edit(Guid id)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var result = await _userApiClient.GetByID(id);
 			if (result.IsSuccessed)
 			{

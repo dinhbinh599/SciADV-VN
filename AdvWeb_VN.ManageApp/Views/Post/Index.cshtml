@@ -122,10 +122,10 @@
                                                         @Html.DisplayFor(modelItem => item.View)
                                                     </td>
                                                     <td>
-                                                        @Html.ActionLink("Sửa", "Edit", new { id = item.PostID }) |
-                                                        @Html.ActionLink("Xem", "Details", new { id = item.PostID }) |
-                                                        @Html.ActionLink("Xóa", "Delete", new { id = item.PostID }) |
-                                                    </td>
+                                                        <a href="/Post/Edit/@item.PostID" class="btn btn-outline-primary"> Sửa</a>
+                                                        <a href="/Post/Details/@item.PostID" style="margin-top:5px" class="btn btn-outline-info">Xem</a>
+                                                        <a href="/Post/Delete/@item.PostID" style="margin-top:5px" class="btn btn-outline-danger">Xóa</a>
+</td>
                                                 </tr>
                                                 }
                                             </tbody>

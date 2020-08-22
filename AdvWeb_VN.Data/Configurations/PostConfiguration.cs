@@ -13,10 +13,10 @@ namespace AdvWeb_VN.Data.Configurations
 		{
 			builder.ToTable("Posts");
 			builder.HasKey(x => x.PostID);
-			builder.Property(x => x.PostID).IsUnicode(false).HasMaxLength(100);
-			builder.Property(x => x.Thumbnail).IsRequired(false).HasMaxLength(200);
+			builder.Property(x => x.PostID).IsUnicode().HasMaxLength(100);
+			builder.Property(x => x.Thumbnail).IsRequired().HasMaxLength(200);
 			builder.Property(x => x.PostName).IsRequired()
-				.HasMaxLength(50).IsUnicode();
+				.HasMaxLength(200).IsUnicode();
 			builder.Property(x => x.Contents).IsRequired().IsUnicode();
 			builder.Property(x => x.View).IsRequired().HasDefaultValue(0);
 			builder.HasOne(x => x.Category).WithMany(x => x.Posts).HasForeignKey(x => x.CategoryID);

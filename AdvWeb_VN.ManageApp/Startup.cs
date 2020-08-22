@@ -40,7 +40,7 @@ namespace AdvWeb_VN.ManageApp
 			
 			services.AddSession(options =>
 			{
-				options.IdleTimeout = TimeSpan.FromMinutes(30);
+				options.IdleTimeout = TimeSpan.FromDays(1);
 			});
 
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

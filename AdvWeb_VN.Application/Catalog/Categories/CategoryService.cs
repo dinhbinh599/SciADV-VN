@@ -13,6 +13,7 @@ using AdvWeb_VN.ViewModels.Common;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.Application.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.Categories;
+using AdvWeb_VN.ViewModels.Catalog.Tags;
 
 namespace AdvWeb_VN.Application.Catalog.Categories
 {
@@ -78,6 +79,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 			return new ApiSuccessResult<CategoryViewModel>(categoryVM);
 		}
+
 
 		public async Task<ApiResult<bool>> Update(CategoryUpdateRequest request)
 		{

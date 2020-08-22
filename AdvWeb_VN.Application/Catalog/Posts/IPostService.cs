@@ -26,8 +26,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<List<PostViewModel>> GetAll();
 		Task<ApiResult<bool>> TagAssign(string postID, TagAssignRequest request);
 		Task<ApiResult<bool>> TagAssignAuthenticate(string postID, Guid userID, TagAssignRequest request);
-		Task<ApiResult<bool>> TagAssignByTagName(string postID, string tagName);
-		Task<ApiResult<bool>> TagRemoveByTagName(string postID, string tagName);
 		Task<int> AddImage(string postID, PostImageCreateRequest request);
 		Task<int> AddImageAuthenticate(string postID, Guid userID, PostImageCreateRequest request);
 		Task<ApiResult<string>> AddImageByUrl(string postID, PostImageCreateUrlRequest request);

@@ -19,30 +19,30 @@ namespace AdvWeb_VN.Data.Extensions
 				new Category()
 				{
 					CategoryID = 1,
-					CategoryName = "Chaos;Head",
+					CategoryName = "News",
 					CreateDate = DateTime.Now,
 				},
 				new Category()
 				{
 					CategoryID = 2,
-					CategoryName = "Chaos;Child",
+					CategoryName = "Review",
 					CreateDate = DateTime.Now,
 
 				},
 				new Category()
 				{
 					CategoryID = 3,
-					CategoryName = "Steins;Gate",
+					CategoryName = "Project",
 					CreateDate = DateTime.Now
 				},
 				new Category()
 				{
 					CategoryID = 4,
-					CategoryName = "Robotics;Notes",
+					CategoryName = "Donate",
 					CreateDate = DateTime.Now
 				});
 
-			modelBuilder.Entity<Post>().HasData(
+			/*modelBuilder.Entity<Post>().HasData(
 				new Post()
 				{
 					PostID = "Chaos;Child1",
@@ -62,7 +62,7 @@ namespace AdvWeb_VN.Data.Extensions
 					Thumbnail = "https://upload.wikimedia.org/wikipedia/vi/3/34/Chaos_Head_game_cover.jpg",
 					UserID = WRITER_ID,
 					CategoryID = 1
-				});
+				});*/
 			modelBuilder.Entity<Tag>().HasData(
 				new Tag()
 				{
@@ -74,6 +74,7 @@ namespace AdvWeb_VN.Data.Extensions
 					TagID = 2,
 					TagName = "Chaos;Head"
 				});
+			/*
 			modelBuilder.Entity<Comment>().HasData(
 				new Comment()
 				{ 
@@ -136,7 +137,7 @@ namespace AdvWeb_VN.Data.Extensions
 					PostID = "Chaos;Child1",
 					TagID = 1
 				});
-
+				*/
 
 			modelBuilder.Entity<Role>().HasData(new Role()
 			{
