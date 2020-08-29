@@ -1,29 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using AdvWeb_VN.Models;
+using AdvWeb_VN.Data.EF;
 
 namespace AdvWeb_VN.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
+		private readonly AdvWebDbContext _context;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(AdvWebDbContext context)
 		{
-			_logger = logger;
+			_context = context;
 		}
 
 		public IActionResult Index()
-		{
-			return View();
-		}
-
-		public IActionResult Privacy()
 		{
 			return View();
 		}

@@ -4,16 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@ViewData["Title"] - AdvWeb_VN</title>
-	<link rel="icon" type="image/png" href="images/icons/favicon.png">
-  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="fonts/fontawesome-5.0.8/css/fontawesome-all.min.css">
-	<link rel="stylesheet" href="fonts/iconic/css/material-design-iconic-font.min.css">
-	<link rel="stylesheet" href="lib/animate/animate.css">
-	<link rel="stylesheet" href="lib/css-hamburgers/hamburgers.min.css">
-	<link rel="stylesheet" href="lib/animsition/css/animsition.min.css">
-	<link rel="stylesheet" href="css/util.min.css">
-	<link rel="stylesheet" href="css/main.css">
+	<link rel="icon" type="image/png" href="~/images/icons/favicon.png">
+  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="~/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="~/fonts/fontawesome-5.0.8/css/fontawesome-all.min.css">
+	<link rel="stylesheet" href="~/fonts/iconic/css/material-design-iconic-font.min.css">
+	<link rel="stylesheet" href="~/lib/animate/animate.css">
+	<link rel="stylesheet" href="~/lib/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" href="~/lib/animsition/css/animsition.min.css">
+	<link rel="stylesheet" href="~/css/util.min.css">
+	<link rel="stylesheet" href="~/css/main.css">
 </head>
 <body class="animsition">
   <header>
@@ -23,7 +23,7 @@
         <div class="content-topbar container h-100">
           <div class="left-topbar">
             <a href="/" class="left-topbar-item">Trang chủ</a>
-            <a href="/Post" class="left-topbar-item">Bài đăng</a>
+            <a asp-controller="Posts" class="left-topbar-item">Bài đăng</a>
             <a href="#" class="left-topbar-item">Quản lý</a>
           </div>
           <div class="right-topbar">
@@ -38,7 +38,7 @@
     <!-- mobile -->
     <div class="wrap-header-mobile">
       <div class="logo-mobile">
-        <a href="/"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
+        <a href="/"><img src="~/images/icons/logo-01.png" alt="IMG-LOGO"></a>
       </div>
 
       <div class="btn-show-menu-mobile hamburger hamburger--squeeze m-r--8">
@@ -52,7 +52,7 @@
       <ul class="topbar-mobile">
         <li class="left-topbar">
           <a href="/" class="left-topbar-item">Trang chủ</a>
-          <a href="/Post" class="left-topbar-item">Bài đăng</a>
+          <a asp-controller="Posts" class="left-topbar-item">Bài đăng</a>
           <a href="#" class="left-topbar-item">Quản lý</a>
         </li>
         <li class="right-topbar">
@@ -80,7 +80,7 @@
     <div class="wrap-logo no-banner container">
       <div class="logo">
         <a href="/">
-          <img src="images/icons/logo-01.png" alt="LOGO">
+          <img src="~/images/icons/logo-01.png" alt="LOGO">
         </a>
       </div>
     </div>
@@ -90,7 +90,7 @@
         <!-- Menu desktop-->
         <nav class="menu-desktop">
           <a href="/" class="logo-stick">
-            <img src="images/icons/logo-01.png" alt="LOGO">
+            <img src="~/images/icons/logo-01.png" alt="LOGO">
           </a>
 
           <ul class="main-menu justify-content-center">
@@ -127,7 +127,7 @@
                       <div class="col-3">
                         <div>
                           <a href="/Post/1" class="wrap-pic-w hov1 trans-03">
-                            <img src="images/post-05.jpg" alt="IMG">
+                            <img src="~/images/post-05.jpg" alt="IMG">
                           </a>
 
                           <div class="p-t-10">
@@ -192,46 +192,15 @@
       @RenderBody()
     </main>
   </div>
-    @* <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AdvWeb_VN</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - AdvWeb_VN - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer> *@
-    <footer>
+  
+  <footer>
 		<div class="bg2 p-t-40 p-b-25">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-4 p-b-20">
 						<div class="size-h-3 flex-s-c">
 							<a href="index.html">
-								<img class="max-s-full" src="images/icons/logo-02.png" alt="LOGO">
+								<img class="max-s-full" src="~/images/icons/logo-02.png" alt="LOGO">
 							</a>
 						</div>
 
@@ -278,7 +247,7 @@
 						<ul>
 							<li class="flex-wr-sb-s p-b-20">
 								<a href="#" class="size-w-4 wrap-pic-w hov1 trans-03">
-									<img src="images/popular-post-01.jpg" alt="IMG">
+									<img src="~/images/popular-post-01.jpg" alt="IMG">
 								</a>
 
 								<div class="size-w-5">
@@ -296,7 +265,7 @@
 
 							<li class="flex-wr-sb-s p-b-20">
 								<a href="#" class="size-w-4 wrap-pic-w hov1 trans-03">
-									<img src="images/popular-post-02.jpg" alt="IMG">
+									<img src="~/images/popular-post-02.jpg" alt="IMG">
 								</a>
 
 								<div class="size-w-5">
@@ -371,11 +340,11 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
       </span>
     </div>
 
-    <script src="lib/jquery/dist/jquery.min.js"></script>
-    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/animsition/js/animsition.min.js"></script>
-    <script src="lib/bootstrap/dist/js/popper.js"></script>
-    <script src="js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/animsition/js/animsition.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/popper.js"></script>
+    <script src="~/js/main.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
