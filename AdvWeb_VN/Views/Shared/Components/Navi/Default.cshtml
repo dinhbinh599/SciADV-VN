@@ -1,0 +1,101 @@
+@model IEnumerable<AdvWeb_VN.Data.Entities.Category>
+<div>
+  <div class="menu-mobile">
+    <ul class="topbar-mobile">
+      <li class="left-topbar">
+        <a href="/" class="left-topbar-item">Trang chủ</a>
+        <a asp-controller="Posts" class="left-topbar-item">Bài đăng</a>
+        <a href="#" class="left-topbar-item">Quản lý</a>
+      </li>
+      <li class="right-topbar">
+        <a href="#">
+          <span class="fab fa-facebook-f"></span>
+        </a>
+      </li>
+    </ul>
+    <ul class="main-menu-m">
+      <li>
+        <a href="/">Home</a>
+        <ul class="sub-menu-m">
+          @foreach (var cat in Model)
+          {
+            <li><a asp-controller="Category">
+              @Html.DisplayFor(_ => cat.CategoryName)
+            </a></li>
+          }
+        </ul>
+        <span class="arrow-main-menu-m">
+          <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="wrap-logo no-banner container">
+    <div class="logo">
+      <a href="/">
+        <img src="~/images/icons/logo-01.png" alt="LOGO">
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap-main-nav">
+    <div class="main-nav">
+      <nav class="menu-desktop">
+        <a href="/" class="logo-stick">
+          <img src="~/images/icons/logo-01.png" alt="LOGO">
+        </a>
+
+        <ul class="main-menu justify-content-center">
+          @foreach (var cat in Model)
+          {
+            <li class="mega-menu-item">
+              <a asp-controller="Categories">
+                @Html.DisplayFor(_ => cat.CategoryName)
+              </a>
+
+              <div class="sub-mega-menu">
+                <div class="nav flex-column nav-pills" roles="tablist">
+                  <a class="nav-link active" data-toggle="pill" href="#@cat.CategoryID" role="tab">Tất cả</a>
+                </div>
+                <div class="tab-content">
+                  <div class="tab-pane show active" id="@cat.CategoryID" role="tabpanel">
+                    @* Tab content *@
+                    <div class="row">
+                      @foreach (var post in cat.Posts)
+                      {
+                        <div class="col-3">
+                          <a href="/Post/Details/@post.PostID" class="wrap-pic-w hov1 trans-03">
+                            <img src="@post.Thumbnail" alt="@post.PostName">
+                          </a>
+
+                          <div class="p-t-10">
+                            <h5 class="p-b-5">
+                              <a href="/Post/Details/@post.PostID" class="f1-s-5 cl3 hov-cl10 trans-03">
+                                @Html.DisplayFor(_ => post.PostName)
+                              </a>
+                            </h5>
+
+                            <span class="cl8">
+                              <a href="#" class="f1-s-6 cl8 hov-cl10 trans-03">
+                                @Html.DisplayFor(_ => post.Category.CategoryName)
+                              </a>
+                              <span class="f1-s-3 m-rl-3">  -</span>
+                              <span class="f1-s-3">
+                                @Html.DisplayFor(_ => post.WriteTime)
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

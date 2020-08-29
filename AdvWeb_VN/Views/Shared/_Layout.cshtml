@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@ViewData["Title"] - AdvWeb_VN</title>
 	<link rel="icon" type="image/png" href="~/images/icons/favicon.png">
-  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="~/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="~/fonts/fontawesome-5.0.8/css/fontawesome-all.min.css">
 	<link rel="stylesheet" href="~/fonts/iconic/css/material-design-iconic-font.min.css">
+  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="~/lib/animate/animate.css">
 	<link rel="stylesheet" href="~/lib/css-hamburgers/hamburgers.min.css">
 	<link rel="stylesheet" href="~/lib/animsition/css/animsition.min.css">
@@ -48,7 +48,9 @@
       </div>
     </div>
 
-    <div class="menu-mobile">
+    @await Component.InvokeAsync("Navi")
+
+    @* <div class="menu-mobile">
       <ul class="topbar-mobile">
         <li class="left-topbar">
           <a href="/" class="left-topbar-item">Trang chủ</a>
@@ -94,18 +96,11 @@
           </a>
 
           <ul class="main-menu justify-content-center">
-            @* <li class="main-menu-active">
+            <li class="main-menu-active">
               <a href="/">Home</a>
-            </li> *@
+            </li>
             <li class="mega-menu-item">
-              <a href="/Category/1">Chuyên mục 1</a>
-              @* 
-              sub-mega-menu
-                nav
-                  nav-link (active)...
-                tab-content
-                  tab-pane
-              *@
+              <a href="/Category/1">Chuyên mục 1</a>             
               <div class="sub-mega-menu">
 
                 <div class="nav flex-column nav-pills" role="tablist">
@@ -184,7 +179,7 @@
           </ul>
         </nav>
       </div>
-    </div>
+    </div> *@
   </header>
 
   <div class="container">
