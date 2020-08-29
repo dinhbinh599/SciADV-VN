@@ -65,13 +65,13 @@
                       @foreach (var post in cat.Posts)
                       {
                         <div class="col-3">
-                          <a href="/Post/Details/@post.PostID" class="wrap-pic-w hov1 trans-03">
+                          <a href="/Posts/Details/@post.PostID" class="wrap-pic-w hov1 trans-03">
                             <img src="@post.Thumbnail" alt="@post.PostName">
                           </a>
 
                           <div class="p-t-10">
                             <h5 class="p-b-5">
-                              <a href="/Post/Details/@post.PostID" class="f1-s-5 cl3 hov-cl10 trans-03">
+                              <a href="/Posts/Details/@post.PostID" class="f1-s-5 cl3 hov-cl10 trans-03">
                                 @Html.DisplayFor(_ => post.PostName)
                               </a>
                             </h5>
