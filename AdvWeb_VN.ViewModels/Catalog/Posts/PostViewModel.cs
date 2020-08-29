@@ -21,15 +21,20 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 		[Display(Name = "Lượt xem")]
 		public int View { set; get; }
 
-		[Display(Name = "Chuyên mục")]
+		[Display(Name = "Chuyên mục con")]
+		public int SubCategoryID { set; get; }
+
+		[Display(Name = "Chuyên mục con")]
+		public string SubCategoryName { set; get; }
+
+		[Display(Name = "Chuyên mục cha")]
 		public int CategoryID { set; get; }
 
-		[Display(Name = "Chuyên mục")]
+		[Display(Name = "Chuyên mục cha")]
 		public string CategoryName { set; get; }
 
 		[Display(Name = "Ngày viết")]
 		public DateTime WriteTime { set; get; }
 		public IList<string> Tags { set; get; }
-
 	}
 }

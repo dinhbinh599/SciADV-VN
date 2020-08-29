@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Categories;
 using AdvWeb_VN.Application.Catalog.Comments;
 using AdvWeb_VN.Application.Catalog.Posts;
+using AdvWeb_VN.Application.Catalog.SubCategories;
 using AdvWeb_VN.Application.Catalog.Tags;
 using AdvWeb_VN.Application.Common;
 using AdvWeb_VN.Application.System.Roles;
@@ -13,13 +11,10 @@ using AdvWeb_VN.Data.EF;
 using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.Utilities.Constants;
 using AdvWeb_VN.ViewModels.System.Users;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +27,8 @@ namespace AdvWeb_VN.BackendApi
 {
 	public class Startup
 	{
+		readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
@@ -42,6 +39,17 @@ namespace AdvWeb_VN.BackendApi
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddCors(options =>
+			{
+				options.AddPolicy(name: MyAllowSpecificOrigins,
+								  builder =>
+								  {
+									  builder
+									  .AllowAnyOrigin()
+									  .AllowAnyHeader()
+									  .AllowAnyMethod();
+								  });
+			});
 			services.AddDbContext<AdvWebDbContext>(options =>
 			options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
 			services.AddIdentity<User, Role>()
@@ -63,6 +71,7 @@ namespace AdvWeb_VN.BackendApi
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IStorageService, FileStorageService>();
 			services.AddTransient<IRoleService, RoleService>();
+			services.AddTransient<ISubCategoryService, SubCategoryService>();
 			services.AddTransient<ICommentService, CommentService>();
 			services.AddTransient<ICategoryService, CategoryService>();
 			services.AddTransient<ITagService, TagService>();
@@ -150,6 +159,8 @@ namespace AdvWeb_VN.BackendApi
 
 			app.UseAuthentication();
 			app.UseRouting();
+
+			app.UseCors(MyAllowSpecificOrigins);
 
 			app.UseAuthorization();
 

@@ -30,6 +30,13 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("popular")]
+        public async Task<IActionResult> GetPopular()
+        {
+            var posts = await _postService.GetPopular();
+            return Ok(posts);
+        }
+
         [HttpGet("paging-tagid")]
         public async Task<IActionResult> GetAllPagingByTagID([FromQuery]GetManagePostPagingRequest request)
         {
@@ -44,12 +51,20 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("public-paging-category")]
+        public async Task<IActionResult> GetPagingCategory([FromQuery]GetPublicPostPagingRequest request)
+        {
+            var posts = await _postService.GetPagingCategory(request);
+            return Ok(posts);
+        }
+
         [HttpGet("{userID}/paging-categoryid")]
         public async Task<IActionResult> GetAllPagingByCategoryID(Guid userID,[FromQuery]GetManagePostPagingRequest request)
         {
             var posts = await _postService.GetAllPagingCategoryIDAuthenticate(userID, request);
             return Ok(posts);
         }
+
 
         [HttpGet("public-paging-tagid")]
         public async Task<IActionResult> GetByTagID([FromQuery]GetPublicPostPagingRequest request)

@@ -49,6 +49,8 @@ namespace AdvWeb_VN.ManageApp
 			services.AddTransient<ICategoryApiClient, CategoryApiClient>();
 			services.AddTransient<IPostApiClient, PostApiClient>();
 			services.AddTransient<ITagApiClient, TagApiClient>();
+			services.AddTransient<ISubCategoryApiClient, SubCategoryApiClient>();
+
 
 			IMvcBuilder builder = services.AddRazorPages();
 			var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");

@@ -12,9 +12,11 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 
 		[Display(Name = "Nội dung")]
 		public string Contents { set; get; }
-
-		[Display(Name = "Chuyên mục")]
+		[Display(Name = "Chuyên mục cha")]
 		public int CategoryID { set; get; }
+
+		[Display(Name = "Chuyên mục con")]
+		public int SubCategoryID { set; get; }
 
 		[Display(Name = "Thumbnail")]
 		public IFormFile ThumbnailFile { get; set; }

@@ -23,13 +23,13 @@ namespace AdvWeb_VN.ManageApp.Controllers
 	{
 		private readonly IPostApiClient _postApiClient;
 		private readonly IConfiguration _configuration;
-		private readonly ICategoryApiClient _categegoryApiClient; 
+		private readonly ISubCategoryApiClient _subCategegoryApiClient; 
 		private readonly ITagApiClient _tagApiClient;
-		public PostController(IPostApiClient postApiClient, IConfiguration configuration, ICategoryApiClient categegoryApiClient, ITagApiClient tagApiClient)
+		public PostController(IPostApiClient postApiClient, IConfiguration configuration, ISubCategoryApiClient subCategegoryApiClient, ITagApiClient tagApiClient)
 		{
 			_postApiClient = postApiClient;
 			_configuration = configuration;
-			_categegoryApiClient = categegoryApiClient;
+			_subCategegoryApiClient = subCategegoryApiClient;
 			_tagApiClient = tagApiClient;
 		}
 
@@ -61,16 +61,14 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Create()
+		public IActionResult Create()
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 			
-			var tagAssignRequest = await GetTagAssignRequest();
 			var postCreateRequest = new PostCreateRequest()
 			{
-				UserID = userID,
-				Categories = await _categegoryApiClient.GetAll(),
-				TagAssignRequest = tagAssignRequest
+				UserID = userID			
 			};
 			return View(postCreateRequest);
 		}
@@ -93,9 +91,11 @@ namespace AdvWeb_VN.ManageApp.Controllers
 					id = result.ResultObj.PostID,
 					Contents = await ConvertImage(postID, oldContents)
 				});
-				var requestConvert = SelectConvertBySelectedTags(request.TagAssignRequest);
+				var tagAssignRequest = await GetTagAssignRequest();
+				tagAssignRequest.SelectedTags = request.TagAssignRequest.SelectedTags;
+				var requestConvert = SelectConvertBySelectedTags(tagAssignRequest);
 				await _postApiClient.TagAssign(postID, requestConvert);
-				TempData["result"] = "Thêm mới người dùng thành công";
+				TempData["result"] = "Thêm mới bài viết thành công";
 				return RedirectToAction("Index");
 			}
 
@@ -117,10 +117,11 @@ namespace AdvWeb_VN.ManageApp.Controllers
 				{
 					PostID = post.PostID,
 					PostName = post.PostName,
-					CategoryID = post.CategoryID,
+					SubCategoryID = post.SubCategoryID,
 					Contents = post.Contents,
 					Thumbnail = post.Thumbnail,
-					Categories = await _categegoryApiClient.GetAll(),
+					CategoryName = post.SubCategoryName,
+					CategoryID = post.CategoryID,
 					TagAssignRequest = SelectConvertByTags(await GetTagAssignRequest(post.PostID))
 				};
 				return View(updateRequest);

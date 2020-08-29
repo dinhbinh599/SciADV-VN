@@ -27,6 +27,19 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(categories);
         }
 
+        [HttpGet("menu")]
+        public async Task<IActionResult> GetMenuCategory()
+        {
+            var categories = await _categoryService.GetMenuCategory();
+            return Ok(categories);
+        }
+
+        [HttpGet("footer")]
+        public async Task<IActionResult> GetFooterCategory()
+        {
+            var categories = await _categoryService.GetFooterCategory();
+            return Ok(categories);
+        }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int id)
         {

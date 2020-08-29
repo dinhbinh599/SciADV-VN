@@ -13,6 +13,8 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 		Task<ApiResult<bool>> Update(CategoryUpdateRequest request);
 		Task<ApiResult<bool>> Delete(int categoryID);
 		Task<ApiResult<CategoryViewModel>> GetByID(int categoryID);
+		Task<ApiResult<List<CategoryMenuViewModel>>> GetMenuCategory();
+		Task<ApiResult<List<CategoryViewModel>>> GetFooterCategory();
 		Task<List<CategoryViewModel>> GetAll();
 	}
 }

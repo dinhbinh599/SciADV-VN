@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Catalog\Posts\PostService.cs~RF3ae60dcf.TMP" />
     <None Remove="Head4.jpg" />
     <None Remove="Head4.jpg" />
   </ItemGroup>

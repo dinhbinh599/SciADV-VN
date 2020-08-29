@@ -52,14 +52,16 @@
                                     <span asp-validation-for="Contents" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="CategoryID" class="control-label"></label>
-                                    <select asp-for="CategoryID" class="form-control category-select">
-                                        @foreach (var category in Model.Categories)
-                                        {
-                                            <option value="@category.CategoryID">@category.CategoryName</option>
-                                        }
+                                    <label class="control-label">Chuyên mục cha</label>
+                                    <select asp-for="CategoryID" class="form-control category-select" id="category-select">
+                                        <option value="@Model.CategoryID" selected="selected"></option>  
                                     </select>
-                                    <span asp-validation-for="CategoryID" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SubCategoryID" class="control-label"></label>
+                                    <select asp-for="SubCategoryID" class="form-control category-select" id="subcategory-select">
+                                        <option value="@Model.SubCategoryID" selected="selected">@Model.CategoryName</option>
+                                    </select>
                                 </div>
                                 @for (int i = 0; i < Model.TagAssignRequest.Tags.Count; i++)
                                 {
@@ -108,6 +110,8 @@
 </div>
 @section scripts{
     <script type="text/javascript">
+		let endpoint = "@ViewData["BaseAddress"]"
+
 		// Add the following code if you want the name of the file appear on select
 		$(".custom-file-input").on("change", function () {
 			var fileName = $(this).val().split("\\").pop();
@@ -116,7 +120,42 @@
 		$("#custom-file").change(function () {
 			readData(this);
 		});
-		function readData(input) {
+
+        $("select#category-select").change(function () {
+			var selectedCategory = $(this).children("option:selected").val();
+			showSubCategory(selectedCategory);
+		});
+
+        showCategory();
+
+        function showCategory() {
+			fetch(endpoint + "/api/categories")
+				.then(response => response.json())
+				.then(data => _displayItemCategory(data))
+				.catch(error => console.error('Unable to get items.', error))
+		}
+
+		function _displayItemCategory(data) {
+			data.forEach(item => {
+				$("#category-select").append("<option value=" + item.categoryID + ">" + item.categoryName + "</option>")
+			})
+		}
+
+        function showSubCategory(id) {
+			$("#subcategory-select").empty()
+			fetch(endpoint + "/api/subcategories/category/" + id)
+				.then(response => response.json())
+				.then(data => _displayItemSubCategory(data))
+				.catch(error => console.error('Unable to get items.', error))
+		}
+
+		function _displayItemSubCategory(data) {
+			data.forEach(item => {
+				$("#subcategory-select").append("<option value=" + item.subCategoryID + ">" + item.subCategoryName + "</option>")
+			})
+		}
+
+        function readData(input) {
 			if (input.files && input.files[0]) {
 				var reader = new FileReader();
 				reader.onload = function (e) {

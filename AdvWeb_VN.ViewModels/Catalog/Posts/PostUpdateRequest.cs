@@ -19,8 +19,11 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 
 		[Display(Name = "Thumbnail")]
 		public IFormFile ThumbnailFile { get; set; }
-
-		[Display(Name = "Chuyên mục")]
+		[Display(Name = "Chuyên mục cha")]
 		public int CategoryID { set; get; }
+		[Display(Name = "Chuyên mục con")]
+		public int SubCategoryID { set; get; }
+		[Display(Name = "Chuyên mục")]
+		public string CategoryName { set; get; }
 	}
 }

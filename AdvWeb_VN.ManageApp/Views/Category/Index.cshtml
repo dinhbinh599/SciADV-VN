@@ -82,7 +82,7 @@
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                         aria-label="Browser: activate to sort column ascending">Tên Chuyên Mục</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Platform(s): activate to sort column ascending">Số Bài Viết</th>
+                                                        aria-label="Platform(s): activate to sort column ascending">Số chuyên mục con</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                         aria-label="Platform(s): activate to sort column ascending">Ngày Tạo</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
@@ -100,7 +100,7 @@
                                                             @Html.DisplayFor(modelItem => item.CategoryName)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.PostCount)
+                                                            @Html.DisplayFor(modelItem => item.SubCount)
                                                         </td>
                                                         <td>
                                                             @Html.DisplayFor(modelItem => item.CreateDate)
@@ -117,7 +117,7 @@
                                                 <tr>
                                                     <th rowspan="1" colspan="1">ID</th>
                                                     <th rowspan="1" colspan="1">Tên Chuyên Mục</th>
-                                                    <th rowspan="1" colspan="1">Số Bài Viết</th>
+                                                    <th rowspan="1" colspan="1">Số chuyên mục con</th>
                                                     <th rowspan="1" colspan="1">Ngày Tạo</th>
                                                     <th rowspan="1" colspan="1"></th>
                                                 </tr>

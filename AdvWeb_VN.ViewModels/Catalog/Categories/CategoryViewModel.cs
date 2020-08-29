@@ -10,7 +10,9 @@ namespace AdvWeb_VN.ViewModels.Catalog.Categories
 		[Display(Name = "Tên Chuyên Mục")]
 		public string CategoryName { set; get; }
 
-		[Display(Name = "Số Bài Viết")]
+		[Display(Name = "Số chuyên mục con")]
+		public int SubCount { set; get; }
+		[Display(Name = "Số bài viết con")]
 		public int PostCount { set; get; }
 
 		[Display(Name = "Ngày Tạo")]

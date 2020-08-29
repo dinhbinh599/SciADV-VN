@@ -30,8 +30,8 @@ namespace AdvWeb_VN.Data.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200)
                         .IsUnicode(true);
 
                     b.Property<DateTime>("CreateDate")
@@ -46,25 +46,25 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             CategoryID = 1,
                             CategoryName = "News",
-                            CreateDate = new DateTime(2020, 8, 21, 10, 41, 34, 895, DateTimeKind.Local).AddTicks(4615)
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 862, DateTimeKind.Local).AddTicks(8489)
                         },
                         new
                         {
                             CategoryID = 2,
                             CategoryName = "Review",
-                            CreateDate = new DateTime(2020, 8, 21, 10, 41, 34, 896, DateTimeKind.Local).AddTicks(4994)
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 864, DateTimeKind.Local).AddTicks(617)
                         },
                         new
                         {
                             CategoryID = 3,
                             CategoryName = "Project",
-                            CreateDate = new DateTime(2020, 8, 21, 10, 41, 34, 896, DateTimeKind.Local).AddTicks(5022)
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 864, DateTimeKind.Local).AddTicks(650)
                         },
                         new
                         {
                             CategoryID = 4,
                             CategoryName = "Donate",
-                            CreateDate = new DateTime(2020, 8, 21, 10, 41, 34, 896, DateTimeKind.Local).AddTicks(5025)
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 864, DateTimeKind.Local).AddTicks(654)
                         });
                 });
 
@@ -132,6 +132,9 @@ namespace AdvWeb_VN.Data.Migrations
                         .HasMaxLength(200)
                         .IsUnicode(true);
 
+                    b.Property<int>("SubCategoryID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Thumbnail")
                         .IsRequired()
                         .HasColumnType("nvarchar(200)")
@@ -150,7 +153,7 @@ namespace AdvWeb_VN.Data.Migrations
 
                     b.HasKey("PostID");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("SubCategoryID");
 
                     b.HasIndex("UserID");
 
@@ -237,16 +240,81 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             Id = new Guid("706a7f4f-a6ed-4e24-bd09-df7829865142"),
-                            ConcurrencyStamp = "44f4debc-1aa6-48f7-9796-9c6811a383ff",
+                            ConcurrencyStamp = "bae8194c-7e85-445c-9964-3e9115aac2f4",
                             Name = "admin",
                             NormalizedName = "admin"
                         },
                         new
                         {
                             Id = new Guid("d00409db-a6ed-4985-a3b7-4036774572cd"),
-                            ConcurrencyStamp = "1334d8c3-5384-44c1-88ca-de253bfbe736",
+                            ConcurrencyStamp = "5418defd-e23d-446b-9c55-d2b3555d0ad4",
                             Name = "Writer",
                             NormalizedName = "Writer"
+                        });
+                });
+
+            modelBuilder.Entity("AdvWeb_VN.Data.Entities.SubCategory", b =>
+                {
+                    b.Property<int>("SubCategoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(true);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("SubCategoryID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.ToTable("SubCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            SubCategoryID = 1,
+                            CategoryID = 1,
+                            CategoryName = "Chaos;Head",
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 865, DateTimeKind.Local).AddTicks(9771)
+                        },
+                        new
+                        {
+                            SubCategoryID = 2,
+                            CategoryID = 1,
+                            CategoryName = "Chaos;Child",
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 866, DateTimeKind.Local).AddTicks(1212)
+                        },
+                        new
+                        {
+                            SubCategoryID = 3,
+                            CategoryID = 1,
+                            CategoryName = "Steins;Gate",
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 866, DateTimeKind.Local).AddTicks(1254)
+                        },
+                        new
+                        {
+                            SubCategoryID = 4,
+                            CategoryID = 2,
+                            CategoryName = "Chaos;Child",
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 866, DateTimeKind.Local).AddTicks(1257)
+                        },
+                        new
+                        {
+                            SubCategoryID = 5,
+                            CategoryID = 3,
+                            CategoryName = "Chaos;Head",
+                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 866, DateTimeKind.Local).AddTicks(1259)
                         });
                 });
 
@@ -344,13 +412,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("0cfe64bd-645b-4f5a-91d1-c3082c132ed8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0fd00d60-056c-43ec-8403-54f3c11134ca",
+                            ConcurrencyStamp = "8355d864-e204-4215-b9ee-f7d2f947d438",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGWf5nZV7/efV3s/czmyPogqZKkMJzQT/slAlxnBIaqQ5Ad/lC9I7yv2/1z5EQoRHQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOlLh8HxImfunDzO6jCTKsad8dzECelHNN5Dt4es0Fdny0J/bwXLyXd7JRerL8nX8A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -360,13 +428,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6bcb461f-4603-42a0-9800-ff0e4b6e45c1",
+                            ConcurrencyStamp = "1597057c-61ce-4e54-83a3-6588e6b80366",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "hoho303",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDGpxmpHGzlWdwVkRJxhS3pd916zglrIcVPbXExRfBwKH3Qg7p6EX27WXJe8uUQMcg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDLMAgLxjfBESXAYj+QvPsoN94WkKA9ib9Fj5tciKLyujQlViSpeNhbfsViZfZPKFA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -492,9 +560,9 @@ namespace AdvWeb_VN.Data.Migrations
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.Post", b =>
                 {
-                    b.HasOne("AdvWeb_VN.Data.Entities.Category", "Category")
+                    b.HasOne("AdvWeb_VN.Data.Entities.SubCategory", "SubCategory")
                         .WithMany("Posts")
-                        .HasForeignKey("CategoryID")
+                        .HasForeignKey("SubCategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -525,6 +593,15 @@ namespace AdvWeb_VN.Data.Migrations
                     b.HasOne("AdvWeb_VN.Data.Entities.Tag", "Tag")
                         .WithMany("PostTags")
                         .HasForeignKey("TagID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AdvWeb_VN.Data.Entities.SubCategory", b =>
+                {
+                    b.HasOne("AdvWeb_VN.Data.Entities.Category", "Category")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -41,17 +41,54 @@ namespace AdvWeb_VN.Data.Extensions
 					CategoryName = "Donate",
 					CreateDate = DateTime.Now
 				});
+			modelBuilder.Entity<SubCategory>().HasData(
+				new SubCategory()
+				{
+					SubCategoryID = 1,
+					CategoryName = "Chaos;Head",
+					CreateDate = DateTime.Now,
+					CategoryID = 1
+				},
+				new SubCategory()
+				{
+					SubCategoryID = 2,
+					CategoryName = "Chaos;Child",
+					CreateDate = DateTime.Now,
+					CategoryID = 1
+
+				},
+				new SubCategory()
+				{
+					SubCategoryID = 3,
+					CategoryName = "Steins;Gate",
+					CreateDate = DateTime.Now,
+					CategoryID = 1
+				},
+				new SubCategory()
+				{
+					SubCategoryID = 4,
+					CategoryName = "Chaos;Child",
+					CreateDate = DateTime.Now,
+					CategoryID = 2
+				},
+				new SubCategory()
+				{
+					SubCategoryID = 5,
+					CategoryName = "Chaos;Head",
+					CreateDate = DateTime.Now,
+					CategoryID = 3
+				});
 
 			/*modelBuilder.Entity<Post>().HasData(
 				new Post()
 				{
-					PostID = "Chaos;Child1",
+					PostID = "News-Chaos;Child1",
 					PostName = "Review Visual Novel Chaos;Child",
 					WriteTime = DateTime.Now,
 					Contents = "Đây là 1 Visual Novel rất hay",
 					Thumbnail = "https://images-na.ssl-images-amazon.com/images/I/91HUMu2XDYL._RI_.jpg",
 					UserID = WRITER_ID,
-					CategoryID = 2
+					SubCategoryID = 2
 				},
 				new Post()
 				{
@@ -61,7 +98,7 @@ namespace AdvWeb_VN.Data.Extensions
 					Contents = "Đây là 1 Visual Novel rất hay",
 					Thumbnail = "https://upload.wikimedia.org/wikipedia/vi/3/34/Chaos_Head_game_cover.jpg",
 					UserID = WRITER_ID,
-					CategoryID = 1
+					SubCategoryID = 1
 				});*/
 			modelBuilder.Entity<Tag>().HasData(
 				new Tag()

@@ -9,6 +9,6 @@ namespace AdvWeb_VN.Data.Entities
 		public int CategoryID { set; get; }
 		public string CategoryName { set; get; }
 		public DateTime CreateDate { set; get; }
-		public List<Post> Posts { set; get; }
+		public List<SubCategory> SubCategories { set; get; }
 	}
 }

@@ -24,6 +24,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<ApiResult<PagedResult<PostViewModel>>> GetAllByTagID(GetPublicPostPagingRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetAllByCategoryID(GetPublicPostPagingRequest request);
 		Task<List<PostViewModel>> GetAll();
+		Task<ApiResult<List<PostViewModel>>> GetPopular();
 		Task<ApiResult<bool>> TagAssign(string postID, TagAssignRequest request);
 		Task<ApiResult<bool>> TagAssignAuthenticate(string postID, Guid userID, TagAssignRequest request);
 		Task<int> AddImage(string postID, PostImageCreateRequest request);
@@ -36,5 +37,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<List<PostImageViewModel>> GetListImages(string postID);
 		Task<ApiResult<bool>> UpdateImageContents(string postID, PostUpdateContentsRequest request);
 		Task<ApiResult<bool>> UpdateImageContentsAuthenticate(string postID, Guid userID, PostUpdateContentsRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetPagingCategory(GetPublicPostPagingRequest request);
 	}
 }

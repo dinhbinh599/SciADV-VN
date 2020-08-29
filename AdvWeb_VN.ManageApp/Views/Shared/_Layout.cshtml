@@ -203,11 +203,13 @@ to get the desired effect
 	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
 	<script>
-		$(document).ready(function () {
-			$('.category-select').select2();
-			$('.tag-select').select2({
+		$('.tag-select').select2({
 				tags: true
-			});
+		});
+
+		$('.category-select').select2();
+
+		$(document).ready(function () {
 			$('.contents').summernote({
 				minHeight: null,
 				maxHeight: null,

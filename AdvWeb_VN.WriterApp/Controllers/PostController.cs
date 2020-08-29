@@ -41,7 +41,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 				PageIndex = pageIndex,
 				PageSize = pageSize
 			};
-			var data = await _postApiClient.GetPostsPagings(userID,request);
+			var data = await _postApiClient.GetPostsPagings(userID, request);
 			ViewBag.Keyword = keyword;
 			if (TempData["result"] != null)
 			{
@@ -62,16 +62,14 @@ namespace AdvWeb_VN.WriterApp.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Create()
+		public  IActionResult Create()
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-			var tagAssignRequest = await GetTagAssignRequest();
 			var postCreateRequest = new PostCreateRequest()
 			{
-				UserID = userID,
-				Categories = await _categegoryApiClient.GetAll(),
-				TagAssignRequest = tagAssignRequest
+				UserID = userID			
 			};
 			return View(postCreateRequest);
 		}
@@ -94,7 +92,9 @@ namespace AdvWeb_VN.WriterApp.Controllers
 					id = result.ResultObj.PostID,
 					Contents = await ConvertImage(userID, postID, oldContents)
 				});
-				var requestConvert = SelectConvertBySelectedTags(request.TagAssignRequest);
+				var tagAssignRequest = await GetTagAssignRequest();
+				tagAssignRequest.SelectedTags = request.TagAssignRequest.SelectedTags;
+				var requestConvert = SelectConvertBySelectedTags(tagAssignRequest);
 				await _postApiClient.TagAssign(userID, postID, requestConvert);
 				TempData["result"] = "Thêm mới người dùng thành công";
 				return RedirectToAction("Index");
@@ -118,10 +118,11 @@ namespace AdvWeb_VN.WriterApp.Controllers
 				{
 					PostID = post.PostID,
 					PostName = post.PostName,
-					CategoryID = post.CategoryID,
+					SubCategoryID = post.SubCategoryID,
 					Contents = post.Contents,
 					Thumbnail = post.Thumbnail,
-					Categories = await _categegoryApiClient.GetAll(),
+					CategoryID = post.CategoryID,
+					CategoryName = post.SubCategoryName,
 					TagAssignRequest = SelectConvertByTags(await GetTagAssignRequest(post.PostID))
 				};
 				return View(updateRequest);

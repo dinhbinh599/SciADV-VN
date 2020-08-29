@@ -33,6 +33,8 @@
     <Compile Remove="Migrations\20200821032744_update-post-data.Designer.cs" />
     <Compile Remove="Migrations\20200821033304_update-post-data.cs" />
     <Compile Remove="Migrations\20200821033304_update-post-data.Designer.cs" />
+    <Compile Remove="Migrations\20200822074056_add-subcate.cs" />
+    <Compile Remove="Migrations\20200822074056_add-subcate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

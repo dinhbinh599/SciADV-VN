@@ -48,29 +48,19 @@
 									<span asp-validation-for="Contents" class="text-danger"></span>
 								</div>
 								<div class="form-group">
-									<label asp-for="CategoryID" class="control-label"></label>
-									<select asp-for="CategoryID" class="form-control category-select">
-										@foreach (var category in Model.Categories)
-										{
-											<option value="@category.CategoryID">@category.CategoryName</option>
-										}
-									</select>
-									<span asp-validation-for="CategoryID" class="text-danger"></span>
+									<label class="control-label">Chuyên mục cha</label>
+									<select asp-for="CategoryID" class="form-control category-select" id="category-select"></select>
 								</div>
-								@for (int i = 0; i < Model.TagAssignRequest.Tags.Count; i++)
-								{
-									<input type="hidden" asp-for="TagAssignRequest.Tags[i].ID" />
-									<input type="hidden" asp-for="TagAssignRequest.Tags[i].Name" />
-								}
-							<div class="form-group">
-								<label class="control-label">Tags</label>
-								<select asp-for="TagAssignRequest.SelectedTags" class="form-control tag-select" multiple="multiple">
-									@foreach (var tag in Model.TagAssignRequest.Tags)
-									{
-										<option value="@tag.Name">@tag.Name</option>
-									}
-								</select>
-							</div>
+								<div class="form-group">
+									<label asp-for="SubCategoryID" class="control-label"></label>
+									<select asp-for="SubCategoryID" class="form-control category-select" id="subcategory-select"></select>
+									<span asp-validation-for="SubCategoryID" class="text-danger"></span>
+								</div>
+								<div class="form-group">
+									<label class="control-label">Tags</label>
+									<select asp-for="TagAssignRequest.SelectedTags" class="form-control tag-select" id="tag-select" multiple="multiple">
+									</select>
+								</div>
 								<div class="form-group">
 									<label for="exampleInputFile">Thumbnail</label>
 									<div class="input-group">
@@ -88,8 +78,17 @@
 								<input type="hidden" asp-for="UserID" class="form-control" />
 							</div>
 							<div class="card-footer">
-								<div class="form-group">
-									<input type="submit" value="Lưu lại" class="btn btn-primary" />
+								<div class="row">
+									<div class="col-1">
+										<div class="form-group">
+											<input type="submit" value="Lưu lại" class="btn btn-outline-primary" />
+										</div>
+									</div>
+									<div class="col-1">
+										<div class="form-group">
+											<input type="submit" value="Xem trước" class="btn btn-outline-info" />
+										</div>
+									</div>
 								</div>
 							</div>
 						</form>
@@ -105,14 +104,69 @@
 </div>
 @section scripts{
 	<script type="text/javascript">
-		// Add the following code if you want the name of the file appear on select
+		let endpoint = "@ViewData["BaseAddress"]"
+
 		$(".custom-file-input").on("change", function () {
 			var fileName = $(this).val().split("\\").pop();
 			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 		});
+
 		$("#custom-file").change(function () {
 			readData(this);
 		});
+
+		$("select#category-select").change(function () {
+			var selectedCategory = $(this).children("option:selected").val();
+			showSubCategory(selectedCategory);
+		});
+
+		showTag();
+		showCategory();
+		showSubCategory(1);
+
+
+		function showTag() {
+			fetch(endpoint + "/api/tags")
+				.then(response => response.json())
+				.then(data => _displayItemTag(data.resultObj))
+				.catch(error => console.error('Unable to get items.', error))
+		}
+
+		function showCategory() {
+			fetch(endpoint + "/api/categories")
+				.then(response => response.json())
+				.then(data => _displayItemCategory(data))
+				.catch(error => console.error('Unable to get items.', error))
+		}
+
+		function _displayItemCategory(data) {
+			data.forEach(item => {
+				$("#category-select").append("<option value=" + item.categoryID + ">" + item.categoryName + "</option>")
+			})
+		}
+
+		function _displayItemTag(data) {
+
+			data.forEach(item => {
+				console.log(item.tagName)
+				$("#tag-select").append("<option value='" + item.tagName + "'>" + item.tagName + "</option>")
+			})
+		}
+
+		function showSubCategory(id) {
+			$("#subcategory-select").empty()
+			fetch(endpoint + "/api/subcategories/category/" + id)
+				.then(response => response.json())
+				.then(data => _displayItemSubCategory(data))
+				.catch(error => console.error('Unable to get items.', error))
+		}
+
+		function _displayItemSubCategory(data) {
+			data.forEach(item => {
+				$("#subcategory-select").append("<option value=" + item.subCategoryID + ">" + item.subCategoryName + "</option>")
+			})
+		}
+
 		function readData(input) {
 			if (input.files && input.files[0]) {
 				var reader = new FileReader();
@@ -121,7 +175,7 @@
 				}
 				reader.readAsDataURL(input.files[0]);
 			}
-		}
+	}
 	</script>
 }
 

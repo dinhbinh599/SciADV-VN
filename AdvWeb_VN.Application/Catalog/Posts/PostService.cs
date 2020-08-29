@@ -46,34 +46,40 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<string>> Create(PostCreateRequest request)
 		{
-			var query = from li in _context.Categories
-						where li.CategoryID.Equals(request.CategoryID)
+			var query = from li in _context.SubCategories
+						where li.SubCategoryID.Equals(request.SubCategoryID)
 						select li;
-			var list = await query.ToListAsync<Category>();
-			if (list.Count == 0) return new ApiErrorResult<string>($"Không tìm thấy chuyên mục : {request.CategoryID}");
+			var list = await query.ToListAsync<SubCategory>();
+			if (list.Count == 0) return new ApiErrorResult<string>($"Không tìm thấy chuyên mục : {request.SubCategoryID}");
 			
 			var query2 = from c in _context.Posts
-						 where c.CategoryID.Equals(request.CategoryID)
+						 where c.SubCategoryID.Equals(request.SubCategoryID)
 						 select c;
 
 			string PostID = "";
-			Category category = query.FirstOrDefault<Category>();
+			SubCategory subcategory = query.FirstOrDefault<SubCategory>();
+
+			var queryCategory = from c in _context.Categories
+								where c.CategoryID.Equals(subcategory.CategoryID)
+								select c;
+			Category category = queryCategory.FirstOrDefault<Category>();
+
 			if (query2.Count() > 0)
 			{
 				SplitResult splitResult = new SplitResult();
 				var posts = await query2.ToListAsync<Post>();
-				splitResult = new Split().GetID(posts.FirstOrDefault().PostID, category.CategoryName.Length);
+				splitResult = new Split().GetID(posts.FirstOrDefault().PostID, category.CategoryName.Length + subcategory.CategoryName.Length + 1);
 				var max = splitResult.Number;
 				foreach (var item in posts)
 				{
-					splitResult = new Split().GetID(item.PostID, category.CategoryName.Length);
+					splitResult = new Split().GetID(item.PostID, subcategory.CategoryName.Length + category.CategoryName.Length + 1);
 					if (splitResult.Number > max) max = splitResult.Number;
 				}
 				PostID = splitResult.name + (max + 1);
 			}
 			else
 			{
-				PostID = category.CategoryName + "1";
+				PostID = category.CategoryName + "-" + subcategory.CategoryName + "1";
 			}
 			var post = new Post()
 			{
@@ -83,6 +89,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				View = 0,
 				UserID = request.UserID,
 				CategoryID = request.CategoryID,
+				SubCategoryID = request.SubCategoryID,
 				WriteTime = DateTime.Now,
 			};
 			if (request.ThumbnailFile != null)
@@ -125,10 +132,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		{
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
-						join e in _context.Categories on p.CategoryID equals e.CategoryID
+						join e in _context.SubCategories on p.SubCategoryID equals e.SubCategoryID
+						join k in _context.Categories on e.CategoryID equals k.CategoryID
 						join c in _context.Tags on pic.TagID equals c.TagID
 						join u in _context.Users on p.UserID equals u.Id
-						select new { p, pic, c, e, u};
+						select new { p, pic, k , c, e, u};
 
 			if(!string.IsNullOrEmpty(request.Keyword))
 			{
@@ -152,9 +160,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
-					CategoryID = x.p.CategoryID,
+					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.u.UserName,
-					CategoryName = x.e.CategoryName
+					SubCategoryName = x.e.CategoryName,
+					CategoryID = x.e.CategoryID,
+					CategoryName = x.k.CategoryName
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
@@ -172,7 +182,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			if (post == null) return new ApiErrorResult<PostViewModel>("Không tìm thấy bài viết này!");
 			var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
 			var tag = await GetTagsAsync(post);
-			var category = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryID == post.CategoryID);
+			var subCategory = await _context.SubCategories.FirstOrDefaultAsync(x => x.SubCategoryID == post.SubCategoryID);
+			var category = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryID == subCategory.CategoryID);
 			var postViewModel = new PostViewModel()
 			{
 				PostID = post.PostID,
@@ -181,8 +192,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				View = post.View,
 				Thumbnail = post.Thumbnail,
 				Contents = post.Contents,
-				CategoryID = post.CategoryID,
+				SubCategoryID = post.SubCategoryID,
 				UserName = user.UserName,
+				SubCategoryName = subCategory.CategoryName,
+				CategoryID = subCategory.CategoryID,
 				CategoryName = category.CategoryName,
 				Tags = tag
 			};
@@ -198,6 +211,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			post.PostName = request.PostName;
 			post.Contents = request.Contents;
 			post.WriteTime = DateTime.Now;
+			post.SubCategoryID = request.SubCategoryID;
 			post.CategoryID = request.CategoryID;
 			if (request.ThumbnailFile != null)
 			{
@@ -227,12 +241,30 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				View = x.View,
 				Thumbnail = x.Thumbnail,
 				Contents = x.Contents,
-				CategoryID = x.CategoryID,
+				SubCategoryID = x.SubCategoryID,
 				UserName = x.User.UserName,
-				CategoryName = x.Category.CategoryName
+				SubCategoryName = x.SubCategory.CategoryName
 			}).ToListAsync();
 
 			return data;
+		}
+
+		public async Task<ApiResult<List<PostViewModel>>> GetPopular()
+		{
+			var postVMs = await _context.Posts.Select(x => new PostViewModel()
+			{
+				PostID = x.PostID,
+				PostName = x.PostName,
+				WriteTime = x.WriteTime,
+				View = x.View,
+				Thumbnail = x.Thumbnail,
+				Contents = x.Contents,
+				SubCategoryID = x.SubCategoryID,
+				UserName = x.User.UserName,
+				SubCategoryName = x.SubCategory.CategoryName
+			}).OrderByDescending(x=>x.View).Take(4).ToListAsync();
+
+			return new ApiSuccessResult<List<PostViewModel>>(postVMs);
 		}
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllByTagID(GetPublicPostPagingRequest request)
@@ -241,8 +273,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
 						join c in _context.Tags on pic.TagID equals c.TagID
 						join d in _context.Users on p.UserID equals d.Id
-						join e in _context.Categories on p.CategoryID equals e.CategoryID
-						select new { p, pic, d, e };
+						join e in _context.SubCategories on p.SubCategoryID equals e.SubCategoryID
+						join k in _context.Categories on e.CategoryID equals k.CategoryID
+						select new { p, pic, d, e, k };
 
 			if (request.Id.HasValue && request.Id.Value > 0)
 			{
@@ -261,9 +294,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
-					CategoryID = x.p.CategoryID,
+					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.d.UserName,
-					CategoryName = x.e.CategoryName
+					SubCategoryName = x.e.CategoryName,
+					CategoryID = x.e.CategoryID,
+					CategoryName = x.k.CategoryName
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
@@ -277,10 +312,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllByCategoryID(GetPublicPostPagingRequest request)
 		{
-			var query = from c in _context.Categories
-						join p in _context.Posts on c.CategoryID equals p.CategoryID
+			var query = from c in _context.SubCategories
+						join k in _context.Categories on c.CategoryID equals k.CategoryID
+						join p in _context.Posts on c.SubCategoryID equals p.SubCategoryID
 						join d in _context.Users on p.UserID equals d.Id
-						select new { p, c, d };
+						select new { p, c, d, k };
 
 			if (request.Id.HasValue && request.Id.Value > 0)
 			{
@@ -299,10 +335,12 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
-					CategoryID = x.p.CategoryID,
+					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.d.UserName,
-					CategoryName = x.c.CategoryName
-				}).ToListAsync();
+					SubCategoryName = x.c.CategoryName,
+					CategoryID = x.c.CategoryID,
+					CategoryName = x.k.CategoryName
+				}).OrderBy(x=>x.WriteTime).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
 				TotalRecords = totalRow,
@@ -315,19 +353,20 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingCategoryID(GetManagePostPagingRequest request)
 		{
-			var query = from c in _context.Categories
-						join p in _context.Posts on c.CategoryID equals p.CategoryID
+			var query = from sc in _context.SubCategories
+						join k in _context.Categories on sc.CategoryID equals k.CategoryID
+						join p in _context.Posts on sc.SubCategoryID equals p.SubCategoryID
 						join d in _context.Users on p.UserID equals d.Id
-						select new { p, c, d };
+						select new { p, sc, d, k };
 
 			if (!string.IsNullOrEmpty(request.Keyword))
 			{
-				query = query.Where(x => x.c.CategoryName.Contains(request.Keyword)||x.p.PostName.Contains(request.Keyword));
+				query = query.Where(x => x.sc.CategoryName.Contains(request.Keyword)||x.p.PostName.Contains(request.Keyword));
 			}
 
 			if (request.ID != null)
 			{
-				query = query.Where(x => request.ID.Equals(x.p.CategoryID)||request.ID.ToString().Contains(x.p.PostID));
+				query = query.Where(x => request.ID.Equals(x.p.SubCategoryID)||request.ID.ToString().Contains(x.p.PostID));
 			}
 
 			int totalRow = await query.CountAsync();
@@ -342,9 +381,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
-					CategoryID = x.p.CategoryID,
+					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.d.UserName,
-					CategoryName = x.c.CategoryName
+					SubCategoryName = x.sc.CategoryName,
+					CategoryID = x.sc.CategoryID,
+					CategoryName = x.k.CategoryName
 				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
@@ -593,8 +634,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			post.PostName = request.PostName;
 			post.Contents = request.Contents;
 			post.WriteTime = DateTime.Now;
+			post.SubCategoryID = request.SubCategoryID;
 			post.CategoryID = request.CategoryID;
-
 			if (request.ThumbnailFile != null)
 			{
 				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.PostID == request.PostID);
@@ -632,7 +673,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			if (post == null) return new ApiErrorResult<PostViewModel>("Không tìm thấy bài viết này!");
 			var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
 			var tag = await GetTagsAsync(post);
-			var category = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryID == post.CategoryID);
+			var subCategory = await _context.SubCategories.FirstOrDefaultAsync(x => x.SubCategoryID == post.SubCategoryID);
+			var category = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryID == subCategory.CategoryID);
 			var postViewModel = new PostViewModel()
 			{
 				PostID = post.PostID,
@@ -641,8 +683,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				View = post.View,
 				Thumbnail = post.Thumbnail,
 				Contents = post.Contents,
-				CategoryID = post.CategoryID,
+				SubCategoryID = post.SubCategoryID,
 				UserName = user.UserName,
+				SubCategoryName = subCategory.CategoryName,
+				CategoryID = subCategory.CategoryID,
 				CategoryName = category.CategoryName,
 				Tags = tag
 			};
@@ -652,10 +696,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingCategoryIDAuthenticate(Guid userID, GetManagePostPagingRequest request)
 		{
-			var query = from c in _context.Categories
-						join p in _context.Posts on c.CategoryID equals p.CategoryID
+			var query = from c in _context.SubCategories
+						join k in _context.Categories on c.CategoryID equals k.CategoryID
+						join p in _context.Posts on c.SubCategoryID equals p.SubCategoryID
 						join d in _context.Users on p.UserID equals d.Id
-						select new { p, c, d };
+						select new { p, c, d, k };
 
 			query = query.Where(x => x.p.UserID.Equals(userID));
 
@@ -666,7 +711,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			if (request.ID != null)
 			{
-				query = query.Where(x => request.ID.Equals(x.p.CategoryID) || request.ID.ToString().Contains(x.p.PostID));
+				query = query.Where(x => request.ID.Equals(x.p.SubCategoryID) || request.ID.ToString().Contains(x.p.PostID));
 			}
 
 			int totalRow = await query.CountAsync();
@@ -681,9 +726,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
-					CategoryID = x.p.CategoryID,
+					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.d.UserName,
-					CategoryName = x.c.CategoryName
+					SubCategoryName = x.c.CategoryName,
+					CategoryID = x.c.CategoryID,
+					CategoryName = x.k.CategoryName
 				}).ToListAsync();
 
 			var pagedResult = new PagedResult<PostViewModel>()
@@ -783,5 +830,47 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			return new ApiSuccessResult<bool>();
 		}
+
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingCategory(GetPublicPostPagingRequest request)
+		{
+			var query = from c in _context.Categories
+						join p in _context.Posts on c.CategoryID equals p.CategoryID
+						join u in _context.Users on p.UserID equals u.Id
+						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
+						select new { c, p, u, sc };
+
+			if (request.Id.HasValue && request.Id.Value > 0)
+			{
+				query = query.Where(x => x.p.CategoryID.Equals(request.Id));
+			}
+			int totalRow = await query.CountAsync();
+
+			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					SubCategoryID = x.p.SubCategoryID,
+					UserName = x.u.UserName,
+					SubCategoryName = x.sc.CategoryName,
+					CategoryName = x.c.CategoryName,
+					CategoryID = x.c.CategoryID
+				}).ToListAsync();
+
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				Items = postVMs,
+				PageIndex = request.PageIndex,
+				PageSize = request.PageSize,
+				TotalRecords = totalRow
+			};
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
+		}
+
 	}
 }

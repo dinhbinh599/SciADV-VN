@@ -98,6 +98,7 @@ namespace AdvWeb_VN.WriterApp.Services
 
             requestContent.Add(new StringContent(createRequest.PostName), "postName");
             requestContent.Add(new StringContent(createRequest.CategoryID.ToString()), "categoryID");
+            requestContent.Add(new StringContent(createRequest.SubCategoryID.ToString()), "subCategoryID");
             requestContent.Add(new StringContent(createRequest.UserID.ToString()), "userID");
             requestContent.Add(new StringContent(createRequest.Contents), "contents");
 
@@ -166,6 +167,7 @@ namespace AdvWeb_VN.WriterApp.Services
 
             requestContent.Add(new StringContent(request.PostName), "postName");
             requestContent.Add(new StringContent(request.CategoryID.ToString()), "categoryID");
+            requestContent.Add(new StringContent(request.SubCategoryID.ToString()), "subCategoryID");
             requestContent.Add(new StringContent(request.Contents), "contents");
 
             var response = await client.PutAsync($"/api/posts/{userID}/{request.PostID}", requestContent);

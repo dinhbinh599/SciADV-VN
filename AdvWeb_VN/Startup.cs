@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AdvWeb_VN.WebApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +25,25 @@ namespace AdvWeb_VN
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddHttpClient();
 			services.AddControllersWithViews();
+
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddTransient<IUserApiClient, UserApiClient>();
+			services.AddTransient<IRoleApiClient, RoleApiClient>();
+			services.AddTransient<ICategoryApiClient, CategoryApiClient>();
+			services.AddTransient<IPostApiClient, PostApiClient>();
+			services.AddTransient<ITagApiClient, TagApiClient>();
+			services.AddTransient<ISubCategoryApiClient, SubCategoryApiClient>();
+
+
+			IMvcBuilder builder = services.AddRazorPages();
+			var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+			if (environment == Environments.Development)
+			{
+				builder.AddRazorRuntimeCompilation();
+			}
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

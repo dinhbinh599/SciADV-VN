@@ -14,6 +14,7 @@ using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.Application.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.Categories;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
+using AdvWeb_VN.ViewModels.Catalog.SubCategories;
 
 namespace AdvWeb_VN.Application.Catalog.Categories
 {
@@ -57,7 +58,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 			{
 				CategoryID = x.CategoryID,
 				CategoryName = x.CategoryName,
-				PostCount = x.Posts.Count,
+				SubCount = x.SubCategories.Count,
 				CreateDate = x.CreateDate
 			}).ToListAsync();
 
@@ -67,19 +68,79 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 		public async Task<ApiResult<CategoryViewModel>> GetByID(int categoryID)
 		{
 			var category = await _context.Categories.FindAsync(categoryID);
-			var posts = await _context.Posts.Where(x => x.CategoryID.Equals(categoryID)).ToListAsync();
+			var subs = await _context.SubCategories.Where(x => x.CategoryID.Equals(categoryID)).ToListAsync();
 			if (category == null) return new ApiErrorResult<CategoryViewModel>("Không tìm thấy chuyên mục này!");
 			var categoryVM = new CategoryViewModel()
 			{
 				CategoryID = category.CategoryID,
 				CategoryName = category.CategoryName,
-				PostCount = posts.Count,
+				SubCount = subs.Count,
 				CreateDate = category.CreateDate
 			};
 
 			return new ApiSuccessResult<CategoryViewModel>(categoryVM);
 		}
 
+		public async Task<ApiResult<List<CategoryViewModel>>> GetFooterCategory()
+		{
+			var category = _context.Categories;
+
+			var categoryVMs = await category.Select(x => new CategoryViewModel()
+			{
+				CategoryID = x.CategoryID,
+				CategoryName = x.CategoryName,
+				CreateDate = x.CreateDate,
+				SubCount = x.SubCategories.Count,
+				PostCount = _context.Posts.Where(p => p.CategoryID.Equals(x.CategoryID)).Count()
+			}).Distinct().ToListAsync();
+
+			return new ApiSuccessResult<List<CategoryViewModel>>(categoryVMs);
+		}
+
+		public async Task<ApiResult<List<CategoryMenuViewModel>>> GetMenuCategory()
+		{
+			var category = _context.Categories;
+
+			var categoryMenuVM = await category.Select(x => new CategoryMenuViewModel()
+			{
+				CategoryID = x.CategoryID,
+				CategoryName = x.CategoryName,
+				CreateDate = x.CreateDate,
+				SubCount = x.SubCategories.Count,
+				SubCategoryAll = new SubCategoryMenuViewModel()
+				{
+					SubCategoryName = "All",
+					Posts = _context.Posts
+					.Where(p => p.CategoryID.Equals(x.CategoryID))
+					.Select(p=>new PostViewModel() 
+					{
+						PostID = p.PostID,
+						PostName = p.PostName,
+						SubCategoryName = p.SubCategory.CategoryName,
+						WriteTime = p.WriteTime,
+						Thumbnail = p.Thumbnail
+					}).OrderBy(x => x.WriteTime).Take(4).ToList()
+				},
+				SubCategories = x.SubCategories
+					.Select(sc => new SubCategoryMenuViewModel()
+					{
+						SubCategoryID = sc.SubCategoryID,
+						SubCategoryName = sc.CategoryName,
+						CreateDate = sc.CreateDate,
+						PostCount = sc.Posts.Count,
+						Posts = sc.Posts
+							.Select(p => new PostViewModel()
+							{
+								PostID = p.PostID,
+								PostName = p.PostName,
+								SubCategoryName = sc.CategoryName,
+								WriteTime = p.WriteTime,
+								Thumbnail = p.Thumbnail
+							}).OrderBy(x => x.WriteTime).Take(4).ToList()
+					}).ToList()
+			}).ToListAsync();
+			return new ApiSuccessResult<List<CategoryMenuViewModel>>(categoryMenuVM);
+		}
 
 		public async Task<ApiResult<bool>> Update(CategoryUpdateRequest request)
 		{
@@ -88,7 +149,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 			category.CategoryName = request.CategoryName;
 			var result = await _context.SaveChangesAsync();
-			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
+			if (result == 0) return new ApiErrorResult<bool>("Cập nhật chuyên mục thất bại");
 			return new ApiSuccessResult<bool>();
 		}
 	}

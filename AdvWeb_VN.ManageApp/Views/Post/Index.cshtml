@@ -60,7 +60,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="col-sm-12 col-md-6" ">
+                                    <div class="col-sm-12 col-md-6">
                                         <form asp-action="Index" method="get">
                                             <div id="example1_filter" class="dataTables_filter">
                                                 <label>
@@ -81,16 +81,14 @@
                                                aria-describedby="example1_info">
                                             <thead>
                                                 <tr role="row">
-                                                    <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">
-                                                        ID
-                                                    </th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                         aria-label="Browser: activate to sort column ascending">Tên bài viết</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                         aria-label="Engine version: activate to sort column ascending">Người viết</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Engine version: activate to sort column ascending">Chuyên mục</th>
+                                                        aria-label="Engine version: activate to sort column ascending">Chuyên mục cha</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                                        aria-label="Engine version: activate to sort column ascending">Chuyên mục con</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                         aria-label="Engine version: activate to sort column ascending">Ngày viết</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
@@ -103,17 +101,17 @@
                                                 @foreach (var item in Model.Items)
                                                 {
                                                 <tr role="row" class="odd">
-                                                    <td tabindex="0" class="sorting_1">
-                                                        @Html.DisplayFor(modelItem => item.PostID)
-                                                    </td>
                                                     <td>
                                                         @Html.DisplayFor(modelItem => item.PostName)
                                                     </td>
                                                     <td>
                                                         @Html.DisplayFor(modelItem => item.UserName)
                                                     </td>
-                                                    <td>
+                                                    <td tabindex="0" class="sorting_1">
                                                         @Html.DisplayFor(modelItem => item.CategoryName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.SubCategoryName)
                                                     </td>
                                                     <td>
                                                         @Html.DisplayFor(modelItem => item.WriteTime)
@@ -125,16 +123,16 @@
                                                         <a href="/Post/Edit/@item.PostID" class="btn btn-outline-primary"> Sửa</a>
                                                         <a href="/Post/Details/@item.PostID" style="margin-top:5px" class="btn btn-outline-info">Xem</a>
                                                         <a href="/Post/Delete/@item.PostID" style="margin-top:5px" class="btn btn-outline-danger">Xóa</a>
-</td>
+                                                    </td>
                                                 </tr>
                                                 }
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th rowspan="1" colspan="1">ID</th>
                                                     <th rowspan="1" colspan="1">Tên bài viết</th>
                                                     <th rowspan="1" colspan="1">Người viết</th>
-                                                    <th rowspan="1" colspan="1">Chuyên mục</th>
+                                                    <th rowspan="1" colspan="1">Chuyên mục cha</th>
+                                                    <th rowspan="1" colspan="1">Chuyên mục con</th>
                                                     <th rowspan="1" colspan="1">Ngày viết</th>
                                                     <th rowspan="1" colspan="1">Lượt xem</th>
                                                     <th rowspan="1" colspan="1"></th>
