@@ -25,20 +25,20 @@
 <!-- Feature post -->
 <section class="bg0">
 	<div class="row m-rl-0 justify-content-center">
-		@for (int i = 0; i < 3; i++)
+		@foreach (var item in Model.Items)
 		{
 			<div class="col-md-4 p-rl-1 p-b-2">
-				<div class="bg-img1 size-a-11 how1 pos-relative" style="background-image: url(https://localhost:5002/user-content/@Model.Items[i].Thumbnail);">
-					<a href="/post/@Model.Items[i].PostID" class="dis-block how1-child1 trans-03"></a>
+				<div class="bg-img1 size-a-11 how1 pos-relative" style="        background-image: url(https://localhost:5002/user-content/@item.Thumbnail);">
+					<a href="/post/@item.PostID" class="dis-block how1-child1 trans-03"></a>
 
 					<div class="flex-col-e-s s-full p-rl-25 p-tb-18">
 						<a href="#" class="dis-block how1-child2 f1-s-2 cl0 bo-all-1 bocl0 hov-btn1 trans-03 p-rl-5 p-t-2">
-							@Model.Items[i].SubCategoryName
+							@item.SubCategoryName
 						</a>
 
 						<h3 class="how1-child2 m-t-14 m-b-10">
 							<a href="blog-detail-02.html" class="f1-l-1 cl0 hov-cl10 trans-03 respon1">
-								@split.NormalizeName(Model.Items[i].PostName, 12)
+								@split.NormalizeName(item.PostName, 12)
 							</a>
 						</h3>
 					</div>
