@@ -1,13 +1,13 @@
-﻿@using  AdvWeb_VN.ViewModels.Common;
-@using AdvWeb_VN.Utilities.Settings
-@model PagedResult<AdvWeb_VN.ViewModels.Catalog.Posts.PostViewModel>
+﻿@using AdvWeb_VN.Utilities.Settings
+@using AdvWeb_VN.WebApp.Models
+@model CategoryPageViewModel
 @{
 	ViewData["Title"] = "Index";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
 	Split split = new Split();
 	var postTopCount = 5;
-	if (Model.Items.Count < 5) { postTopCount = Model.Items.Count; }
+	if (Model.Posts.Items.Count < 5) { postTopCount = Model.Posts.Items.Count; }
 }
 
 <!-- Breadcrumb -->
@@ -23,7 +23,7 @@
 			</a>
 
 			<span class="breadcrumb-item f1-s-3 cl9">
-				@Model.Items[0].CategoryName
+				@Model.Posts.Items[0].CategoryName
 			</span>
 		</div>
 
@@ -39,7 +39,7 @@
 <!-- Page heading -->
 <div class="container p-t-4 p-b-40">
 	<h2 class="f1-l-1 cl2">
-		@Model.Items[0].CategoryName
+		@Model.Posts.Items[0].CategoryName
 	</h2>
 </div>
 
@@ -48,23 +48,23 @@
 	<div class="container">
 		<div class="row m-rl--1">
 			<div class="col-12 p-rl-1 p-b-2">
-				<div class="bg-img1 size-a-3 how1 pos-relative" style="background-image: url(@(imageFolder + Model.Items[0].Thumbnail));">
-					<a href="/post/post-@Model.Items[0].PostID" class="dis-block how1-child1 trans-03"></a>
+				<div class="bg-img1 size-a-3 how1 pos-relative" style="background-image: url(@(imageFolder + Model.Posts.Items[0].Thumbnail));">
+					<a href="/post/post-@Model.Posts.Items[0].PostID" class="dis-block how1-child1 trans-03"></a>
 
 					<div class="flex-col-e-s s-full p-rl-25 p-tb-20">
-						<a href="/subcategory/subcategory-@Model.Items[0].SubCategoryID" class="dis-block how1-child2 f1-s-2 cl0 bo-all-1 bocl0 hov-btn1 trans-03 p-rl-5 p-t-2">
-							@Model.Items[0].SubCategoryName
+						<a href="/subcategory/subcategory-@Model.Posts.Items[0].SubCategoryID" class="dis-block how1-child2 f1-s-2 cl0 bo-all-1 bocl0 hov-btn1 trans-03 p-rl-5 p-t-2">
+							@Model.Posts.Items[0].SubCategoryName
 						</a>
 
 						<h3 class="how1-child2 m-t-14 m-b-10">
-							<a href="/post/post-@Model.Items[0].PostID" class="how-txt1 size-a-6 f1-l-1 cl0 hov-cl10 trans-03">
-								@split.NormalizeName(Model.Items[0].PostName, 10)
+							<a href="/post/post-@Model.Posts.Items[0].PostID" class="how-txt1 size-a-6 f1-l-1 cl0 hov-cl10 trans-03">
+								@split.NormalizeName(Model.Posts.Items[0].PostName, 10)
 							</a>
 						</h3>
 
 						<span class="how1-child2">
 							<span class="f1-s-4 cl11">
-								@Model.Items[0].UserName
+								@Model.Posts.Items[0].UserName
 							</span>
 
 							<span class="f1-s-3 cl11 m-rl-3">
@@ -72,7 +72,7 @@
 							</span>
 
 							<span class="f1-s-3 cl11">
-								@(Model.Items[0].WriteTime.Day + "/" + Model.Items[0].WriteTime.Month)
+								@(Model.Posts.Items[0].WriteTime.Day + "/" + Model.Posts.Items[0].WriteTime.Month)
 							</span>
 						</span>
 					</div>
@@ -81,17 +81,17 @@
 			@for (int i = 1; i < postTopCount; i++)
 			{
 				<div class="col-sm-6 col-md-3 p-rl-1 p-b-2">
-					<div class="bg-img1 size-a-14 how1 pos-relative" style="background-image: url(@(imageFolder + Model.Items[i].Thumbnail));">
-						<a href="/post/post-@Model.Items[i].PostID" class="dis-block how1-child1 trans-03"></a>
+					<div class="bg-img1 size-a-14 how1 pos-relative" style="background-image: url(@(imageFolder + Model.Posts.Items[i].Thumbnail));">
+						<a href="/post/post-@Model.Posts.Items[i].PostID" class="dis-block how1-child1 trans-03"></a>
 
 						<div class="flex-col-e-s s-full p-rl-25 p-tb-20">
-							<a href="/subcategory/subcategory-@Model.Items[i].SubCategoryID" class="dis-block how1-child2 f1-s-2 cl0 bo-all-1 bocl0 hov-btn1 trans-03 p-rl-5 p-t-2">
-								@Model.Items[i].SubCategoryName
+							<a href="/subcategory/subcategory-@Model.Posts.Items[i].SubCategoryID" class="dis-block how1-child2 f1-s-2 cl0 bo-all-1 bocl0 hov-btn1 trans-03 p-rl-5 p-t-2">
+								@Model.Posts.Items[i].SubCategoryName
 							</a>
 
 							<h3 class="how1-child2 m-t-14">
-								<a href="/post/post-@Model.Items[i].PostID" class="how-txt1 size-h-1 f1-m-1 cl0 hov-cl10 trans-03">
-									@split.NormalizeName(Model.Items[i].PostName, 10)
+								<a href="/post/post-@Model.Posts.Items[i].PostID" class="how-txt1 size-h-1 f1-m-1 cl0 hov-cl10 trans-03">
+									@split.NormalizeName(Model.Posts.Items[i].PostName, 10)
 								</a>
 							</h3>
 						</div>
@@ -109,25 +109,25 @@
 		<div class="row justify-content-center">
 			<div class="col-md-10 col-lg-8 p-b-80">
 				<div class="row">
-					@for (int i = 0; i < Model.Items.Count; i++)
+					@for (int i = 0; i < Model.Posts.Items.Count; i++)
 					{
 					<div class="col-sm-6 p-r-25 p-r-15-sr991">
 						<!-- Item latest -->
 						<div class="m-b-45">
-							<a href="/post/@Model.Items[i].PostID" class="wrap-pic-w hov1 trans-03">
-								<img class="image-post" src="@(imageFolder + Model.Items[i].Thumbnail)" alt="IMG">
+							<a href="/post/@Model.Posts.Items[i].PostID" class="wrap-pic-w hov1 trans-03">
+								<img class="image-post" src="@(imageFolder + Model.Posts.Items[i].Thumbnail)" alt="IMG">
 							</a>
 
 							<div class="p-t-16">
 								<h5 class="p-b-5">
-									<a href="/post/@Model.Items[i].PostID" class="f1-m-3 cl2 hov-cl10 trans-03">
-										@split.NormalizeName(Model.Items[i].PostName, 12)
+									<a href="/post/@Model.Posts.Items[i].PostID" class="f1-m-3 cl2 hov-cl10 trans-03">
+										@split.NormalizeName(Model.Posts.Items[i].PostName, 12)
 									</a>
 								</h5>
 
 								<span class="cl8">
 									<a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
-										by @Model.Items[i].UserName
+										by @Model.Posts.Items[i].UserName
 									</a>
 
 									<span class="f1-s-3 m-rl-3">
@@ -135,7 +135,7 @@
 									</span>
 
 									<span class="f1-s-3">
-										@(Model.Items[i].WriteTime.Day + "/" + Model.Items[i].WriteTime.Month)
+										@(Model.Posts.Items[i].WriteTime.Day + "/" + Model.Posts.Items[i].WriteTime.Month)
 									</span>
 								</span>
 							</div>
@@ -147,7 +147,7 @@
 
 				<!-- Pagination -->
 				<div class="flex-wr-s-c m-rl--7 p-t-15">
-					@await Component.InvokeAsync("Pager", Model)
+					@await Component.InvokeAsync("Pager", Model.Posts)
 				</div>
 			</div>
 
@@ -163,7 +163,7 @@
 
 						<ul class="p-t-35">
 							@{
-                                var popular5 = Model.Items.OrderByDescending(i => i.View).Take(5);
+                                var popular5 = Model.Posts.Items.OrderByDescending(i => i.View).Take(5);
 							}
 							@for (int i=0; i < popular5.Count(); i++) 
                             {
@@ -190,41 +190,12 @@
 						</div>
 
 						<div class="flex-wr-s-s m-rl--5">
-							@foreach (var tag in Model.Items)
-                            {
-
-                            }
-							<a href="#" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
-								Fashion
-							</a>
-
-							<a href="#" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
-								Lifestyle
-							</a>
-
-							<a href="#" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
-								Denim
-							</a>
-
-							<a href="#" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
-								Streetstyle
-							</a>
-
-							<a href="#" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
-								Crafts
-							</a>
-
-							<a href="#" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
-								Magazine
-							</a>
-
-							<a href="#" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
-								News
-							</a>
-
-							<a href="#" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
-								Blogs
-							</a>
+							@foreach (var tag in Model.Tags)
+							{
+								<a href="/Tag/tag-@tag.TagID" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
+									@tag.TagName
+								</a>
+							}
 						</div>
 					</div>
 				</div>

@@ -35,6 +35,14 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("category/{id}")]
+        public async Task<IActionResult> GetAllByCategory(int id)
+        {
+            var result = await _tagService.GetAllByCategoryID(id);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
         [HttpGet("paging")]
         public async Task<IActionResult> GetAllPaging([FromQuery]GetTagPagingRequest request)
         {

@@ -59,6 +59,25 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 			return new ApiSuccessResult<List<TagViewModel>>(data);
 		}
 
+		public async Task<ApiResult<List<TagViewModel>>> GetAllByCategoryID(int categoryID)
+		{
+			var query = from t in _context.Tags
+						join pt in _context.PostTags on t.TagID equals pt.TagID
+						join p in _context.Posts on pt.PostID equals p.PostID
+						join c in _context.Categories on p.CategoryID equals c.CategoryID
+						select new {c, t};
+
+			query = query.Where(x => x.c.CategoryID.Equals(categoryID));
+
+			var data = await query.Select(x => new TagViewModel()
+			{
+				TagID = x.t.TagID,
+				TagName = x.t.TagName,
+				PostCount = x.t.PostTags.Count
+			}).Distinct().ToListAsync();
+			return new ApiSuccessResult<List<TagViewModel>>(data);
+		}
+
 		public async Task<ApiResult<PagedResult<TagViewModel>>> GetAllPagingTagID(GetTagPagingRequest request)
 		{
 			var query = from c in _context.Tags

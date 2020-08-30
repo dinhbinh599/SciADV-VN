@@ -15,5 +15,6 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 		Task<ApiResult<TagViewModel>> GetByID(int tagID);
 		Task<ApiResult<List<TagViewModel>>> GetAll();
 		Task<ApiResult<PagedResult<TagViewModel>>> GetAllPagingTagID(GetTagPagingRequest request);
+		Task<ApiResult<List<TagViewModel>>> GetAllByCategoryID(int categoryID);
 	}
 }

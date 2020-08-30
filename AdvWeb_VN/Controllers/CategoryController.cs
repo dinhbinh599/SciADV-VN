@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
+using AdvWeb_VN.WebApp.Models;
 using AdvWeb_VN.WebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,11 +13,13 @@ namespace AdvWeb_VN.WebApp.Controllers
     public class CategoryController : Controller
     {
         private readonly IPostApiClient _postApiClient;
+        private readonly ITagApiClient _tagApiClient;
         private readonly IConfiguration _configuration;
 
-        public CategoryController(IPostApiClient postApiClient, IConfiguration configuration)
+        public CategoryController(IPostApiClient postApiClient, ITagApiClient tagApiClient, IConfiguration configuration)
         {
             _postApiClient = postApiClient;
+            _tagApiClient = tagApiClient;
             _configuration = configuration;
         }
 
@@ -31,9 +34,14 @@ namespace AdvWeb_VN.WebApp.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-            var result = await _postApiClient.GetPostsPagingsCategory(request);
-
-            return View(result.ResultObj);
+            var resultPost = await _postApiClient.GetPostsPagingsCategory(request);
+            var resultTag = await _tagApiClient.GetAllByCategoryID(request.Id.GetValueOrDefault(1));
+            var categoryVM = new CategoryPageViewModel()
+            {
+                Posts = resultPost.ResultObj,
+                Tags = resultTag.ResultObj
+            };
+            return View(categoryVM);
         }
     }
 }
