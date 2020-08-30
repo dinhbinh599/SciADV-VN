@@ -8,18 +8,21 @@
 	<title>@ViewData["Title"] - Admin</title>
 
 	<!-- Font Awesome Icons -->
-	<link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+	<link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
 	<!-- IonIcons -->
 	<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 	<!-- Theme style -->
-	<link rel="stylesheet" href="/dist/css/adminlte.min.css">
+	<link rel="stylesheet" href="~/dist/css/adminlte.min.css">
 	<!-- Google Font: Source Sans Pro -->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" rel="stylesheet">
-
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/start/jquery-ui.css" />
 	<style>
+		.col-sm-12.col-md-4.category {
+			padding-top: 24px;
+			padding-bottom: 15px;
+		}
 		span.select2-selection.select2-selection--single {
 			padding: unset;
 			padding-top: 1px;
@@ -189,22 +192,23 @@ to get the desired effect
 	<!-- ./wrapper -->
 	<!-- REQUIRED SCRIPTS -->
 	<!-- jQuery -->
-	<script src="/plugins/jquery/jquery.min.js"></script>
+	<script src="~/plugins/jquery/jquery.min.js"></script>
 	<!-- Bootstrap -->
-	<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<!-- AdminLTE -->
-	<script src="/dist/js/adminlte.js"></script>
+	<script src="~/dist/js/adminlte.js"></script>
 
 	<!-- OPTIONAL SCRIPTS -->
-	<script src="/plugins/chart.js/Chart.min.js"></script>
-	<script src="/dist/js/demo.js"></script>
-	<script src="/dist/js/pages/dashboard3.js"></script>
+	<script src="~/plugins/chart.js/Chart.min.js"></script>
+	<script src="~/dist/js/demo.js"></script>
+	<script src="~/dist/js/pages/dashboard3.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 	<script>
 		$('.tag-select').select2({
-				tags: true
+			tags: true
 		});
 
 		$('.category-select').select2();

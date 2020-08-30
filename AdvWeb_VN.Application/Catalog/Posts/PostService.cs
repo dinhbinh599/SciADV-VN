@@ -361,12 +361,12 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			if (!string.IsNullOrEmpty(request.Keyword))
 			{
-				query = query.Where(x => x.sc.CategoryName.Contains(request.Keyword)||x.p.PostName.Contains(request.Keyword));
+				query = query.Where(x => x.k.CategoryName.Contains(request.Keyword)||x.p.PostName.Contains(request.Keyword));
 			}
 
 			if (request.ID != null)
 			{
-				query = query.Where(x => request.ID.Equals(x.p.SubCategoryID)||request.ID.ToString().Contains(x.p.PostID));
+				query = query.Where(x => request.ID.Equals(x.k.CategoryID)||request.ID.ToString().Contains(x.p.PostID));
 			}
 
 			int totalRow = await query.CountAsync();

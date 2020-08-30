@@ -33,6 +33,8 @@
 							<h3 class="card-title">Thêm bài viết</h3>
 						</div>
 						<!-- /.card-header -->
+
+						<div id='previewDiv'>&nbsp;</div>
 						<!-- form start -->
 						<form asp-action="Create" role="form" method="post" enctype="multipart/form-data">
 							<div class="card-body">
@@ -86,7 +88,7 @@
 									</div>
 									<div class="col-1">
 										<div class="form-group">
-											<input type="submit" value="Xem trước" class="btn btn-outline-info" />
+											<input type="button" id="preview" value="Xem trước" class="btn btn-outline-info" />
 										</div>
 									</div>
 								</div>
@@ -120,6 +122,23 @@
 			showSubCategory(selectedCategory);
 		});
 
+		$("#previewDiv").dialog({
+			title: "Xem trước",
+			height: 600,
+			width: 600,
+			autoOpen: false,
+			open: function () {},
+			show: "blind",
+			hide: "explode"
+		});
+
+		$('#preview').click(function () {
+			var html = $('textarea.contents').val();
+			$('#previewDiv').html(html);
+			$("#previewDiv").dialog("open");
+			return false;
+		});
+
 		showTag();
 		showCategory();
 		showSubCategory(1);
@@ -146,7 +165,7 @@
 		}
 
 		function _displayItemTag(data) {
-			
+
 			data.forEach(item => {
 				console.log(item.tagName)
 				$("#tag-select").append("<option value='" + item.tagName + "'>" + item.tagName + "</option>")

@@ -23,20 +23,26 @@ namespace AdvWeb_VN.ManageApp.Controllers
 	{
 		private readonly IPostApiClient _postApiClient;
 		private readonly IConfiguration _configuration;
-		private readonly ISubCategoryApiClient _subCategegoryApiClient; 
+		private readonly ISubCategoryApiClient _subCategegoryApiClient;
+		private readonly ICategoryApiClient _categegoryApiClient;
 		private readonly ITagApiClient _tagApiClient;
-		public PostController(IPostApiClient postApiClient, IConfiguration configuration, ISubCategoryApiClient subCategegoryApiClient, ITagApiClient tagApiClient)
+
+		public PostController(IPostApiClient postApiClient, IConfiguration configuration, ISubCategoryApiClient subCategegoryApiClient, ICategoryApiClient categegoryApiClient, ITagApiClient tagApiClient)
 		{
 			_postApiClient = postApiClient;
 			_configuration = configuration;
 			_subCategegoryApiClient = subCategegoryApiClient;
+			_categegoryApiClient = categegoryApiClient;
 			_tagApiClient = tagApiClient;
 		}
 
-		public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
+		public async Task<IActionResult> Index(string keyword, int id = 1, int pageIndex = 1, int pageSize = 10)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+			ViewData["ID"] = id;
 			var request = new GetManagePostPagingRequest()
 			{
+				ID = id,
 				Keyword = keyword,
 				PageIndex = pageIndex,
 				PageSize = pageSize
