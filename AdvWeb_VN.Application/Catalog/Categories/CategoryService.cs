@@ -116,6 +116,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 					{
 						PostID = p.PostID,
 						PostName = p.PostName,
+						SubCategoryID = p.SubCategoryID,
 						SubCategoryName = p.SubCategory.CategoryName,
 						WriteTime = p.WriteTime,
 						Thumbnail = p.Thumbnail
@@ -133,6 +134,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 							{
 								PostID = p.PostID,
 								PostName = p.PostName,
+								SubCategoryID = p.SubCategoryID,
 								SubCategoryName = sc.CategoryName,
 								WriteTime = p.WriteTime,
 								Thumbnail = p.Thumbnail

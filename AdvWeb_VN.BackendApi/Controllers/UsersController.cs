@@ -12,7 +12,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-//    [Authorize]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -56,6 +56,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("paging")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery]GetUserPagingRequest request)
         {
             var users = await _userService.GetUsersPaging(request);
@@ -63,6 +64,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(Guid id)
         {
             var user = await _userService.GetByID(id);
@@ -70,6 +72,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("name/{name}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByName(string name)
         {
             var user = await _userService.GetByName(name);

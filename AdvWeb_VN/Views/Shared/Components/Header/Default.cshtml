@@ -21,7 +21,7 @@
                             @foreach (var item in Model.PostHeaders.Items)
 							{
                             <span class="dis-inline-block slide100-txt-item animated visible-false">
-                                @split.NormalizeName(item.PostName, 12)
+                                @split.NormalizeName(item.PostName, 30)
                             </span>
 							}
                         </span>
@@ -31,7 +31,7 @@
 
                 <div class="flex-wr-e-c">
                     <div class="left-topbar">
-                        <span class="left-topbar-item flex-wr-s-c">
+                        @*<span class="left-topbar-item flex-wr-s-c">
                             <span>
                                 New York, NY
                             </span>
@@ -41,17 +41,17 @@
                             <span>
                                 HI 58° LO 56°
                             </span>
-                        </span>
+                        </span>*@
 
-                        <a href="#" class="left-topbar-item">
+                        @*<a href="#" class="left-topbar-item">
                             Thông tin
-                        </a>
+                        </a>*@
 
-                        <a href="#" class="left-topbar-item">
+                        <a href="https://www.facebook.com/GeroSagaSciADV" class="left-topbar-item">
                             Liên lạc
                         </a>
 
-                        <a href="#" class="left-topbar-item">
+                        <a href="/" class="left-topbar-item">
                             Admin
                         </a>
 
@@ -87,7 +87,7 @@
         <div class="wrap-header-mobile">
             <!-- Logo moblie -->
             <div class="logo-mobile">
-                <a href="/"><img src="~/images/icons/logo-01.png" alt="IMG-LOGO"></a>
+                <a href="/"><img src="~/images/icons/logo.svg" alt="IMG-LOGO"></a>
             </div>
 
             <!-- Button show menu -->
@@ -101,7 +101,7 @@
         <!-- Menu Mobile -->
         <div class="menu-mobile">
             <ul class="topbar-mobile">
-                <li class="left-topbar">
+                @*<li class="left-topbar">
                     <span class="left-topbar-item flex-wr-s-c">
                         <span>
                             New York, NY
@@ -113,7 +113,7 @@
                             HI 58° LO 56°
                         </span>
                     </span>
-                </li>
+                </li>*@
 
                 <li class="left-topbar">
                     <a href="#" class="left-topbar-item">
@@ -232,7 +232,7 @@
                                                             </h5>
 
                                                             <span class="cl8">
-                                                                <a href="#" class="f1-s-6 cl8 hov-cl10 trans-03">
+                                                                <a href="/subcategory/subcategory-@itemPost.SubCategoryID" class="f1-s-6 cl8 hov-cl10 trans-03">
                                                                     @itemPost.SubCategoryName
                                                                 </a>
 
@@ -271,7 +271,7 @@
                                                                     </h5>
 
                                                                     <span class="cl8">
-                                                                        <a href="#" class="f1-s-6 cl8 hov-cl10 trans-03">
+                                                                        <a href="/subcategory/subcategory-@itemSubCategory.SubCategoryID" class="f1-s-6 cl8 hov-cl10 trans-03">
                                                                             @itemSubCategory.SubCategoryName
                                                                         </a>
 
@@ -298,8 +298,8 @@
                         <li>
                             <a href="#">More</a>
                             <ul class="sub-menu">
-                                <li><a href="about.html">Thông tin</a></li>
-                                <li><a href="contact.html">Liên lạc</a></li>
+                                <li><a href="https://www.facebook.com/GeroSagaSciADV">Thông tin</a></li>
+                                <li><a href="https://www.facebook.com/GeroSagaSciADV">Liên lạc</a></li>
                             </ul>
                         </li>
                     </ul>

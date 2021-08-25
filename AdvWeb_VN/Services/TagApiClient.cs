@@ -30,10 +30,10 @@ namespace AdvWeb_VN.WebApp.Services
 
         public async Task<ApiResult<TagViewModel>> GetByID(int id)
         {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            //var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/tags/{id}");
             var body = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
@@ -45,10 +45,9 @@ namespace AdvWeb_VN.WebApp.Services
         public async Task<ApiResult<List<TagViewModel>>> GetAll()
         {
             var client = _httpClientFactory.CreateClient();
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
-
+            //var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/tags");
             var body = await response.Content.ReadAsStringAsync();
             var tags = JsonConvert.DeserializeObject<ApiResult<List<TagViewModel>>>(body);
@@ -58,10 +57,9 @@ namespace AdvWeb_VN.WebApp.Services
         public async Task<ApiResult<PagedResult<TagViewModel>>> GetTagsPagings(GetTagPagingRequest request)
         {
             var client = _httpClientFactory.CreateClient();
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
-
+           // var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/tags/paging?pageIndex=" +
                 $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");
             var body = await response.Content.ReadAsStringAsync();
@@ -72,7 +70,7 @@ namespace AdvWeb_VN.WebApp.Services
         public async Task<ApiResult<List<TagViewModel>>> GetAllByCategoryID(int categoryID)
         {
             var client = _httpClientFactory.CreateClient();
-
+            //var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             var response = await client.GetAsync($"/api/tags/category/{categoryID}");
             var body = await response.Content.ReadAsStringAsync();

@@ -10,38 +10,38 @@ using Microsoft.Extensions.Configuration;
 
 namespace AdvWeb_VN.WebApp.Controllers
 {
-    public class CategoryController : Controller
+    public class SubCategoryController : Controller
     {
         private readonly IPostApiClient _postApiClient;
         private readonly ITagApiClient _tagApiClient;
         private readonly IConfiguration _configuration;
 
-        public CategoryController(IPostApiClient postApiClient, ITagApiClient tagApiClient, IConfiguration configuration)
+        public SubCategoryController(IPostApiClient postApiClient, ITagApiClient tagApiClient, IConfiguration configuration)
         {
             _postApiClient = postApiClient;
             _tagApiClient = tagApiClient;
             _configuration = configuration;
         }
 
-        [HttpGet("{controller}/category-{id}")]
+        [HttpGet("{controller}/subcategory-{id}")]
         public async Task<IActionResult> Index(int id, int pageIndex = 1, int pageSize = 10)
         {
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
-            ViewData["Active"] = id;
+            ViewData["Active"] = 0;
             var request = new GetPublicPostPagingRequest()
             {
                 Id = id,
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-            var resultPost = await _postApiClient.GetPostsPagingsCategory(request);
+            var resultPost = await _postApiClient.GetPostsPagingsSubCategory(request);
             var resultTag = await _tagApiClient.GetAllByCategoryID(request.Id.GetValueOrDefault(1));
-            var categoryVM = new CategoryPageViewModel()
+            var subCategoryVM = new CategoryPageViewModel()
             {
                 Posts = resultPost.ResultObj,
                 Tags = resultTag.ResultObj
             };
-            return View(categoryVM);
+            return View(subCategoryVM);
         }
     }
 }

@@ -65,7 +65,6 @@ namespace AdvWeb_VN
 			app.UseRouting();
 
 			app.UseAuthorization();
-
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Categories;
 using AdvWeb_VN.ViewModels.Catalog.Categories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -21,6 +23,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var categories = await _categoryService.GetAll();
@@ -28,6 +31,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("menu")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetMenuCategory()
         {
             var categories = await _categoryService.GetMenuCategory();
@@ -35,12 +39,15 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("footer")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetFooterCategory()
         {
             var categories = await _categoryService.GetFooterCategory();
             return Ok(categories);
         }
+
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(int id)
         {
             var result = await _categoryService.GetByID(id);

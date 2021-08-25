@@ -1,18 +1,26 @@
-﻿@using  AdvWeb_VN.ViewModels.Common;
-@using AdvWeb_VN.Utilities.Settings
+﻿@using AdvWeb_VN.Utilities.Settings
 @using AdvWeb_VN.WebApp.Models
-
-@model HomePageViewModel
+@model PostListPageViewModel
 @{
-	Split split = new Split();
-	ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Index";
 	Layout = "~/Views/Shared/_Layout.cshtml";
+	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
+	Split split = new Split();
+	var postTopCount = 5;
+	if (Model.Posts.Items.Count < 5) { postTopCount = Model.Posts.Items.Count; }
 }
 
-<!-- Headline -->
+<!-- Breadcrumb -->
 <div class="container">
 	<div class="bg0 flex-wr-sb-c p-rl-20 p-tb-8">
-		<div class="f2-s-1 p-r-30 size-w-0 m-tb-6 flex-wr-s-c">
+		<div class="f2-s-1 p-r-30 m-tb-6">
+			<a href="/" class="breadcrumb-item f1-s-3 cl9">
+				Home
+			</a>
+
+			<span class="breadcrumb-item f1-s-3 cl9">
+				Blog
+			</span>
 		</div>
 
 		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
@@ -24,47 +32,19 @@
 	</div>
 </div>
 
-<!-- Feature post -->
-<section class="bg0">
-	<div class="row m-rl-0 justify-content-center">
-		@for(int i=0;i<3;i++)
-		{
-			<div class="col-md-4 p-rl-1 p-b-2">
-				<div class="bg-img1 size-a-11 how1 pos-relative" style="        background-image: url(https://localhost:5002/user-content/@Model.Posts.Items[i].Thumbnail);">
-					<a href="/post/@Model.Posts.Items[i].PostID" class="dis-block how1-child1 trans-03"></a>
-
-					<div class="flex-col-e-s s-full p-rl-25 p-tb-18">
-						<a href="/subcategory/subcategory-@Model.Posts.Items[i].SubCategoryID" class="dis-block how1-child2 f1-s-2 cl0 bo-all-1 bocl0 hov-btn1 trans-03 p-rl-5 p-t-2">
-							@Model.Posts.Items[i].SubCategoryName
-						</a>
-
-						<h3 class="how1-child2 m-t-14 m-b-10">
-							<a href="/post/@Model.Posts.Items[i].PostID" class="f1-l-1 cl0 hov-cl10 trans-03 respon1">
-								@split.NormalizeName(Model.Posts.Items[i].PostName, 12)
-							</a>
-						</h3>
-					</div>
-				</div>
-			</div>
-		}
-	</div>
-</section>
+<!-- Page heading -->
+<div class="container p-t-4 p-b-40">
+	<h2 class="f1-l-1 cl2">
+		Bài Viết
+	</h2>
+</div>
 
 <!-- Post -->
-@*List Category đặt ở đây*@
-
-<!-- Latest -->
-<section class="bg0 p-t-60 p-b-35">
+<section class="bg0 p-b-55">
 	<div class="container">
 		<div class="row justify-content-center">
-			<div class="col-md-10 col-lg-8 p-b-20">
-				<div class="how2 how2-cl4 flex-s-c m-r-10 m-r-0-sr991">
-					<h3 class="f1-m-2 cl3 tab01-title">
-						Bài viết mới nhất
-					</h3>
-				</div>
-
-				<div class="row p-t-35">
+			<div class="col-md-10 col-lg-8 p-b-80">
+				<div class="row">
 					@foreach (var item in Model.Posts.Items)
 					{
 						<div class="col-sm-6 p-r-25 p-r-15-sr991">
@@ -99,9 +79,19 @@
 						</div>
 					}
 				</div>
+
+				<!-- Pagination -->
+				@await Component.InvokeAsync("Pager", Model.Posts)
+
+				@*<div class="flex-wr-s-c m-rl--7 p-t-15">
+				<a href="#" class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7 pagi-active">1</a>
+				<a href="#" class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7">2</a>
+				</div>*@
 			</div>
+
 			<!-- Sidebar -->
 			@await Component.InvokeAsync("Sidebar")
 		</div>
 	</div>
 </section>
+

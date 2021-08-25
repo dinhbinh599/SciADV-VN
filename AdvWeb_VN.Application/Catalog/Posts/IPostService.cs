@@ -18,11 +18,12 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<ApiResult<bool>> AddViewCount(string postID);
 		Task<ApiResult<PostViewModel>> GetByID(string postID);
 		Task<ApiResult<PostViewModel>> GetByIDAuthenticate(string postID, Guid userID);
-		Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingTagID(GetManagePostPagingRequest request);
-		Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingCategoryID(GetManagePostPagingRequest request);
-		Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingCategoryIDAuthenticate(Guid userID,GetManagePostPagingRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingByTagID(GetManagePostPagingRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingByCategoryID(GetManagePostPagingRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingByCategoryIDAuthenticate(Guid userID,GetManagePostPagingRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetAllByTagID(GetPublicPostPagingRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetAllByCategoryID(GetPublicPostPagingRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingBySubCategoryID(GetManagePostPagingRequest request);
 		Task<List<PostViewModel>> GetAll();
 		Task<ApiResult<List<PostViewModel>>> GetPopular();
 		Task<ApiResult<bool>> TagAssign(string postID, TagAssignRequest request);
@@ -38,5 +39,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<ApiResult<bool>> UpdateImageContents(string postID, PostUpdateContentsRequest request);
 		Task<ApiResult<bool>> UpdateImageContentsAuthenticate(string postID, Guid userID, PostUpdateContentsRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPagingCategory(GetPublicPostPagingRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetPagingSubCategory(GetPublicPostPagingRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTag(GetPublicPostPagingRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTagByName(GetPublicPostPagingRequestSearch request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetPaging(GetPublicPostPagingRequest request);
 	}
 }

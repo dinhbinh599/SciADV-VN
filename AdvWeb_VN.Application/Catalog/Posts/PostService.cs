@@ -128,7 +128,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<bool>();
 		}
 
-		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingTagID(GetManagePostPagingRequest request)
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingByTagID(GetManagePostPagingRequest request)
 		{
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
@@ -351,7 +351,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
 
-		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingCategoryID(GetManagePostPagingRequest request)
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingByCategoryID(GetManagePostPagingRequest request)
 		{
 			var query = from sc in _context.SubCategories
 						join k in _context.Categories on sc.CategoryID equals k.CategoryID
@@ -694,7 +694,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<PostViewModel>(postViewModel);
 		}
 
-		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingCategoryIDAuthenticate(Guid userID, GetManagePostPagingRequest request)
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingByCategoryIDAuthenticate(Guid userID, GetManagePostPagingRequest request)
 		{
 			var query = from c in _context.SubCategories
 						join k in _context.Categories on c.CategoryID equals k.CategoryID
@@ -872,5 +872,215 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
 
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetAllPagingBySubCategoryID(GetManagePostPagingRequest request)
+		{
+			var query = from sc in _context.SubCategories
+						join k in _context.Categories on sc.CategoryID equals k.CategoryID
+						join p in _context.Posts on sc.SubCategoryID equals p.SubCategoryID
+						join d in _context.Users on p.UserID equals d.Id
+						select new { p, sc, d, k };
+
+			if (!string.IsNullOrEmpty(request.Keyword))
+			{
+				query = query.Where(x => x.sc.CategoryName.Contains(request.Keyword) || x.p.PostName.Contains(request.Keyword));
+			}
+
+			if (request.ID != null)
+			{
+				query = query.Where(x => request.ID.Equals(x.k.CategoryID) || request.ID.ToString().Contains(x.p.PostID));
+			}
+
+			int totalRow = await query.CountAsync();
+
+			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					SubCategoryID = x.p.SubCategoryID,
+					UserName = x.d.UserName,
+					SubCategoryName = x.sc.CategoryName,
+					CategoryID = x.sc.CategoryID,
+					CategoryName = x.k.CategoryName
+				}).ToListAsync();
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				TotalRecords = totalRow,
+				PageSize = request.PageSize,
+				PageIndex = request.PageIndex,
+				Items = data
+			};
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
+		}
+
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingSubCategory(GetPublicPostPagingRequest request)
+		{
+			var query = from c in _context.Categories
+						join p in _context.Posts on c.CategoryID equals p.CategoryID
+						join u in _context.Users on p.UserID equals u.Id
+						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
+						select new { c, p, u, sc };
+
+			if (request.Id.HasValue && request.Id.Value > 0)
+			{
+				query = query.Where(x => x.p.SubCategoryID.Equals(request.Id));
+			}
+			int totalRow = await query.CountAsync();
+
+			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					SubCategoryID = x.p.SubCategoryID,
+					UserName = x.u.UserName,
+					SubCategoryName = x.sc.CategoryName,
+					CategoryName = x.c.CategoryName,
+					CategoryID = x.c.CategoryID
+				}).ToListAsync();
+
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				Items = postVMs,
+				PageIndex = request.PageIndex,
+				PageSize = request.PageSize,
+				TotalRecords = totalRow
+			};
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
+		}
+
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTag(GetPublicPostPagingRequest request)
+		{
+			var query = from p in _context.Posts
+						join pic in _context.PostTags on p.PostID equals pic.PostID
+						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
+						join c in _context.Categories on p.CategoryID equals c.CategoryID
+						join t in _context.Tags on pic.TagID equals t.TagID
+						join u in _context.Users on p.UserID equals u.Id
+						select new { p, c, sc, u, pic };
+
+			if (request.Id.HasValue && request.Id.Value > 0)
+			{
+				query = query.Where(x => x.pic.TagID.Equals(request.Id));
+			}
+			int totalRow = await query.CountAsync();
+
+			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					SubCategoryID = x.p.SubCategoryID,
+					UserName = x.u.UserName,
+					SubCategoryName = x.sc.CategoryName,
+					CategoryName = x.c.CategoryName,
+					CategoryID = x.c.CategoryID
+				}).ToListAsync();
+
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				Items = postVMs,
+				PageIndex = request.PageIndex,
+				PageSize = request.PageSize,
+				TotalRecords = totalRow
+			};
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
+		}
+
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTagByName(GetPublicPostPagingRequestSearch request)
+		{
+			var query = from p in _context.Posts
+						join pic in _context.PostTags on p.PostID equals pic.PostID
+						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
+						join c in _context.Categories on p.CategoryID equals c.CategoryID
+						join t in _context.Tags on pic.TagID equals t.TagID
+						join u in _context.Users on p.UserID equals u.Id
+						select new { p, c, sc, u, pic,t };
+
+			if (!string.IsNullOrEmpty(request.Keyword))
+			{
+				query = query.Where(x => x.t.TagName.Contains(request.Keyword));
+			}
+
+			int totalRow = await query.CountAsync();
+
+			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					SubCategoryID = x.p.SubCategoryID,
+					UserName = x.u.UserName,
+					SubCategoryName = x.sc.CategoryName,
+					CategoryName = x.c.CategoryName,
+					CategoryID = x.c.CategoryID
+				}).ToListAsync();
+
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				Items = postVMs,
+				PageIndex = request.PageIndex,
+				PageSize = request.PageSize,
+				TotalRecords = totalRow
+			};
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
+		}
+
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPaging(GetPublicPostPagingRequest request)
+		{
+			var query = from p in _context.Posts
+						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
+						join c in _context.Categories on p.CategoryID equals c.CategoryID
+						join u in _context.Users on p.UserID equals u.Id
+						select new { p, c, sc, u };
+
+			int totalRow = await query.CountAsync();
+
+			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.Select(x => new PostViewModel()
+				{
+					PostID = x.p.PostID,
+					PostName = x.p.PostName,
+					WriteTime = x.p.WriteTime,
+					View = x.p.View,
+					Thumbnail = x.p.Thumbnail,
+					Contents = x.p.Contents,
+					SubCategoryID = x.p.SubCategoryID,
+					UserName = x.u.UserName,
+					SubCategoryName = x.sc.CategoryName,
+					CategoryName = x.c.CategoryName,
+					CategoryID = x.c.CategoryID
+				}).ToListAsync();
+
+			var pagedResult = new PagedResult<PostViewModel>()
+			{
+				Items = postVMs,
+				PageIndex = request.PageIndex,
+				PageSize = request.PageSize,
+				TotalRecords = totalRow
+			};
+			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
+		}
 	}
 }

@@ -9,8 +9,10 @@ using AdvWeb_VN.Models;
 using AdvWeb_VN.WebApp.Services;
 using Microsoft.Extensions.Configuration;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
+using AdvWeb_VN.WebApp.Models;
+using AdvWeb_VN.ViewModels.Catalog.Tags;
 
-namespace AdvWeb_VN.Controllers
+namespace AdvWeb_VN.WebApp.Controllers
 {
 	public class HomeController : Controller
 	{
@@ -28,17 +30,21 @@ namespace AdvWeb_VN.Controllers
 		public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
 		{
 			ViewData["Active"] = 0;
-			var request = new GetPublicPostPagingRequest()
+			var postRequest = new GetPublicPostPagingRequest()
 			{
 				PageIndex = pageIndex,
 				PageSize = pageSize
 			};
-			var data = await _postApiClient.GetPostsPagings(request);
+			var resultPost = await _postApiClient.GetPostsPagings(postRequest);
+			var homeVM = new HomePageViewModel()
+			{
+				Posts = resultPost.ResultObj
+			};
 			if (TempData["result"] != null)
 			{
 				ViewBag.SuccessMsg = TempData["result"];
 			}
-			return View(data.ResultObj);
+			return View(homeVM);
 		}
 		public IActionResult Privacy()
 		{

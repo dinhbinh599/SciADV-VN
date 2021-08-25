@@ -13,7 +13,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
 	[Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class PostsController : ControllerBase
     {
         private readonly IPostService _postService;
@@ -24,13 +24,23 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var posts = await _postService.GetAll();
             return Ok(posts);
         }
 
+        [HttpGet("public-paging")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPaging([FromQuery]GetPublicPostPagingRequest request)
+        {
+            var posts = await _postService.GetPaging(request);
+            return Ok(posts);
+        }
+
         [HttpGet("popular")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetPopular()
         {
             var posts = await _postService.GetPopular();
@@ -38,35 +48,71 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("paging-tagid")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllPagingByTagID([FromQuery]GetManagePostPagingRequest request)
         {
-            var posts = await _postService.GetAllPagingTagID(request);
+            var posts = await _postService.GetAllPagingByTagID(request);
+            return Ok(posts);
+        }
+
+        [HttpGet("paging-subcategoryid")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllPagingBySubCategoryID([FromQuery]GetManagePostPagingRequest request)
+        {
+            var posts = await _postService.GetAllPagingBySubCategoryID(request);
             return Ok(posts);
         }
 
         [HttpGet("paging-categoryid")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllPagingByCategoryID([FromQuery]GetManagePostPagingRequest request)
         {
-            var posts = await _postService.GetAllPagingCategoryID(request);
+            var posts = await _postService.GetAllPagingByCategoryID(request);
             return Ok(posts);
         }
 
         [HttpGet("public-paging-category")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetPagingCategory([FromQuery]GetPublicPostPagingRequest request)
         {
             var posts = await _postService.GetPagingCategory(request);
             return Ok(posts);
         }
 
-        [HttpGet("{userID}/paging-categoryid")]
-        public async Task<IActionResult> GetAllPagingByCategoryID(Guid userID,[FromQuery]GetManagePostPagingRequest request)
+        [HttpGet("public-paging-subcategory")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPagingSubCategory([FromQuery]GetPublicPostPagingRequest request)
         {
-            var posts = await _postService.GetAllPagingCategoryIDAuthenticate(userID, request);
+            var posts = await _postService.GetPagingSubCategory(request);
             return Ok(posts);
         }
 
+        [HttpGet("public-paging-tag")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPagingTag([FromQuery]GetPublicPostPagingRequest request)
+        {
+            var posts = await _postService.GetPagingTag(request);
+            return Ok(posts);
+        }
+
+        [HttpGet("{userID}/paging-categoryid")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllPagingByCategoryID(Guid userID,[FromQuery]GetManagePostPagingRequest request)
+        {
+            var posts = await _postService.GetAllPagingByCategoryIDAuthenticate(userID, request);
+            return Ok(posts);
+        }
+
+        [HttpGet("public-paging-tagname")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPagingTagByName([FromQuery]GetPublicPostPagingRequestSearch request)
+        {
+            var posts = await _postService.GetPagingTagByName(request);
+            return Ok(posts);
+        }
 
         [HttpGet("public-paging-tagid")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByTagID([FromQuery]GetPublicPostPagingRequest request)
         {
             var posts = await _postService.GetAllByTagID(request);
@@ -74,6 +120,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("public-paging-categoryid")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByCategoryID([FromQuery]GetPublicPostPagingRequest request)
         {
             var posts = await _postService.GetAllByCategoryID(request);
@@ -81,6 +128,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(string id)
         {
             var result = await _postService.GetByID(id);
@@ -89,6 +137,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("{userID}/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(Guid userID,string id)
         {
             var result = await _postService.GetByIDAuthenticate(id, userID);

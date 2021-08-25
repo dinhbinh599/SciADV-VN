@@ -10,38 +10,33 @@ using Microsoft.Extensions.Configuration;
 
 namespace AdvWeb_VN.WebApp.Controllers
 {
-    public class CategoryController : Controller
+    public class PostListController : Controller
     {
         private readonly IPostApiClient _postApiClient;
-        private readonly ITagApiClient _tagApiClient;
         private readonly IConfiguration _configuration;
 
-        public CategoryController(IPostApiClient postApiClient, ITagApiClient tagApiClient, IConfiguration configuration)
+        public PostListController(IPostApiClient postApiClient, IConfiguration configuration)
         {
             _postApiClient = postApiClient;
-            _tagApiClient = tagApiClient;
             _configuration = configuration;
         }
 
-        [HttpGet("{controller}/category-{id}")]
-        public async Task<IActionResult> Index(int id, int pageIndex = 1, int pageSize = 10)
+        [HttpGet("{controller}")]
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
         {
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
-            ViewData["Active"] = id;
+            ViewData["Active"] = 0;
             var request = new GetPublicPostPagingRequest()
             {
-                Id = id,
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-            var resultPost = await _postApiClient.GetPostsPagingsCategory(request);
-            var resultTag = await _tagApiClient.GetAllByCategoryID(request.Id.GetValueOrDefault(1));
-            var categoryVM = new CategoryPageViewModel()
+            var resultPost = await _postApiClient.GetPostsPagings(request);
+            var postListVM = new PostListPageViewModel()
             {
                 Posts = resultPost.ResultObj,
-                Tags = resultTag.ResultObj
             };
-            return View(categoryVM);
+            return View(postListVM);
         }
     }
 }

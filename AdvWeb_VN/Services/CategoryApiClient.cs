@@ -28,20 +28,6 @@ namespace AdvWeb_VN.WebApp.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResult<bool>> Delete(int id)
-        {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.DeleteAsync($"/api/categories/{id}");
-            var body = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(body);
-
-            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(body);
-        }
-
         public async Task<ApiResult<CategoryViewModel>> GetByID(int id)
         {
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
@@ -55,44 +41,6 @@ namespace AdvWeb_VN.WebApp.Services
 
             return JsonConvert.DeserializeObject<ApiErrorResult<CategoryViewModel>>(body);
         }
-
-        public async Task<ApiResult<bool>> CreateCategory(CategoryCreateRequest createRequest)
-        {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-
-            var json = JsonConvert.SerializeObject(createRequest);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await client.PostAsync($"/api/categories", httpContent);
-            var result = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(result);
-
-            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
-        }
-
-        public async Task<ApiResult<bool>> UpdateCategory(int id, CategoryUpdateRequest request)
-        {
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
-
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-
-            var json = JsonConvert.SerializeObject(request);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await client.PutAsync($"/api/categories/{id}", httpContent);
-            var result = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(result);
-
-            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
-        }
-
         public async Task<List<CategoryViewModel>> GetAll()
         {
             var client = _httpClientFactory.CreateClient();

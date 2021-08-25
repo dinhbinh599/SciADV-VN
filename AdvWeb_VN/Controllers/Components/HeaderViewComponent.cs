@@ -26,7 +26,7 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
             var resultCategory = await _categoryApiClient.GetMenuCategory();
             var categories = resultCategory.ResultObj;
 
-            var resultPost = await _postApiClient.GetPostsPagings(new GetPublicPostPagingRequest()
+            var resultPost = await _postApiClient.GetPostsPagingsByCategoryID(new GetPublicPostPagingRequest()
             {
                 PageIndex = 1,
                 PageSize = 5

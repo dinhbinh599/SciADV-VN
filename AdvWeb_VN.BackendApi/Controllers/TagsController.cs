@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Tags;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TagsController : ControllerBase
     {
         private readonly ITagService _tagService;
@@ -21,6 +23,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var tags = await _tagService.GetAll();
@@ -28,6 +31,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(int id)
         {
             var result = await _tagService.GetByID(id);
@@ -36,6 +40,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("category/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllByCategory(int id)
         {
             var result = await _tagService.GetAllByCategoryID(id);
@@ -44,6 +49,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("paging")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery]GetTagPagingRequest request)
         {
             var tags = await _tagService.GetAllPagingTagID(request);

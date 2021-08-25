@@ -1,0 +1,51 @@
+﻿@using AdvWeb_VN.Utilities.Settings
+@model AdvWeb_VN.WebApp.Models.SidebarViewModel
+
+@{
+	Split split = new Split();
+}
+
+	<div class="col-md-10 col-lg-4">
+		<div class="p-l-10 p-rl-0-sr991 p-b-20">
+			<!-- Youtube -->
+			<div class="p-b-55">
+				<div class="how2 how2-cl4 flex-s-c m-b-35">
+					<h3 class="f1-m-2 cl3 tab01-title">
+						Youtube
+					</h3>
+				</div>
+				<script src="~/js/platform.js" defer></script>
+				<div class="elfsight-app-153a1c86-f9fb-413b-b617-9121263064d1"></div>
+			</div>
+
+			<!-- Discord -->
+			<div class="p-b-55">
+				<div class="how2 how2-cl4 flex-s-c m-b-35">
+					<h3 class="f1-m-2 cl3 tab01-title">
+						Discord
+					</h3>
+				</div>
+				<iframe src="https://discord.com/widget?id=720979619175727154&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+				</iframe>
+			</div>
+
+			<!-- Tag -->
+			<div class="p-b-55">
+				<div class="how2 how2-cl4 flex-s-c m-b-30">
+					<h3 class="f1-m-2 cl3 tab01-title">
+						Từ khóa
+					</h3>
+				</div>
+
+				<div class="flex-wr-s-s m-rl--5">
+					@foreach (var item in Model.Tags.Items)
+					{
+						<a href="/tag/tag-@item.TagID" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
+							@item.TagName
+						</a>
+					}
+
+				</div>
+			</div>
+		</div>
+	</div>

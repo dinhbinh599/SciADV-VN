@@ -42,7 +42,7 @@ namespace AdvWeb_VN.WebApp.Services
             return JsonConvert.DeserializeObject<ApiErrorResult<PostViewModel>>(body);
         }
 
-        public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagings(GetPublicPostPagingRequest request)
+        public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsByCategoryID(GetPublicPostPagingRequest request)
         {
             var client = _httpClientFactory.CreateClient();
 
@@ -72,6 +72,50 @@ namespace AdvWeb_VN.WebApp.Services
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             var response = await client.GetAsync($"/api/posts/public-paging-category?pageIndex=" +
                 $"{request.PageIndex}&pageSize={request.PageSize}&id={request.Id}");
+            var body = await response.Content.ReadAsStringAsync();
+            var posts = JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<PostViewModel>>>(body);
+            return posts;
+        }
+
+        public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsSubCategory(GetPublicPostPagingRequest request)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var response = await client.GetAsync($"/api/posts/public-paging-subcategory?pageIndex=" +
+                $"{request.PageIndex}&pageSize={request.PageSize}&id={request.Id}");
+            var body = await response.Content.ReadAsStringAsync();
+            var posts = JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<PostViewModel>>>(body);
+            return posts;
+        }
+
+        public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsTag(GetPublicPostPagingRequest request)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var response = await client.GetAsync($"/api/posts/public-paging-tag?pageIndex=" +
+                $"{request.PageIndex}&pageSize={request.PageSize}&id={request.Id}");
+            var body = await response.Content.ReadAsStringAsync();
+            var posts = JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<PostViewModel>>>(body);
+            return posts;
+        }
+
+        public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsTagByName(GetPublicPostPagingRequestSearch request)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var response = await client.GetAsync($"/api/posts/public-paging-tagname?pageIndex=" +
+                $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");
+            var body = await response.Content.ReadAsStringAsync();
+            var posts = JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<PostViewModel>>>(body);
+            return posts;
+        }
+
+        public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagings(GetPublicPostPagingRequest request)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var response = await client.GetAsync($"/api/posts/public-paging?pageIndex=" +
+                $"{request.PageIndex}&pageSize={request.PageSize}");
             var body = await response.Content.ReadAsStringAsync();
             var posts = JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<PostViewModel>>>(body);
             return posts;

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Categories;
 using AdvWeb_VN.Application.Catalog.SubCategories;
 using AdvWeb_VN.ViewModels.Catalog.SubCategories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SubCategoriesController : ControllerBase
     {
         private readonly ISubCategoryService _subCategoryService;
@@ -22,6 +24,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var categories = await _subCategoryService.GetAll();
@@ -29,6 +32,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(int id)
         {
             var result = await _subCategoryService.GetByID(id);
@@ -37,6 +41,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("category/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByCategoryID(int id)
         {
             var categories = await _subCategoryService.GetByCategoryID(id);
