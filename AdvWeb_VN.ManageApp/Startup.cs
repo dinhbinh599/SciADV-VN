@@ -49,7 +49,8 @@ namespace AdvWeb_VN.ManageApp
 			services.AddTransient<ICategoryApiClient, CategoryApiClient>();
 			services.AddTransient<IPostApiClient, PostApiClient>();
 			services.AddTransient<ITagApiClient, TagApiClient>();
-			services.AddTransient<ISubCategoryApiClient, SubCategoryApiClient>();
+			services.AddTransient<ISubCategoryApiClient, SubCategoryApiClient>(); 
+			services.AddTransient<ICommentApiClient, CommentApiClient>();
 
 
 			IMvcBuilder builder = services.AddRazorPages();

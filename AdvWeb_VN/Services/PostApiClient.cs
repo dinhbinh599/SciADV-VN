@@ -30,7 +30,7 @@ namespace AdvWeb_VN.WebApp.Services
         }
 
 
-        public async Task<ApiResult<PostViewModel>> GetByID(string id)
+        public async Task<ApiResult<PostViewModel>> GetByID(int id)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
@@ -110,12 +110,12 @@ namespace AdvWeb_VN.WebApp.Services
             return posts;
         }
 
-        public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagings(GetPublicPostPagingRequest request)
+        public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagings(GetPublicPostPagingRequestSearch request)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             var response = await client.GetAsync($"/api/posts/public-paging?pageIndex=" +
-                $"{request.PageIndex}&pageSize={request.PageSize}");
+                $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");
             var body = await response.Content.ReadAsStringAsync();
             var posts = JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<PostViewModel>>>(body);
             return posts;

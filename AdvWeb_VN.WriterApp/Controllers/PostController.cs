@@ -43,6 +43,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 			};
 			var data = await _postApiClient.GetPostsPagings(userID, request);
 			ViewBag.Keyword = keyword;
+			ViewData["PageSize"] = pageSize;
 			if (TempData["result"] != null)
 			{
 				ViewBag.SuccessMsg = TempData["result"];
@@ -54,7 +55,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 
 
 		[HttpGet]
-		public async Task<IActionResult> Details(string id)
+		public async Task<IActionResult> Details(int id)
 		{
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 			var result = await _postApiClient.GetByID(userID, id);
@@ -78,8 +79,10 @@ namespace AdvWeb_VN.WriterApp.Controllers
 		[Consumes("multipart/form-data")]
 		public async Task<IActionResult> Create([FromForm]PostCreateRequest request)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			if (!ModelState.IsValid)
 				return View();
+
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 			var oldContents = request.Contents;
 			request.Contents = "oldContents";
@@ -105,7 +108,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Edit(string id)
+		public async Task<IActionResult> Edit(int id)
 		{
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 			var result = await _postApiClient.GetByID(userID, id);
@@ -134,6 +137,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 		[Consumes("multipart/form-data")]
 		public async Task<IActionResult> Edit([FromForm]PostUpdateRequest request)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			if (!ModelState.IsValid)
 				return View();
 
@@ -154,7 +158,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Delete(string id)
+		public IActionResult Delete(int id)
 		{
 			return View(new PostDeleteRequest()
 			{
@@ -197,7 +201,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 			return tagAssignRequest;
 		}
 
-		private async Task<TagAssignRequest> GetTagAssignRequest(string postID)
+		private async Task<TagAssignRequest> GetTagAssignRequest(int postID)
 		{
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 			var postObj = await _postApiClient.GetByID(userID, postID);
@@ -251,7 +255,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 			return request;
 		}
 
-		private async Task<string> ConvertImage(Guid userID, string postID, string contents)
+		private async Task<string> ConvertImage(Guid userID, int postID, string contents)
 		{
 			var base64Strings = new List<string>();
 			var requests = new List<PostImageBase64CreateRequest>();

@@ -6,7 +6,7 @@ namespace AdvWeb_VN.Data.Entities
 {
 	public class PostTag
 	{
-		public string PostID { set; get; }
+		public int PostID { set; get; }
 		public Post Post { set; get; }
 		public int TagID { set; get; }
 		public Tag Tag { set; get; }

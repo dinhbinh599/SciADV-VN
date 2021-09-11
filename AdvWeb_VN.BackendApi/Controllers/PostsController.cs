@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Posts;
+using AdvWeb_VN.Application.System.Users;
+using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.ProductImages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdvWeb_VN.BackendApi.Controllers
@@ -17,11 +20,14 @@ namespace AdvWeb_VN.BackendApi.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostService _postService;
+        private readonly IUserService _userService;
 
-        public PostsController(IPostService postService)
+        public PostsController(IPostService postService, IUserService userService)
         {
             _postService = postService;
+            _userService = userService;
         }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -33,7 +39,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpGet("public-paging")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPaging([FromQuery]GetPublicPostPagingRequest request)
+        public async Task<IActionResult> GetPaging([FromQuery]GetPublicPostPagingRequestSearch request)
         {
             var posts = await _postService.GetPaging(request);
             return Ok(posts);
@@ -51,7 +57,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAllPagingByTagID([FromQuery]GetManagePostPagingRequest request)
         {
-            var posts = await _postService.GetAllPagingByTagID(request);
+            var posts = await _postService.GetManagePagingByTagID(request);
             return Ok(posts);
         }
 
@@ -59,7 +65,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAllPagingBySubCategoryID([FromQuery]GetManagePostPagingRequest request)
         {
-            var posts = await _postService.GetAllPagingBySubCategoryID(request);
+            var posts = await _postService.GetManagePagingBySubCategoryID(request);
             return Ok(posts);
         }
 
@@ -67,7 +73,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAllPagingByCategoryID([FromQuery]GetManagePostPagingRequest request)
         {
-            var posts = await _postService.GetAllPagingByCategoryID(request);
+            var posts = await _postService.GetManagePagingByCategoryID(request);
             return Ok(posts);
         }
 
@@ -97,9 +103,10 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpGet("{userID}/paging-categoryid")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllPagingByCategoryID(Guid userID,[FromQuery]GetManagePostPagingRequest request)
+        public async Task<IActionResult> GetAllPagingByCategoryIDAuthenticate([FromQuery]GetManagePostPagingRequest request)
         {
-            var posts = await _postService.GetAllPagingByCategoryIDAuthenticate(userID, request);
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
+            var posts = await _postService.GetManagePagingByCategoryIDAuthenticate(userID, request);
             return Ok(posts);
         }
 
@@ -115,7 +122,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetByTagID([FromQuery]GetPublicPostPagingRequest request)
         {
-            var posts = await _postService.GetAllByTagID(request);
+            var posts = await _postService.GetPublicPagingByTagID(request);
             return Ok(posts);
         }
 
@@ -123,13 +130,13 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetByCategoryID([FromQuery]GetPublicPostPagingRequest request)
         {
-            var posts = await _postService.GetAllByCategoryID(request);
+            var posts = await _postService.GetPublicPagingByCategoryID(request);
             return Ok(posts);
         }
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetByID(string id)
+        public async Task<IActionResult> GetByID(int id)
         {
             var result = await _postService.GetByID(id);
             if (!result.IsSuccessed) return BadRequest(result);
@@ -138,8 +145,9 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpGet("{userID}/{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetByID(Guid userID,string id)
+        public async Task<IActionResult> GetByIDAuthenticate(int id)
         {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
             var result = await _postService.GetByIDAuthenticate(id, userID);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
@@ -158,7 +166,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Update(string id, [FromForm]PostUpdateRequest request)
+        public async Task<IActionResult> Update(int id, [FromForm]PostUpdateRequest request)
         {
             var result = await _postService.Update(id,request);
             if (!result.IsSuccessed) return BadRequest(result);
@@ -167,15 +175,16 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpPut("{userID}/{id}")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Update(Guid userID, string id,[FromForm]PostUpdateRequest request)
+        public async Task<IActionResult> UpdateAuthenticate(int id,[FromForm]PostUpdateRequest request)
         {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
             var result = await _postService.UpdateAuthenticate(id, userID, request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPut("{id}/contents")]
-        public async Task<IActionResult> UpdateContents(string id, [FromBody]PostUpdateContentsRequest request)
+        public async Task<IActionResult> UpdateContents(int id, [FromBody]PostUpdateContentsRequest request)
         {
             var result = await _postService.UpdateImageContents(id, request);
             if (!result.IsSuccessed) return BadRequest(result);
@@ -183,15 +192,16 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPut("{userID}/{id}/contents")]
-        public async Task<IActionResult> UpdateContents(Guid userID, string id, [FromBody]PostUpdateContentsRequest request)
+        public async Task<IActionResult> UpdateContentsAuthenticate(int id, [FromBody]PostUpdateContentsRequest request)
         {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
             var result = await _postService.UpdateImageContentsAuthenticate(id, userID, request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPut("view/{id}")]
-        public async Task<IActionResult> AddViewCount(string id)
+        public async Task<IActionResult> AddViewCount(int id)
         {
             var result = await _postService.AddViewCount(id);
             if (!result.IsSuccessed) return BadRequest(result);
@@ -199,7 +209,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             var result = await _postService.Delete(id);
             if (!result.IsSuccessed) return BadRequest(result);
@@ -207,15 +217,16 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpDelete("{userID}/{id}")]
-        public async Task<IActionResult> Delete(Guid userID, string id)
+        public async Task<IActionResult> DeleteAuthenticate(int id)
         {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
             var result = await _postService.DeleteAuthenticate(id, userID);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPut("{id}/tags")]
-        public async Task<IActionResult> TagAssign(string id, [FromBody]TagAssignRequest request)
+        public async Task<IActionResult> TagAssign(int id, [FromBody]TagAssignRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -229,8 +240,9 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPut("{userID}/{id}/tags")]
-        public async Task<IActionResult> TagAssign(Guid userID, string id, [FromBody]TagAssignRequest request)
+        public async Task<IActionResult> TagAssignAuthenticate(int id, [FromBody]TagAssignRequest request)
         {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -245,7 +257,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         //Images
         [HttpPost("{postId}/images")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> CreateImage(string postId, [FromForm]PostImageCreateRequest request)
+        public async Task<IActionResult> CreateImage(int postId, [FromForm]PostImageCreateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -262,8 +274,9 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpPost("{userID}/{postId}/images")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> CreateImage(Guid userID, string postId, [FromForm]PostImageCreateRequest request)
+        public async Task<IActionResult> CreateImageAuthenticate(int postId, [FromForm]PostImageCreateRequest request)
         {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -278,7 +291,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPost("{postId}/images/url")]
-        public async Task<IActionResult> CreateImageByUrl(string postId, [FromBody]PostImageCreateUrlRequest request)
+        public async Task<IActionResult> CreateImageByUrl(int postId, [FromBody]PostImageCreateUrlRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -291,8 +304,9 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPost("{userID}/{postId}/images/url")]
-        public async Task<IActionResult> CreateImageByUrl(Guid userID, string postId, [FromBody]PostImageCreateUrlRequest request)
+        public async Task<IActionResult> CreateImageByUrlAuthenticate(int postId, [FromBody]PostImageCreateUrlRequest request)
         {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -336,7 +350,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("{postID}/images")]
-        public async Task<IActionResult> GetImageByPostId(string postID)
+        public async Task<IActionResult> GetImageByPostId(int postID)
         {
             var image = await _postService.GetListImages(postID);
             if (image == null) return BadRequest("Cannot find post");

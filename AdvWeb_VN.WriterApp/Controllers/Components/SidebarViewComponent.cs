@@ -11,24 +11,33 @@ namespace eShopSolution.AdminApp.Controllers.Components
     {
         private readonly IUserApiClient _userApiClient;
         private readonly IConfiguration _configuration;
+        private readonly ICommentApiClient _commentApiClient;
 
-        public SidebarViewComponent(IUserApiClient userApiClient, IConfiguration configuration)
+        public SidebarViewComponent(IUserApiClient userApiClient, IConfiguration configuration, ICommentApiClient commentApiClient)
         {
             _userApiClient = userApiClient;
             _configuration = configuration;
+            _commentApiClient = commentApiClient;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _userApiClient.GetByName(User.Identity.Name);
-            var userCurrent = result.ResultObj;
+            var userResult = await _userApiClient.GetCurrentUser();
+            var userCurrent = userResult.ResultObj;
+
+            var commentResult = await _commentApiClient.GetNewCount();
+            var commentCount = commentResult.ResultObj;
+
+
             var sidebarViewModel = new SidebarViewModel()
             {
                 Email = userCurrent.Email,
                 PhoneNumber = userCurrent.PhoneNumber,
                 UserName = userCurrent.UserName,
                 Roles = userCurrent.Roles,
-                AvatarImage = userCurrent.AvatarImage
+                UserID = userCurrent.UserID,
+                AvatarImage = userCurrent.AvatarImage,
+                NewCommentCount = commentCount
             };
 
             return View("Default", sidebarViewModel);

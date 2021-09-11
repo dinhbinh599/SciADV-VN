@@ -23,7 +23,7 @@
 				<img src="@imagePath" style="width:33px;height:33px" class="img-circle elevation-2" alt="User Image">
 			</div>
 			<div class="info">
-				<a href="/Profile/Index" class="d-block">@User.Identity.Name</a>
+				<a href="/User/Details/@Model.UserID" class="d-block">@User.Identity.Name</a>
 			</div>
 		</div>
 
@@ -75,13 +75,21 @@
 				</li>
 				<li class="nav-item">
 					<a href="/Tag" class="nav-link">
-						<i class="nav-icon far fa-image"></i>
+						<i class="nav-icon fas fa-tags"></i>
 						<p>
 							Tag
 						</p>
 					</a>
 				</li>
-
+				<li class="nav-item">
+					<a href="/Comment" class="nav-link">
+						<i class="nav-icon far fa-comments"></i>
+						<p>
+							Bình luận
+						</p>
+						<span class="badge badge-danger navbar-badge newcount">@Model.NewCommentCount</span>
+					</a>
+				</li>
 				<li class="nav-item">
 					<a href="pages/gallery.html" class="nav-link">
 						<i class="nav-icon far fa-image"></i>

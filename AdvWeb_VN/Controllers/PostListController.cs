@@ -22,12 +22,13 @@ namespace AdvWeb_VN.WebApp.Controllers
         }
 
         [HttpGet("{controller}")]
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
         {
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
-            ViewData["Active"] = 0;
-            var request = new GetPublicPostPagingRequest()
+            ViewData["Active"] = 99;
+            var request = new GetPublicPostPagingRequestSearch()
             {
+                Keyword = keyword,
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };

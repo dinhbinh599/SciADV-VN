@@ -8,6 +8,6 @@ namespace AdvWeb_VN.ManageApp.Models
 {
 	public class SidebarViewModel : UserViewModel
 	{
-		
+		public int NewCommentCount;
 	}
 }

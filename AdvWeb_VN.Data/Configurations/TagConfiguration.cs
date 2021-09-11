@@ -15,7 +15,7 @@ namespace AdvWeb_VN.Data.Configurations
 			builder.HasKey(x => x.TagID);
 			builder.Property(x => x.TagID).UseIdentityColumn();
 			builder.Property(x => x.TagName).IsRequired()
-				.IsUnicode().HasMaxLength(20);
+				.IsUnicode().HasMaxLength(100);
 		}
 	}
 }

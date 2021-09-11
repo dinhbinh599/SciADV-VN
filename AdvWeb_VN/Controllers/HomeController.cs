@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.WebApp.Models;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
+using AdvWeb_VN.ViewModels.Catalog.Comments;
 
 namespace AdvWeb_VN.WebApp.Controllers
 {
@@ -30,7 +31,7 @@ namespace AdvWeb_VN.WebApp.Controllers
 		public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
 		{
 			ViewData["Active"] = 0;
-			var postRequest = new GetPublicPostPagingRequest()
+			var postRequest = new GetPublicPostPagingRequestSearch()
 			{
 				PageIndex = pageIndex,
 				PageSize = pageSize

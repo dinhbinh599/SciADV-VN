@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.System.Users;
+using AdvWeb_VN.Data.Entities;
+using AdvWeb_VN.Utilities.Constants;
 using AdvWeb_VN.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = RoleInfo.Admin)]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -40,7 +44,6 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpPost]
         [Consumes("multipart/form-data")]
-        [AllowAnonymous]
         public async Task<IActionResult> Register([FromForm]RegisterRequest request)
         {
             if (!ModelState.IsValid)
@@ -71,6 +74,15 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(user);
         }
 
+        [HttpGet("current")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
+            var user = await _userService.GetCurrentUser(userID);
+            return Ok(user);
+        }
+
         [HttpGet("name/{name}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetByName(string name)
@@ -84,6 +96,16 @@ namespace AdvWeb_VN.BackendApi.Controllers
         public async Task<IActionResult> Update(Guid id,[FromForm]UserUpdateRequest request)
         {
             var result = await _userService.Update(id ,request);
+            if (!result.IsSuccessed) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("update-authenticate")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateAuthenticate([FromForm]UserUpdateRequest request)
+        {
+            var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
+            var result = await _userService.Update(userID, request);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }

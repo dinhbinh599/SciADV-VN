@@ -54,13 +54,13 @@
                                 <div class="form-group">
                                     <label class="control-label">Chuyên mục cha</label>
                                     <select asp-for="CategoryID" class="form-control category-select" id="category-select">
-                                        <option value="@Model.CategoryID" selected="selected"></option>
+                                        <option value="@Model.CategoryID" selected="selected">@Model.CategoryName</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="SubCategoryID" class="control-label"></label>
                                     <select asp-for="SubCategoryID" class="form-control category-select" id="subcategory-select">
-                                        <option value="@Model.SubCategoryID" selected="selected">@Model.CategoryName</option>
+                                        <option value="@Model.SubCategoryID" selected="selected">@Model.SubCategoryName</option>
                                     </select>
                                 </div>
                                 @for (int i = 0; i < Model.TagAssignRequest.Tags.Count; i++)
@@ -129,7 +129,8 @@
 
         showCategory();
 
-        function showCategory() {
+		function showCategory() {
+            $("select#category-select").empty()
 			fetch(endpoint + "/api/categories")
 				.then(response => response.json())
 				.then(data => _displayItemCategory(data))

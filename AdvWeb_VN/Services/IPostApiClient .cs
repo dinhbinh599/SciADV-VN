@@ -10,9 +10,9 @@ namespace AdvWeb_VN.WebApp.Services
 {
 	public interface IPostApiClient
 	{
-		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagings(GetPublicPostPagingRequest request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagings(GetPublicPostPagingRequestSearch request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsByCategoryID(GetPublicPostPagingRequest request);
-		Task<ApiResult<PostViewModel>> GetByID(string id);
+		Task<ApiResult<PostViewModel>> GetByID(int id);
 		Task<ApiResult<List<PostViewModel>>> GetPopular();
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsCategory(GetPublicPostPagingRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsSubCategory(GetPublicPostPagingRequest request);

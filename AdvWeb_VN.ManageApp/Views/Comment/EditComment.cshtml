@@ -1,0 +1,146 @@
+﻿@model AdvWeb_VN.ViewModels.Catalog.Comments.CommentUpdateRequest
+@{
+	ViewData["Title"] = "Cập nhật";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<a class="btn btn-outline-primary" href="/Comment?id=@Model.PostID">Về danh sách</a>
+				</div>
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><a href="/Home">Home</a></li>
+						<li class="breadcrumb-item"><a href="/Comment">Danh sách bình luận</a></li>
+						<li class="breadcrumb-item active">Sửa bài viết</li>
+					</ol>
+				</div>
+			</div>
+		</div><!-- /.container-fluid -->
+	</section>
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- general form elements -->
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">Sửa bài viết</h3>
+						</div>
+						<!-- /.card-header -->
+
+						<div id='previewDiv'>&nbsp;</div>
+						<!-- form start -->
+						<form asp-action="EditComment" role="form" method="post">
+							<div class="card-body">
+								<div asp-validation-summary="All" class="text-danger"></div>
+								<div class="form-group">
+									<label asp-for="Commenter" class="control-label"></label>
+									<input asp-for="Commenter" class="form-control" />
+									<span asp-validation-for="Commenter" class="text-danger"></span>
+								</div>
+								<input type="hidden" asp-for="PostID" />
+								<input type="hidden" asp-for="CommentID" />
+							</div>
+							<div class="card-footer">
+								<div class="row">
+									<div class="col-1">
+										<div class="form-group">
+											<input type="submit" value="Lưu lại" class="btn btn-outline-primary" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!-- /.card -->
+				</div>
+				<!--/.col (left) -->
+			</div>
+			<!-- /.row -->
+		</div><!-- /.container-fluid -->
+	</section>
+	<!-- /.content -->
+</div>
+@section scripts{
+	<script type="text/javascript">
+		let endpoint = "@ViewData["BaseAddress"]"
+
+		// Add the following code if you want the name of the file appear on select
+		$(".custom-file-input").on("change", function () {
+			var fileName = $(this).val().split("\\").pop();
+			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		});
+		$("#custom-file").change(function () {
+			readData(this);
+		});
+
+        $("select#category-select").change(function () {
+			var selectedCategory = $(this).children("option:selected").val();
+			showSubCategory(selectedCategory);
+		});
+
+        $("#previewDiv").dialog({
+			title: "Xem trước",
+			height: 600,
+			width:600,
+			autoOpen: false,
+			open: function () {},
+			show: "blind",
+			hide: "explode"
+		});
+
+		$('#preview').click(function () {
+			var html = $('textarea.contents').val();
+			$('#previewDiv').html(html);
+			$("#previewDiv").dialog("open");
+			return false;
+		});
+
+        showCategory();
+
+        function showCategory() {
+			fetch(endpoint + "/api/categories")
+				.then(response => response.json())
+				.then(data => _displayItemCategory(data))
+				.catch(error => console.error('Unable to get items.', error))
+		}
+
+		function _displayItemCategory(data) {
+			data.forEach(item => {
+				$("#category-select").append("<option value=" + item.categoryID + ">" + item.categoryName + "</option>")
+			})
+		}
+
+        function showSubCategory(id) {
+			$("#subcategory-select").empty()
+			fetch(endpoint + "/api/subcategories/category/" + id)
+				.then(response => response.json())
+				.then(data => _displayItemSubCategory(data))
+				.catch(error => console.error('Unable to get items.', error))
+		}
+
+		function _displayItemSubCategory(data) {
+			data.forEach(item => {
+				$("#subcategory-select").append("<option value=" + item.subCategoryID + ">" + item.subCategoryName + "</option>")
+			})
+		}
+
+        function readData(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					$('#image-thumbnail').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+	</script>
+}
+

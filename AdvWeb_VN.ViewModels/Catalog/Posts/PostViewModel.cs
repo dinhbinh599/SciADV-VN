@@ -6,7 +6,7 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 {
 	public class PostViewModel
 	{
-		public string PostID { set; get; }
+		public int PostID { set; get; }
 
 		[Display(Name = "Tên bài viết")]
 		public string PostName { set; get; }

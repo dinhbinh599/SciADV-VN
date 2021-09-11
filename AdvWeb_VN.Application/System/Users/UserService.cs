@@ -1,4 +1,5 @@
 ﻿using AdvWeb_VN.Application.Common;
+using AdvWeb_VN.Data.EF;
 using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.Utilities.Exceptions;
 using AdvWeb_VN.ViewModels.Common;
@@ -27,15 +28,18 @@ namespace AdvWeb_VN.Application.System.Users
 		private readonly RoleManager<Role> _roleManager;
 		private readonly IConfiguration _configuration;
 		private readonly IStorageService _storageService;
+		private readonly AdvWebDbContext _context;
 
-		public UserService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IConfiguration configuration, IStorageService storageService)
+		public UserService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IConfiguration configuration, IStorageService storageService, AdvWebDbContext context)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_roleManager = roleManager;
 			_configuration = configuration;
 			_storageService = storageService;
+			_context = context;
 		}
+
 		private async Task<string> SaveFile(IFormFile file)
 		{
 			var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
@@ -53,13 +57,23 @@ namespace AdvWeb_VN.Application.System.Users
 			var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, true);
 			if(!result.Succeeded) return new ApiErrorResult<string>("Tên đăng nhập hoặc mật khẩu không đúng");
 
-			var claims = new[]
+			//var claims = new[]
+			//{
+			//	new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+			//	new Claim(ClaimTypes.Email, user.Email),
+			//	new Claim(ClaimTypes.Name, user.UserName),
+			//	//new Claim(ClaimTypes.Role, string.Join(";", roles))
+			//};
+
+			List<Claim> info = new List<Claim>();
+			info.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+			info.Add(new Claim(ClaimTypes.Email, user.Email));
+			info.Add(new Claim(ClaimTypes.Name, user.UserName));
+			foreach (var item in roles)
 			{
-				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-				new Claim(ClaimTypes.Email, user.Email),
-				new Claim(ClaimTypes.Name, user.UserName),
-				new Claim(ClaimTypes.Role, string.Join(";", roles))
-			};
+				info.Add(new Claim(ClaimTypes.Role, item));
+			}
+			var claims = info.ToArray();
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
 			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -155,6 +169,10 @@ namespace AdvWeb_VN.Application.System.Users
 			{
 				user.Avatar = await this.SaveFile(request.AvatarImage);
 			}
+			else
+			{
+				user.Avatar = "user-icon.jpg";
+			}
 			var result = await _userManager.CreateAsync(user, request.Password);
 			if (result.Succeeded) return new ApiSuccessResult<bool>();
 			return new ApiErrorResult<bool>("Đăng ký không thành công");
@@ -235,6 +253,30 @@ namespace AdvWeb_VN.Application.System.Users
 		public async Task<ApiResult<UserViewModel>> GetByName(string name)
 		{
 			var user = await _userManager.FindByNameAsync(name);
+			if (user == null) return new ApiErrorResult<UserViewModel>("User không tồn tại");
+			var roles = await _userManager.GetRolesAsync(user);
+			var userVm = new UserViewModel()
+			{
+				Email = user.Email,
+				PhoneNumber = user.PhoneNumber,
+				UserID = user.Id,
+				UserName = user.UserName,
+				Roles = roles,
+				AvatarImage = user.Avatar
+			};
+			return new ApiSuccessResult<UserViewModel>(userVm);
+		}
+
+		public async Task<bool> IsPostOwner(Guid id, int postID)
+		{
+			var post = await _context.Posts.FirstOrDefaultAsync(x => x.PostID.Equals(postID));
+			if (id == post.UserID) return true;
+			return false;
+		}
+
+		public async Task<ApiResult<UserViewModel>> GetCurrentUser(Guid id)
+		{
+			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<UserViewModel>("User không tồn tại");
 			var roles = await _userManager.GetRolesAsync(user);
 			var userVm = new UserViewModel()

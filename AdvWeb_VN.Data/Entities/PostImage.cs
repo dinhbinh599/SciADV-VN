@@ -8,7 +8,7 @@ namespace AdvWeb_VN.Data.Entities
     {
         public int ID { get; set; }
 
-        public string PostID { get; set; }
+        public int PostID { get; set; }
 
         public string ImagePath { get; set; }
 

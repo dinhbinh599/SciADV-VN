@@ -21,7 +21,7 @@
                             @foreach (var item in Model.PostHeaders.Items)
 							{
                             <span class="dis-inline-block slide100-txt-item animated visible-false">
-                                @split.NormalizeName(item.PostName, 30)
+                                <a style="color:unset" href="/post/@item.PostID">@split.NormalizeName(item.PostName, 30)</a>
                             </span>
 							}
                         </span>
@@ -217,38 +217,38 @@
                                             <div class="row">
                                                 @foreach (var itemPost in itemCategory.SubCategoryAll.Posts)
                                                 {
-                                                <div class="col-3">
-                                                    <!-- Item post -->
-                                                    <div>
-                                                        <a href="/post/@itemPost.PostID" class="wrap-pic-w hov1 trans-03">
-                                                            <img class="image-post-category" src="https://localhost:5002/user-content/@itemPost.Thumbnail" alt="IMG">
-                                                        </a>
+                                                    <div class="col-3">
+                                                        <!-- Item post -->
+                                                        <div>
+                                                            <a href="/post/@itemPost.PostID" class="wrap-pic-w hov1 trans-03">
+                                                                <img class="image-post-category" src="https://localhost:5002/user-content/@itemPost.Thumbnail" alt="IMG">
+                                                            </a>
 
-                                                        <div class="p-t-10">
-                                                            <h5 class="p-b-5">
-                                                                <a href="/post/@itemPost.PostID" class="f1-s-5 cl3 hov-cl10 trans-03">
-                                                                    @split.NormalizeName(itemPost.PostName, 12)
-                                                                </a>
-                                                            </h5>
+                                                            <div class="p-t-10">
+                                                                <h5 class="p-b-5">
+                                                                    <a href="/post/@itemPost.PostID" class="f1-s-5 cl3 hov-cl10 trans-03">
+                                                                        @split.NormalizeName(itemPost.PostName, 12)
+                                                                    </a>
+                                                                </h5>
 
-                                                            <span class="cl8">
-                                                                <a href="/subcategory/subcategory-@itemPost.SubCategoryID" class="f1-s-6 cl8 hov-cl10 trans-03">
-                                                                    @itemPost.SubCategoryName
-                                                                </a>
+                                                                <span class="cl8">
+                                                                    <a href="/subcategory/subcategory-@itemPost.SubCategoryID" class="f1-s-6 cl8 hov-cl10 trans-03">
+                                                                        @itemPost.SubCategoryName
+                                                                    </a>
 
-                                                                <span class="f1-s-3 m-rl-3">
-                                                                    -
+                                                                    <span class="f1-s-3 m-rl-3">
+                                                                        -
+                                                                    </span>
+
+                                                                    <span class="f1-s-3">
+                                                                        @(itemPost.WriteTime.Day + "/" + itemPost.WriteTime.Month)
+                                                                    </span>
                                                                 </span>
-
-                                                                <span class="f1-s-3">
-                                                                    @(itemPost.WriteTime.Day + "/" + itemPost.WriteTime.Month)
-                                                                </span>
-                                                            </span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-												}
-                                                </div>
+                                                }
+                                            </div>
                                         </div>
                                         @foreach (var itemSubCategory in itemCategory.SubCategories)
                                         {
@@ -294,6 +294,10 @@
                                 </div>
                             </li>
                         }
+
+                        <li class="@(active.Equals(99)? "main-menu-active" : "") ">
+                            <a href="/PostList">Blog</a>
+                        </li>
 
                         <li>
                             <a href="#">More</a>

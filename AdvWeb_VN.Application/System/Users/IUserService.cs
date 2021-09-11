@@ -19,5 +19,7 @@ namespace AdvWeb_VN.Application.System.Users
 		public Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging (GetUserPagingRequest request);
 		public Task<ApiResult<UserViewModel>> GetByID(Guid id);
 		public Task<ApiResult<UserViewModel>> GetByName(string name);
+		public Task<ApiResult<UserViewModel>> GetCurrentUser(Guid id);
+		public Task<bool> IsPostOwner(Guid id, int postID);
 	}
 }

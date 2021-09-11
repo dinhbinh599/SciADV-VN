@@ -14,14 +14,14 @@ namespace AdvWeb_VN.WriterApp.Services
 
 		Task<ApiResult<PostViewModel>> CreatePost(PostCreateRequest registerRequest);
 
-		Task<ApiResult<bool>> UpdatePost(Guid userID, string id, PostUpdateRequest request);
+		Task<ApiResult<bool>> UpdatePost(Guid userID, int id, PostUpdateRequest request);
 
-		Task<ApiResult<PostViewModel>> GetByID(Guid userID, string id);
+		Task<ApiResult<PostViewModel>> GetByID(Guid userID, int id);
 
-		Task<ApiResult<bool>> Delete(Guid userID, string id);
-		Task<ApiResult<bool>> TagAssign(Guid userID, string id, TagAssignRequest request);
-		Task<ApiResult<string>> AddImageByUrl(Guid userID, string id, PostImageCreateUrlRequest request);
-		Task<ApiResult<bool>> UpdateContents(Guid userID, string id, PostUpdateContentsRequest request);
-		Task<ApiResult<PostImageViewModel>> AddImageBase64(Guid userID, string postID, PostImageBase64CreateRequest request);
+		Task<ApiResult<bool>> Delete(Guid userID, int id);
+		Task<ApiResult<bool>> TagAssign(Guid userID, int id, TagAssignRequest request);
+		Task<ApiResult<string>> AddImageByUrl(Guid userID, int id, PostImageCreateUrlRequest request);
+		Task<ApiResult<bool>> UpdateContents(Guid userID, int id, PostUpdateContentsRequest request);
+		Task<ApiResult<PostImageViewModel>> AddImageBase64(Guid userID, int postID, PostImageBase64CreateRequest request);
 	}
 }

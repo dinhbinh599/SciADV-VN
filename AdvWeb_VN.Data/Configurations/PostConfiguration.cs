@@ -13,7 +13,7 @@ namespace AdvWeb_VN.Data.Configurations
 		{
 			builder.ToTable("Posts");
 			builder.HasKey(x => x.PostID);
-			builder.Property(x => x.PostID).IsUnicode().HasMaxLength(100);
+			builder.Property(x => x.PostID).UseIdentityColumn();
 			builder.Property(x => x.Thumbnail).IsRequired().HasMaxLength(200);
 			builder.Property(x => x.PostName).IsRequired()
 				.HasMaxLength(200).IsUnicode();

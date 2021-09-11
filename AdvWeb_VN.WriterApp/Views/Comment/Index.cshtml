@@ -1,0 +1,261 @@
+﻿@using  AdvWeb_VN.ViewModels.Common;
+@using AdvWeb_VN.Utilities.Settings
+@model PagedResult<AdvWeb_VN.ViewModels.Catalog.Comments.CommentViewModel>
+
+@{
+	ViewData["Title"] = "Danh sách";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var pageNow = (Model.PageIndex - 1) * Model.PageSize + 1;
+	var pageLast = pageNow + Model.PageSize - 1;
+	var postID = ViewData["PostID"];
+	ConvertTime convertTime = new ConvertTime();
+	var defaultAvatar = "https://localhost:5002/user-content/user-icon.jpg";
+	var currentAvatar = "https://localhost:5002/user-content/" + @ViewData["Avatar"];
+	string adminColor, avatar = "";
+}
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" style="min-height: 1200.88px;">
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h1>Danh sách bình luận</h1>
+				</div>
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><a href="/Home">Home</a></li>
+						<li class="breadcrumb-item active">Danh sách bình luận</li>
+					</ol>
+				</div>
+			</div>
+		</div><!-- /.container-fluid -->
+	</section>
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+
+						<!-- Tên nằm trên đầu bảng -->
+						<!-- /.card-header -->
+						<div class="card-body">
+							<div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+								<div class="row">
+									<div class="col-sm-12 col-md-6">
+										<form asp-action="Index" method="get">
+											<div class="dataTables_length" id="example1_length">
+												<label>
+													Show entries
+													<select id="pageSize" name="pageSize" aria-controls="example1"
+															class="custom-select custom-select-sm form-control form-control-sm">
+														<option value="10">10</option>
+														<option value="25">25</option>
+														<option value="50">50</option>
+														<option value="100">100</option>
+													</select>
+												</label>
+												<button id="btn-select" type="button" class="btn btn-outline-primary">Select</button>
+											</div>
+										</form>
+									</div>
+
+									<div class="col-sm-12 col-md-6">
+										<div id="example1_filter" class="dataTables_filter">
+											<label>
+												Search:<input id="keyword" name="keyword" value="@ViewBag.Keyword" type="search" class="form-control form-control-sm" placeholder=""
+															  aria-controls="example1">
+											</label>
+											<button id="btn-search" type="button" class="btn btn-outline-primary">Search</button>
+											<button type="button" onclick="window.location.href='/Comment/Index'" class="btn btn-outline-dark">Reset</button>
+										</div>
+									</div>
+									<div class="col-sm-12 col-md-12" style="margin-top: 20px;">
+										<form asp-action="Index" method="get">
+											<label>
+												Đường dẫn bài viết:<input style="width:500px" value="@ViewBag.ID" class="form-control form-control-sm" id="post-link">
+											</label>
+											<button id="btn-post" type="button" class="btn btn-outline-primary">Search</button>
+										</form>
+									</div>
+								</div>
+								<!-- Show Comment -->
+
+								<div style="padding-top: 50px" class="col-12 col-md-12 col-lg-12 p-b-100">
+									<div class="comments">
+										@*<div class="comments-details">
+												<span class="total-comments comments-sort">@Model.TotalRecords Bình luận</span>
+												<span class="dropdown">
+													<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Sort By <span class="caret"></span></button>
+													<div class="dropdown-menu">
+														<a href="#" class="dropdown-item">Top Comments</a>
+														<a href="#" class="dropdown-item">Newest First</a>
+													</div>
+												</span>
+											</div>*@
+										@if (ViewData["PostID"].ToString() != "0")
+										{
+											<!-- Form Add Comment đầu -->
+											<form asp-action="CreateComment" role="form" method="post">
+												<div asp-validation-summary="All" class="text-danger"></div>
+												<div class="comment-box add-comment">
+													<span class="commenter-pic">
+														<img src="@currentAvatar" class="img-fluid">
+													</span>
+													<span class="commenter-name">
+														<input value="@postID" id="PostID" type="hidden" placeholder="ID" name="PostID">
+														<input value="@postID" id="CurrentID" type="hidden" placeholder="ID" name="CurrentID">
+													</span>
+													<textarea style="height:120px" id="Commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="Commenter"></textarea>
+													<button type="submit" class="btn btn-default">Gửi</button>
+													<button type="cancel" class="btn btn-default">Hủy</button>
+												</div>
+											</form>
+										}
+										<!-- List Comment Hiện ở đây -->
+										@foreach (var comment in Model.Items)
+										{
+											<div data-id="@comment.CommentID" class="comment-box main-comment">
+												<span class="commenter-pic">
+													@if (comment.Avatar != null) { avatar = "https://localhost:5002/user-content/" + comment.Avatar; } else { avatar = defaultAvatar; }
+													<img src=@avatar class="img-fluid">
+												</span>
+												@if (comment.IsManaged) { adminColor = "style= color:red"; } else { adminColor = ""; }
+												<span class="commenter-name">
+													<a @adminColor href="#">@comment.Commentator</a> <span class="comment-time">@convertTime.Convert(comment.CommentTime)</span>
+												</span>
+												<p class="comment-txt more">@comment.Commenter</p>
+												<div class="comment-meta">
+													@if ((!comment.IsView) && (comment.IsOwnerPost))
+													{
+														<a href="/Comment/mark-comment-read?id=@comment.CommentID&currentID=@ViewData["PostID"]" class="mark-read"> Đánh dấu đã đọc</a>
+													}
+													@if (comment.IsOwner)
+													{
+														@Html.ActionLink("Sửa", "EditComment", new { id = comment.CommentID, postID = comment.PostID })
+													}
+													<button class="comment-like"><i class="far fa-thumbs-up" aria-hidden="true"></i> @comment.LikeCount</button>
+													<button class="comment-dislike"><i class="far fa-thumbs-down" aria-hidden="true"></i> @comment.DislikeCount</button>
+													<button post-id="@comment.PostID" parent-id="@comment.CommentID" data-id="@comment.CommentID" class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>
+												</div>
+												@for (int i = 0; i < comment.SubComments.Count; i++)
+												{
+													<div data-id="@comment.SubComments[i].SubCommentID" class="comment-box replied">
+														<span class="commenter-pic">
+															@if (comment.SubComments[i].Avatar != null) { avatar = "https://localhost:5002/user-content/" + comment.SubComments[i].Avatar; } else { avatar = defaultAvatar; }
+															<img src=@avatar class="img-fluid">
+														</span>
+														@if (comment.SubComments[i].IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
+														<span class="commenter-name">
+															<a @adminColor href="#">@comment.SubComments[i].Commentator</a> <span class="comment-time">@convertTime.Convert(comment.SubComments[i].CommentTime)</span>
+														</span>
+														<p class="comment-txt more">@comment.SubComments[i].Commenter</p>
+														<div class="comment-meta">
+															@if ((!comment.SubComments[i].IsView) && (i >= comment.SubComments.Count - 1) && (comment.SubComments[i].IsOwnerPost))
+															{
+																<a href="/Comment/mark-comment-read?id=@comment.SubComments[i].SubCommentID&currentID=@ViewData["PostID"]" class="mark-read"> Đánh dấu đã đọc</a>
+															}
+
+															@if (comment.SubComments[i].IsOwner)
+															{
+																@Html.ActionLink("Sửa", "EditComment", new { id = comment.SubComments[i].SubCommentID, postID = comment.SubComments[i].PostID })
+															}
+															<button class="comment-like"><i class="far fa-thumbs-up" aria-hidden="true"></i> @comment.SubComments[i].LikeCount</button>
+															<button class="comment-dislike"><i class="far fa-thumbs-down" aria-hidden="true"></i>@comment.SubComments[i].DislikeCount</button>
+															<button post-id="@comment.PostID" parent-id="@comment.CommentID" data-id="@comment.SubComments[i].SubCommentID" class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>
+														</div>
+													</div>
+												}
+											</div>
+										}
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12 col-md-5">
+										<div class="dataTables_info" id="example1_info" role="status" aria-live="polite">
+											Showing @pageNow to @pageLast
+											of @Model.TotalRecords entries
+										</div>
+									</div>
+									@await Component.InvokeAsync("Pager", Model)
+								</div>
+							</div>
+						</div>
+						<!-- /.card-body -->
+					</div>
+					<!-- /.card -->
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</section>
+	<!-- /.content -->
+</div>
+@section scripts{
+	<script type="text/javascript">
+		let id = Number($('#post-link').val());
+		let endpoint = "@ViewData["BaseAddress"]";
+		var isReply = false;
+
+        $("select#pageSize").val(@ViewData["PageSize"]).change();
+
+		$(document).ready(function () {
+
+			$("select#pageSize").change(function () {
+				if ($("#keyword").val() != "" || $('#post-link').val() != "") {
+                    var selected = $(this).children("option:selected").val();
+					let postId = $('#post-link').val().replace(/[^0-9]/g, '');
+					window.location.href = "/Comment?id=" + postId + "&pageSize=" + selected + "&keyword=" + $("#keyword").val() ;
+			    }
+		    });
+
+            $("#btn-search").click(function () {
+				if ($("#keyword").val() != "" || $('#post-link').val() != "") {
+                    let postId = $('#post-link').val().replace(/[^0-9]/g, '');
+					window.location.href = "/Comment?id=" + postId + "&keyword=" + $("#keyword").val();
+			    }
+			});
+
+             $("#btn-post").click(function () {
+				if ($('#post-link').val() != "") {
+                    let postId = $('#post-link').val().replace(/[^0-9]/g, '');
+					window.location.href = "/Comment?id=" + postId + "&keyword=" + $("#keyword").val();
+			    }
+			 });
+
+			$(".comment-reply").click(function () {
+				isReply = true;
+				$(".reply").remove();
+				var dataID = $(this).attr("data-id");
+				var parentID = $(this).attr("parent-id");
+                var postID = $(this).attr("post-id");
+				var box = $("div[data-id='" + dataID + "']");
+				box.append('<form class="reply" action="/Comment/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="@currentAvatar" class="img-fluid"></span><span class="commenter-name"><input value="' + postID + '" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="' + @postID +'" id="CurrentID" type="hidden" placeholder="ID" name="CurrentID"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea style="height:120px" id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter"></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
+					$(".reply-popup-cancel").click(function () {
+					$(".reply").remove();
+				});
+			});
+
+			$(".reply-popup-cancel").click(function () {
+				$(".reply").remove();
+			});
+			$(".main-comment").click(function () {
+				if (!isReply) {
+					var x = $(this).children(".comment-box");
+					for (let i = 0; i < x.length; i++) {
+						if (x[i].style.display === "none") {
+							x[i].style.display = "block";
+						} else {
+							x[i].style.display = "none";
+						}
+					}
+				}
+			});
+		});
+	</script>
+}

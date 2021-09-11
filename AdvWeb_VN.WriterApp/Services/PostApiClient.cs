@@ -29,7 +29,7 @@ namespace AdvWeb_VN.WriterApp.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResult<bool>> Delete(Guid userID, string id)
+        public async Task<ApiResult<bool>> Delete(Guid userID, int id)
         {
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
@@ -43,7 +43,7 @@ namespace AdvWeb_VN.WriterApp.Services
             return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(body);
         }
 
-        public async Task<ApiResult<PostViewModel>> GetByID(Guid userID, string id)
+        public async Task<ApiResult<PostViewModel>> GetByID(Guid userID, int id)
         {
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
@@ -110,7 +110,7 @@ namespace AdvWeb_VN.WriterApp.Services
             return JsonConvert.DeserializeObject<ApiErrorResult<PostViewModel>>(result);
         }
 
-        public async Task<ApiResult<PostImageViewModel>> AddImageBase64(Guid userID, string postID, PostImageBase64CreateRequest createRequest)
+        public async Task<ApiResult<PostImageViewModel>> AddImageBase64(Guid userID, int postID, PostImageBase64CreateRequest createRequest)
         {
             var sessions = _httpContextAccessor
                 .HttpContext
@@ -140,7 +140,7 @@ namespace AdvWeb_VN.WriterApp.Services
             return JsonConvert.DeserializeObject<ApiErrorResult<PostImageViewModel>>(result);
         }
 
-        public async Task<ApiResult<bool>> UpdatePost(Guid userID, string id, PostUpdateRequest request)
+        public async Task<ApiResult<bool>> UpdatePost(Guid userID, int id, PostUpdateRequest request)
         {
             var sessions = _httpContextAccessor
                             .HttpContext
@@ -178,7 +178,7 @@ namespace AdvWeb_VN.WriterApp.Services
             return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
         }
 
-        public async Task<ApiResult<bool>> TagAssign(Guid userID, string id, TagAssignRequest request)
+        public async Task<ApiResult<bool>> TagAssign(Guid userID, int id, TagAssignRequest request)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
@@ -198,7 +198,7 @@ namespace AdvWeb_VN.WriterApp.Services
         }
 
 
-        public async Task<ApiResult<string>> AddImageByUrl(Guid userID, string id, PostImageCreateUrlRequest request)
+        public async Task<ApiResult<string>> AddImageByUrl(Guid userID, int id, PostImageCreateUrlRequest request)
         {
             var client = _httpClientFactory.CreateClient();
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
@@ -213,7 +213,7 @@ namespace AdvWeb_VN.WriterApp.Services
             return imagePath;
         }
 
-        public async Task<ApiResult<bool>> UpdateContents(Guid userID, string id, PostUpdateContentsRequest request)
+        public async Task<ApiResult<bool>> UpdateContents(Guid userID, int id, PostUpdateContentsRequest request)
         {
             var client = _httpClientFactory.CreateClient();
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");

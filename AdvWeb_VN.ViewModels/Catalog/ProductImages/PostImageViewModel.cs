@@ -9,7 +9,7 @@ namespace AdvWeb_VN.ViewModels.Catalog.ProductImages
     {
         public int ID { get; set; }
 
-        public string PostID { get; set; }
+        public int PostID { get; set; }
 
         public string ImagePath { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>@ViewData["Title"] - Trang chủ</title>
+	<title>@ViewData["Title"]</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
@@ -22,6 +22,8 @@
 	<link rel="stylesheet" type="text/css" href="~/css/util.min.css">
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="~/css/main.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="~/css/comment.css">
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -79,5 +81,20 @@
 	<script src="~/js/main.js"></script>
 	@RenderSection("Scripts", required: false)
 
+	<script type="text/javascript">
+		$('input#search').keypress(function (event) {
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if (keycode == '13') {
+				if ($('#search').val() != "") {
+					window.location.href = "/PostList?keyword=" + $('#search').val();
+				}
+			}
+		});
+		$('button#search').click(function () {
+			if ($('#search').val() != "") {
+				window.location.href = "/PostList?keyword=" + $('#search').val();
+			}
+		});
+	</script>
 </body>
 </html>

@@ -12,7 +12,7 @@ namespace AdvWeb_VN.WriterApp.Services
 		public Task<ApiResult<string>> Authenticate(LoginRequest request);
 		Task<ApiResult<bool>> UpdateUser(Guid id, UserUpdateRequest request);
 		Task<ApiResult<UserViewModel>> GetByID(Guid id);
-		Task<ApiResult<UserViewModel>> GetByName(string name);
+		Task<ApiResult<UserViewModel>> GetCurrentUser();
 		Task<ApiResult<bool>> Delete(Guid id);
 	}
 }

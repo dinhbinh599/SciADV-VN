@@ -10,7 +10,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <!-- IonIcons -->
-    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
@@ -18,8 +18,30 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/dist/css/comment.css">
+
 
     <style>
+        a.mark-read:hover {
+			margin-right:10px;
+			color: red;
+			font-weight: 500;
+		}
+
+		a.mark-read {
+			margin-right:10px;
+			color: green;
+			font-weight: 500;
+		}
+		.navbar-badge.newcount {
+			font-size: 1.0rem;
+			font-weight: 300;
+			padding: 2px 4px;
+			position: absolute;
+			right: 9px;
+			top: 3px;
+		}
+
         span.select2-selection.select2-selection--single {
             padding: unset;
             padding-top: 1px;
@@ -59,7 +81,7 @@ to get the desired effect
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">Home</a>
+                    <a href="/Home" class="nav-link">Home</a>
                 </li>
             </ul>
 
@@ -179,11 +201,6 @@ to get the desired effect
         <!-- /.control-sidebar -->
         <!-- Main Footer -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
-            All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.0.5
-            </div>
         </footer>
     </div>
     <!-- ./wrapper -->

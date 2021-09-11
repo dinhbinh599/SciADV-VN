@@ -6,7 +6,7 @@ namespace AdvWeb_VN.Data.Entities
 {
 	public class Post
 	{
-		public string PostID { set; get; }
+		public int PostID { set; get; }
 		public string PostName { set; get; }
 		public DateTime WriteTime { set; get; }
 		public string Contents { set; get; }

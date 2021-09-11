@@ -47,6 +47,8 @@ namespace AdvWeb_VN.WriterApp
 			services.AddTransient<ICategoryApiClient, CategoryApiClient>();
 			services.AddTransient<IPostApiClient, PostApiClient>();
 			services.AddTransient<ITagApiClient, TagApiClient>();
+			services.AddTransient<ICommentApiClient, CommentApiClient>();
+
 			IMvcBuilder builder = services.AddRazorPages();
 
 			var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");

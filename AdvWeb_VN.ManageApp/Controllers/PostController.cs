@@ -49,6 +49,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			};
 			var data = await _postApiClient.GetPostsPagings(request);
 			ViewBag.Keyword = keyword;
+			ViewData["PageSize"] = pageSize;
 			if (TempData["result"] != null)
 			{
 				ViewBag.SuccessMsg = TempData["result"];
@@ -60,7 +61,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		
 
 		[HttpGet]
-		public async Task<IActionResult> Details(string id)
+		public async Task<IActionResult> Details(int id)
 		{
 			var result = await _postApiClient.GetByID(id);
 			return View(result.ResultObj);
@@ -83,11 +84,14 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[Consumes("multipart/form-data")]
 		public async Task<IActionResult> Create([FromForm]PostCreateRequest request)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+
 			if (!ModelState.IsValid)
 				return View();
 
 			var oldContents = request.Contents;
 			request.Contents = "oldContents";
+
 			var result = await _postApiClient.CreatePost(request);
 			if (result.IsSuccessed)
 			{
@@ -111,7 +115,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 
 		[HttpGet]
-		public async Task<IActionResult> Edit(string id)
+		public async Task<IActionResult> Edit(int id)
 		{
 			var result = await _postApiClient.GetByID(id);
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
@@ -126,7 +130,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 					SubCategoryID = post.SubCategoryID,
 					Contents = post.Contents,
 					Thumbnail = post.Thumbnail,
-					CategoryName = post.SubCategoryName,
+					CategoryName = post.CategoryName,
+					SubCategoryName = post.SubCategoryName,
 					CategoryID = post.CategoryID,
 					TagAssignRequest = SelectConvertByTags(await GetTagAssignRequest(post.PostID))
 				};
@@ -139,6 +144,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[Consumes("multipart/form-data")]
 		public async Task<IActionResult> Edit([FromForm]PostUpdateRequest request)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+
 			if (!ModelState.IsValid)
 				return View();
 
@@ -157,7 +164,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Delete(string id)
+		public IActionResult Delete(int id)
 		{
 			return View(new PostDeleteRequest()
 			{
@@ -168,6 +175,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Delete(PostDeleteRequest request)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+
 			if (!ModelState.IsValid)
 				return View();
 
@@ -198,7 +207,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			return tagAssignRequest;
 		}
 
-		private async Task<TagAssignRequest> GetTagAssignRequest(string postID)
+		private async Task<TagAssignRequest> GetTagAssignRequest(int postID)
 		{
 			var postObj = await _postApiClient.GetByID(postID);
 			var tagObj = await _tagApiClient.GetAll();
@@ -251,7 +260,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			return request;
 		}
 
-		private async Task<string> ConvertImage(string id,string contents)
+		private async Task<string> ConvertImage(int id,string contents)
 		{
 			var base64Strings = new List<string>();
 			var requests = new List<PostImageBase64CreateRequest>();
@@ -286,6 +295,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			}
 			return contents;
 		}
+
 		private bool checkUrl(string uriName)
 		{
 			Uri uriResult;

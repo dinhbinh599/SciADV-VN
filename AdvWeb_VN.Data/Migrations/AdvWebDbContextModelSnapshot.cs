@@ -46,34 +46,36 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             CategoryID = 1,
                             CategoryName = "News",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 862, DateTimeKind.Local).AddTicks(8489)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 191, DateTimeKind.Local).AddTicks(6789)
                         },
                         new
                         {
                             CategoryID = 2,
                             CategoryName = "Review",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 864, DateTimeKind.Local).AddTicks(617)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 192, DateTimeKind.Local).AddTicks(7624)
                         },
                         new
                         {
                             CategoryID = 3,
                             CategoryName = "Project",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 864, DateTimeKind.Local).AddTicks(650)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 192, DateTimeKind.Local).AddTicks(7655)
                         },
                         new
                         {
                             CategoryID = 4,
                             CategoryName = "Donate",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 864, DateTimeKind.Local).AddTicks(654)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 192, DateTimeKind.Local).AddTicks(7658)
                         });
                 });
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.Comment", b =>
                 {
-                    b.Property<string>("CommentID")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(true);
+                    b.Property<int>("CommentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CommentTime")
                         .HasColumnType("datetime2");
@@ -88,16 +90,33 @@ namespace AdvWeb_VN.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .IsUnicode(true);
 
-                    b.Property<string>("ParrentID")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(true);
+                    b.Property<int>("DislikeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
-                    b.Property<string>("PostID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(true);
+                    b.Property<bool>("IsManaged")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsView")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("LikeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("ParentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("PostID")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UserID")
                         .ValueGeneratedOnAdd()
@@ -113,10 +132,12 @@ namespace AdvWeb_VN.Data.Migrations
 
             modelBuilder.Entity("AdvWeb_VN.Data.Entities.Post", b =>
                 {
-                    b.Property<string>("PostID")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(true);
+                    b.Property<int>("PostID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
@@ -187,11 +208,8 @@ namespace AdvWeb_VN.Data.Migrations
                     b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PostID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(true);
+                    b.Property<int>("PostID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -205,10 +223,8 @@ namespace AdvWeb_VN.Data.Migrations
                     b.Property<int>("TagID")
                         .HasColumnType("int");
 
-                    b.Property<string>("PostID")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100)
-                        .IsUnicode(true);
+                    b.Property<int>("PostID")
+                        .HasColumnType("int");
 
                     b.HasKey("TagID", "PostID");
 
@@ -240,14 +256,14 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             Id = new Guid("706a7f4f-a6ed-4e24-bd09-df7829865142"),
-                            ConcurrencyStamp = "bae8194c-7e85-445c-9964-3e9115aac2f4",
+                            ConcurrencyStamp = "3f10bd0c-295b-4248-a214-caf8c919e302",
                             Name = "admin",
                             NormalizedName = "admin"
                         },
                         new
                         {
                             Id = new Guid("d00409db-a6ed-4985-a3b7-4036774572cd"),
-                            ConcurrencyStamp = "5418defd-e23d-446b-9c55-d2b3555d0ad4",
+                            ConcurrencyStamp = "dc00ca1d-9dd8-4934-a087-9367caa8c272",
                             Name = "Writer",
                             NormalizedName = "Writer"
                         });
@@ -286,35 +302,35 @@ namespace AdvWeb_VN.Data.Migrations
                             SubCategoryID = 1,
                             CategoryID = 1,
                             CategoryName = "Chaos;Head",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 865, DateTimeKind.Local).AddTicks(9771)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 194, DateTimeKind.Local).AddTicks(4642)
                         },
                         new
                         {
                             SubCategoryID = 2,
                             CategoryID = 1,
                             CategoryName = "Chaos;Child",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 866, DateTimeKind.Local).AddTicks(1212)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 194, DateTimeKind.Local).AddTicks(6005)
                         },
                         new
                         {
                             SubCategoryID = 3,
                             CategoryID = 1,
                             CategoryName = "Steins;Gate",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 866, DateTimeKind.Local).AddTicks(1254)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 194, DateTimeKind.Local).AddTicks(6053)
                         },
                         new
                         {
                             SubCategoryID = 4,
                             CategoryID = 2,
                             CategoryName = "Chaos;Child",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 866, DateTimeKind.Local).AddTicks(1257)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 194, DateTimeKind.Local).AddTicks(6057)
                         },
                         new
                         {
                             SubCategoryID = 5,
                             CategoryID = 3,
                             CategoryName = "Chaos;Head",
-                            CreateDate = new DateTime(2020, 8, 25, 15, 22, 7, 866, DateTimeKind.Local).AddTicks(1259)
+                            CreateDate = new DateTime(2021, 9, 11, 17, 18, 9, 194, DateTimeKind.Local).AddTicks(6059)
                         });
                 });
 
@@ -329,8 +345,8 @@ namespace AdvWeb_VN.Data.Migrations
 
                     b.Property<string>("TagName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100)
                         .IsUnicode(true);
 
                     b.HasKey("TagID");
@@ -412,13 +428,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("0cfe64bd-645b-4f5a-91d1-c3082c132ed8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8355d864-e204-4215-b9ee-f7d2f947d438",
+                            ConcurrencyStamp = "fe080476-4135-4e3e-9450-375a14f5c8f5",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOlLh8HxImfunDzO6jCTKsad8dzECelHNN5Dt4es0Fdny0J/bwXLyXd7JRerL8nX8A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDSnQuODWIEqxQwMRoJmVrI3xxFQNkxyApemIazQ9wSqdWK3i0xv8lWwG5X5rDgBMw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -428,13 +444,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1597057c-61ce-4e54-83a3-6588e6b80366",
+                            ConcurrencyStamp = "1afd1efb-deba-4d1c-88e9-b178493b4298",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "hoho303",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDLMAgLxjfBESXAYj+QvPsoN94WkKA9ib9Fj5tciKLyujQlViSpeNhbfsViZfZPKFA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOxm/DwM6RdLz5CummxeZEkyzhzZ5UYZAawQxQbahL5hakmb9w7lH32rW/hSvdfNjQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

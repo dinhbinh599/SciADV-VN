@@ -56,13 +56,13 @@
 								<div class="form-group">
 									<label class="control-label">Chuyên mục cha</label>
 									<select asp-for="CategoryID" class="form-control category-select" id="category-select">
-										<option value="@Model.CategoryID" selected="selected"></option>
+										<option value="@Model.CategoryID" selected="selected">@Model.CategoryName</option>
 									</select>
 								</div>
 								<div class="form-group">
 									<label asp-for="SubCategoryID" class="control-label"></label>
 									<select asp-for="SubCategoryID" class="form-control category-select" id="subcategory-select">
-										<option value="@Model.SubCategoryID" selected="selected">@Model.CategoryName</option>
+										<option value="@Model.SubCategoryID" selected="selected">@Model.SubCategoryName</option>
 									</select>
 								</div>
 								@for (int i = 0; i < Model.TagAssignRequest.Tags.Count; i++)
@@ -123,11 +123,12 @@
 	<script type="text/javascript">
 		let endpoint = "@ViewData["BaseAddress"]"
 
-		// Add the following code if you want the name of the file appear on select
+		// Show The name of the file appear on select
 		$(".custom-file-input").on("change", function () {
 			var fileName = $(this).val().split("\\").pop();
 			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 		});
+
 		$("#custom-file").change(function () {
 			readData(this);
 		});
@@ -139,8 +140,8 @@
 
         $("#previewDiv").dialog({
 			title: "Xem trước",
-			height: 600,
-			width:600,
+			height: 800,
+			width:800,
 			autoOpen: false,
 			open: function () {},
 			show: "blind",
@@ -155,6 +156,7 @@
 		});
 
         showCategory();
+
 
         function showCategory() {
 			fetch(endpoint + "/api/categories")

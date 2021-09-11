@@ -16,8 +16,8 @@
 		</div>
 
 		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
-			<input class="f1-s-1 cl6 plh9 s-full p-l-25 p-r-45" type="text" name="search" placeholder="Search">
-			<button class="flex-c-c size-a-1 ab-t-r fs-20 cl2 hov-cl10 trans-03">
+			<input class="f1-s-1 cl6 plh9 s-full p-l-25 p-r-45" id="search" type="text" name="search" placeholder="Search">
+			<button class="flex-c-c size-a-1 ab-t-r fs-20 cl2 hov-cl10 trans-03" id="search">
 				<i class="zmdi zmdi-search"></i>
 			</button>
 		</div>
@@ -27,10 +27,10 @@
 <!-- Feature post -->
 <section class="bg0">
 	<div class="row m-rl-0 justify-content-center">
-		@for(int i=0;i<3;i++)
+		@for (int i = 0; i < 3; i++)
 		{
 			<div class="col-md-4 p-rl-1 p-b-2">
-				<div class="bg-img1 size-a-11 how1 pos-relative" style="        background-image: url(https://localhost:5002/user-content/@Model.Posts.Items[i].Thumbnail);">
+				<div class="bg-img1 size-a-11 how1 pos-relative" style="background-image: url(https://localhost:5002/user-content/@Model.Posts.Items[i].Thumbnail);">
 					<a href="/post/@Model.Posts.Items[i].PostID" class="dis-block how1-child1 trans-03"></a>
 
 					<div class="flex-col-e-s s-full p-rl-25 p-tb-18">
@@ -99,6 +99,10 @@
 						</div>
 					}
 				</div>
+
+				<a href="/PostList" class="flex-c-c size-a-13 bo-all-1 bocl11 f1-m-6 cl6 hov-btn1 trans-03">
+					Xem thêm
+				</a>
 			</div>
 			<!-- Sidebar -->
 			@await Component.InvokeAsync("Sidebar")

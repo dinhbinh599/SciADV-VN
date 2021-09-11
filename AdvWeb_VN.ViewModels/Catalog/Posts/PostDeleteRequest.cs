@@ -6,6 +6,6 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 {
     public class PostDeleteRequest
     {
-        public string PostID { get; set; }
+        public int PostID { get; set; }
     }
 }

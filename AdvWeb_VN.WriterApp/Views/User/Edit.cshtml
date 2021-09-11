@@ -1,0 +1,110 @@
+﻿@model AdvWeb_VN.ViewModels.System.Users.UserUpdateRequest
+
+@{
+    ViewData["Title"] = "Cập nhật";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var thumbnail = ViewData["BaseAddress"] + "/user-content/" + Model.AvatarImagePath;
+}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a class="btn btn-outline-primary" asp-action="Index" asp-controller="User">Về danh sách</a>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/Home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/User">Danh sách thành viên</a></li>
+                        <li class="breadcrumb-item active">Thay đổi thông tin thành viên</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Thay đổi thông tin thành viên</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form asp-action="Edit" role="form" method="post" enctype="multipart/form-data">
+                            <div class="card-body">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <input asp-for="ID" type="hidden" class="form-control" />
+                                <div class="form-group">
+                                    <label asp-for="Email" class="control-label"></label>
+                                    <input type="email" asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber" class="control-label"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">File input</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input asp-for="AvatarImage" type="file" class="custom-file-input" id="custom-file">
+                                            <label class="custom-file-label" for="custom-file">Choose file</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="">Upload</span>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="AvatarImage" class="text-danger"></span>
+                                </div>
+                                <div style="text-align:center">
+                                    <img src="@thumbnail" class="img-circle elevation-2" style="width:100px;height:100px" id="image-thumbnail" />
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-group">
+                                    <input type="submit" value="Lưu lại" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+@section scripts{
+    <script type="text/javascript">
+		// Add the following code if you want the name of the file appear on select
+		$(".custom-file-input").on("change", function () {
+			var fileName = $(this).val().split("\\").pop();
+			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		});
+		$("#custom-file").change(function () {
+			readData(this);
+		});
+		function readData(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					$('#image-thumbnail').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+    </script>
+}
+
+

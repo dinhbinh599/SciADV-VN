@@ -71,13 +71,13 @@ namespace AdvWeb_VN.WriterApp.Services
             return JsonConvert.DeserializeObject<ApiErrorResult<UserViewModel>>(body);
         }
 
-        public async Task<ApiResult<UserViewModel>> GetByName(string name)
+        public async Task<ApiResult<UserViewModel>> GetCurrentUser()
         {
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.GetAsync($"/api/users/name/{name}");
+            var response = await client.GetAsync($"/api/users/current/");
             var body = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<ApiSuccessResult<UserViewModel>>(body);
@@ -113,7 +113,7 @@ namespace AdvWeb_VN.WriterApp.Services
             requestContent.Add(new StringContent(request.Email), "email");
             requestContent.Add(new StringContent(request.PhoneNumber), "phoneNumber");
 
-            var response = await client.PutAsync($"/api/users/{request.ID}", requestContent);
+            var response = await client.PutAsync($"/api/users/update-authenticate", requestContent);
             var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(result);

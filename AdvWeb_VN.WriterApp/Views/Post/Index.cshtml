@@ -2,165 +2,187 @@
 @model PagedResult<AdvWeb_VN.ViewModels.Catalog.Posts.PostViewModel>
 
 @{
-    var pageNow = (Model.PageIndex - 1) * Model.PageSize + 1;
-    var pageLast = pageNow + Model.PageSize - 1;
+	var pageNow = (Model.PageIndex - 1) * Model.PageSize + 1;
+	var pageLast = pageNow + Model.PageSize - 1;
 }
 @{
-    ViewData["Title"] = "Danh sách";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Danh sách";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" style="min-height: 1200.88px;">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Danh sách bài viết</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/Home">Home</a></li>
-                        <li class="breadcrumb-item active">Danh sách bài viết</li>
-                    </ol>
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h1>Danh sách bài viết</h1>
+				</div>
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><a href="/Home">Home</a></li>
+						<li class="breadcrumb-item active">Danh sách bài viết</li>
+					</ol>
+				</div>
+			</div>
+		</div><!-- /.container-fluid -->
+	</section>
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
 
-                        <!-- Tên nằm trên đầu bảng -->
-                        <div class="card-header">
-                            <a class="btn btn-outline-primary" asp-action="Create" asp-controller="Post">Tạo mới</a>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-6">
-                                        <form asp-action="Index" method="get">
-                                            <div class="dataTables_length" id="example1_length">
-                                                <label>
-                                                    Show entries
-                                                    <select name="pageSize" aria-controls="example1"
-                                                            class="custom-select custom-select-sm form-control form-control-sm">
-                                                        <option value="10">10</option>
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                        <option value="100">100</option>
-                                                    </select>
-                                                </label>
-                                                <button type="submit" class="btn btn-outline-primary">Select</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="col-sm-12 col-md-6" ">
-                                        <form asp-action="Index" method="get">
-                                            <div id="example1_filter" class="dataTables_filter">
-                                                <label>
-                                                    Search:<input name="keyword" value="@ViewBag.Keyword" type="search" class="form-control form-control-sm" placeholder=""
-                                                                  aria-controls="example1">
-                                                </label>
-                                                <button type="submit" class="btn btn-outline-primary">Search</button>
-                                                <button type="button" onclick="window.location.href='/Post/Index'" class="btn btn-outline-dark">Reset</button>
-                                            </div>
-                                        </form>
-                                    </div>
+						<!-- Tên nằm trên đầu bảng -->
+						<div class="card-header">
+							<a class="btn btn-outline-primary" asp-action="Create" asp-controller="Post">Tạo mới</a>
+						</div>
+						<!-- /.card-header -->
+						<div class="card-body">
+							<div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+								<div class="row">
+									<div class="col-sm-12 col-md-6">
+										<form asp-action="Index" method="get">
+											<div class="dataTables_length" id="example1_length">
+												<label>
+													Show entries
+													<select id="pageSize" name="pageSize" aria-controls="example1"
+															class="custom-select custom-select-sm form-control form-control-sm">
+														<option value="10">10</option>
+														<option value="25">25</option>
+														<option value="50">50</option>
+														<option value="100">100</option>
+													</select>
+												</label>
+											</div>
+										</form>
+									</div>
+									<div class="col-sm-12 col-md-6" ">
+										<form asp-action="Index" method="get">
+											<div id="example1_filter" class="dataTables_filter">
+												<label>
+													Search:<input name="keyword" value="@ViewBag.Keyword" type="search" class="form-control form-control-sm" placeholder=""
+																  aria-controls="example1">
+												</label>
+												<button type="button" class="btn btn-outline-primary">Search</button>
+												<button type="button" onclick="window.location.href='/Post/Index'" class="btn btn-outline-dark">Reset</button>
+											</div>
+										</form>
+									</div>
 
-                                </div>
-                                <div class="row" style="margin-top:20px">
-                                    <div class="col-sm-12">
-                                        <table id="example1"
-                                               class="table table-bordered  table-striped dataTable dtr-inline table-hover" role="grid"
-                                               aria-describedby="example1_info">
-                                            <thead>
-                                                <tr role="row">
-                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Browser: activate to sort column ascending">Tên bài viết</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Engine version: activate to sort column ascending">Người viết</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Engine version: activate to sort column ascending">Chuyên mục cha</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Engine version: activate to sort column ascending">Chuyên mục con</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Engine version: activate to sort column ascending">Ngày viết</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="Engine version: activate to sort column ascending">Lượt xem</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                                        aria-label="CSS grade: activate to sort column ascending"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var item in Model.Items)
-                                                {
-                                                    <tr role="row" class="odd">
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.PostName)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.UserName)
-                                                        </td>
-                                                        <td tabindex="0" class="sorting_1">
-                                                            @Html.DisplayFor(modelItem => item.CategoryName)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.SubCategoryName)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.WriteTime)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.View)
-                                                        </td>
-                                                        <td>
-                                                            <a href="/Post/Edit/@item.PostID" class="btn btn-outline-primary"> Sửa</a>
-                                                            <a href="/Post/Details/@item.PostID" style="margin-top:5px" class="btn btn-outline-info">Xem</a>
-                                                            <a href="/Post/Delete/@item.PostID" style="margin-top:5px" class="btn btn-outline-danger">Xóa</a>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th rowspan="1" colspan="1">Tên bài viết</th>
-                                                    <th rowspan="1" colspan="1">Người viết</th>
-                                                    <th rowspan="1" colspan="1">Chuyên mục cha</th>
-                                                    <th rowspan="1" colspan="1">Chuyên mục con</th>
-                                                    <th rowspan="1" colspan="1">Ngày viết</th>
-                                                    <th rowspan="1" colspan="1">Lượt xem</th>
-                                                    <th rowspan="1" colspan="1"></th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-5">
-                                        <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">
-                                            Showing @pageNow to @pageLast
-                                            of @Model.TotalRecords entries
-                                        </div>
-                                    </div>
-                                    @await Component.InvokeAsync("Pager", Model)
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+								</div>
+								<div class="row" style="margin-top:20px">
+									<div class="col-sm-12">
+										<table id="example1"
+											   class="table table-bordered  table-striped dataTable dtr-inline table-hover" role="grid"
+											   aria-describedby="example1_info">
+											<thead>
+												<tr role="row">
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+														aria-label="Browser: activate to sort column ascending">Tên bài viết</th>
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+														aria-label="Engine version: activate to sort column ascending">Người viết</th>
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+														aria-label="Engine version: activate to sort column ascending">Chuyên mục cha</th>
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+														aria-label="Engine version: activate to sort column ascending">Chuyên mục con</th>
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+														aria-label="Engine version: activate to sort column ascending">Ngày viết</th>
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+														aria-label="Engine version: activate to sort column ascending">Lượt xem</th>
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+														aria-label="CSS grade: activate to sort column ascending"></th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach (var item in Model.Items)
+												{
+													<tr role="row" class="odd">
+														<td>
+															@Html.DisplayFor(modelItem => item.PostName)
+														</td>
+														<td>
+															@Html.DisplayFor(modelItem => item.UserName)
+														</td>
+														<td tabindex="0" class="sorting_1">
+															@Html.DisplayFor(modelItem => item.CategoryName)
+														</td>
+														<td>
+															@Html.DisplayFor(modelItem => item.SubCategoryName)
+														</td>
+														<td>
+															@Html.DisplayFor(modelItem => item.WriteTime)
+														</td>
+														<td>
+															@Html.DisplayFor(modelItem => item.View)
+														</td>
+														<td>
+															<a href="/Post/Edit/@item.PostID" class="btn btn-outline-primary"> Sửa</a>
+															<a href="/Post/Details/@item.PostID" style="margin-top:5px" class="btn btn-outline-info">Xem</a>
+															<a href="/Post/Delete/@item.PostID" style="margin-top:5px" class="btn btn-outline-danger">Xóa</a>
+															<a href="/Comment?id=@item.PostID" style="margin-top:5px" class="btn btn-outline-dark">Bình luận</a>
+
+														</td>
+													</tr>
+												}
+											</tbody>
+											<tfoot>
+												<tr>
+													<th rowspan="1" colspan="1">Tên bài viết</th>
+													<th rowspan="1" colspan="1">Người viết</th>
+													<th rowspan="1" colspan="1">Chuyên mục cha</th>
+													<th rowspan="1" colspan="1">Chuyên mục con</th>
+													<th rowspan="1" colspan="1">Ngày viết</th>
+													<th rowspan="1" colspan="1">Lượt xem</th>
+													<th rowspan="1" colspan="1"></th>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12 col-md-5">
+										<div class="dataTables_info" id="example1_info" role="status" aria-live="polite">
+											Showing @pageNow to @pageLast
+											of @Model.TotalRecords entries
+										</div>
+									</div>
+									@await Component.InvokeAsync("Pager", Model)
+								</div>
+							</div>
+						</div>
+						<!-- /.card-body -->
+					</div>
+					<!-- /.card -->
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</section>
+	<!-- /.content -->
 </div>
+@section scripts{
+	<script type="text/javascript">
+
+        $("select#pageSize").val(@ViewData["PageSize"]).change();
+		$("select#pageSize").change(function () {
+			var selected = $(this).children("option:selected").val();
+			if ($("#keyword").val() != null) {
+				window.location.href = "/Post?id=" + "&pageSize=" + selected + "&keyword=" + $("#keyword").val();
+			}
+			else {
+				window.location.href = "/Post?id=" + "&pageSize=" + selected;
+			}
+		});
+        $("#btn-search").click(function () {
+			if ($("#keyword").val() != "")
+			{
+				window.location.href = "/Post?id=" + id + "&keyword=" + $("#keyword").val();
+			}
+	    });
+	</script>
+}

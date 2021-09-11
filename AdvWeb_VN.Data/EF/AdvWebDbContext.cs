@@ -25,7 +25,7 @@ namespace AdvWeb_VN.Data.EF
 			modelBuilder.ApplyConfiguration(new PostImageConfiguration());
 			modelBuilder.ApplyConfiguration(new UserConfiguration());
 			modelBuilder.ApplyConfiguration(new RoleConfiguration());
-			modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
+			modelBuilder.ApplyConfiguration(new SubCategoryConfiguration()); 
 
 
 			modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
@@ -45,6 +45,5 @@ namespace AdvWeb_VN.Data.EF
 		public DbSet<PostTag> PostTags { set; get; }
 		public DbSet<PostImage> PostImages { set; get; }
 		public DbSet<SubCategory> SubCategories { set; get; }
-
 	}
 }

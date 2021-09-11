@@ -6,7 +6,7 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 {
 	public class PostUpdateContentsRequest
 	{
-		public string id { set; get; }
+		public int id { set; get; }
 		public string Contents { set; get; }
 	}
 }
