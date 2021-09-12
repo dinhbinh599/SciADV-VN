@@ -42,6 +42,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		private async Task<string> SaveFile(IFormFile file)
 		{
+			//Lưu file hình ảnh Avatar của User
 			var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
 			var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
 			await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
@@ -50,20 +51,13 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<string>> Authenticate(LoginRequest request)
 		{
+			//Xác thực người dùng và trả về JWT Token để đăng nhập và xác thực sau này.
 			var user = await _userManager.FindByNameAsync(request.UserName);
-			if (user == null) return new ApiErrorResult<string>("Username or Password is wrong");
+			if (user == null) return new ApiErrorResult<string>("Tên đăng nhập hoặc mật khẩu không đúng");
 			
 			var roles = await _userManager.GetRolesAsync(user);
 			var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, true);
 			if(!result.Succeeded) return new ApiErrorResult<string>("Tên đăng nhập hoặc mật khẩu không đúng");
-
-			//var claims = new[]
-			//{
-			//	new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-			//	new Claim(ClaimTypes.Email, user.Email),
-			//	new Claim(ClaimTypes.Name, user.UserName),
-			//	//new Claim(ClaimTypes.Role, string.Join(";", roles))
-			//};
 
 			List<Claim> info = new List<Claim>();
 			info.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
@@ -104,6 +98,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<UserViewModel>> GetByID(Guid id)
 		{
+			//Lấy dữ liệu người dùng từ ID
 			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<UserViewModel>("User không tồn tại");
 			var roles = await _userManager.GetRolesAsync(user);
@@ -120,6 +115,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging(GetUserPagingRequest request)
 		{
+			//Lấy về danh sách Paging của người dùng dựa vào từ khóa
 			var query = _userManager.Users;
 			if (!string.IsNullOrEmpty(request.Keyword))
 			{
@@ -150,6 +146,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> Register(RegisterRequest request)
 		{
+			//Thêm người dùng mới (Chỉ dùng cho Admin)
 			var user = await _userManager.FindByNameAsync(request.UserName);
 			if (user != null) return new ApiErrorResult<bool>("Tài khoản đã tồn tại");
 
@@ -165,6 +162,8 @@ namespace AdvWeb_VN.Application.System.Users
 				Email = request.Email,
 				PhoneNumber = request.PhoneNumber
 			};
+
+			//Lưu File Avatar và trả về đường dẫn. Nếu không có hình mặc định là File có sẵn
 			if (request.AvatarImage != null)
 			{
 				user.Avatar = await this.SaveFile(request.AvatarImage);
@@ -180,6 +179,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> RoleRemoveByRoleName(Guid id, string roleName)
 		{
+			//Xóa Role dựa vào tên Role
 			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
 			if (!await _roleManager.RoleExistsAsync(roleName)) return new ApiErrorResult<bool>("Role không tồn tại");
@@ -192,6 +192,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> RoleAssign(Guid id, RoleAssignRequest request)
 		{
+			//Gán Role cho người dùng
 			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
 			var removedRoles = request.Roles.Where(x => x.Selected == false).Select(x => x.Name).ToList();
@@ -218,6 +219,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> RoleAssignByRoleName(Guid id, string roleName)
 		{
+			//Gán Role cho người dùng dựa vào tên Role
 			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<bool>("Tài khoản không tồn tại");
 			if(!await _roleManager.RoleExistsAsync(roleName)) return new ApiErrorResult<bool>("Role không tồn tại");
@@ -231,6 +233,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<bool>> Update(Guid id,UserUpdateRequest request)
 		{
+			//Thay đổi thông tin người dùng
 			if (await _userManager.Users.AnyAsync(x => x.Email == request.Email && x.Id != id))
 			{
 				return new ApiErrorResult<bool>("Emai đã tồn tại");
@@ -252,8 +255,9 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<UserViewModel>> GetByName(string name)
 		{
+			//Lấy thông tin người dùng dựa vào tên người dùng
 			var user = await _userManager.FindByNameAsync(name);
-			if (user == null) return new ApiErrorResult<UserViewModel>("User không tồn tại");
+			if (user == null) return new ApiErrorResult<UserViewModel>("Người dùng không tồn tại");
 			var roles = await _userManager.GetRolesAsync(user);
 			var userVm = new UserViewModel()
 			{
@@ -269,6 +273,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<bool> IsPostOwner(Guid id, int postID)
 		{
+			//Kiểm tra người dùng có phải người đăng bài hay không
 			var post = await _context.Posts.FirstOrDefaultAsync(x => x.PostID.Equals(postID));
 			if (id == post.UserID) return true;
 			return false;
@@ -276,6 +281,7 @@ namespace AdvWeb_VN.Application.System.Users
 
 		public async Task<ApiResult<UserViewModel>> GetCurrentUser(Guid id)
 		{
+			//Lấy về thông tin của người dùng đang đăng nhập
 			var user = await _userManager.FindByIdAsync(id.ToString());
 			if (user == null) return new ApiErrorResult<UserViewModel>("User không tồn tại");
 			var roles = await _userManager.GetRolesAsync(user);

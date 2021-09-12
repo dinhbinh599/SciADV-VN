@@ -8,6 +8,9 @@ namespace AdvWeb_VN.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<PostTag> builder)
 		{
+			//Cài đặt cấu hình bảng cho PostTag (Many to Many)
+			//Một bài viết có thể có nhiều Tag
+			//Một Tag có thể xuất hiện ở nhiều bài viết
 			builder.ToTable("PostTags");
 			builder.HasKey(x => new { x.TagID, x.PostID });
 			builder.HasOne(x => x.Post).WithMany(t => t.PostTags)

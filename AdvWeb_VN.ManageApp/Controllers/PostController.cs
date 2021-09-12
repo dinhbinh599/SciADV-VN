@@ -38,6 +38,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		public async Task<IActionResult> Index(string keyword, int id = 1, int pageIndex = 1, int pageSize = 10)
 		{
+			//Hiển thị Post Paging theo CategoryID
+			//Sau có lẽ thêm hiển thị All nữa ???
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			ViewData["ID"] = id;
 			var request = new GetManagePostPagingRequest()
@@ -63,6 +65,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Details(int id)
 		{
+			//Để đây cho vui, sau xem chi tiết dẫn hẳn đến WebApp của bài viết
 			var result = await _postApiClient.GetByID(id);
 			return View(result.ResultObj);
 		}
@@ -70,6 +73,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public IActionResult Create()
 		{
+			//Dẫn hướng đến trang khởi tạo bài viết mới
+			//Lấy UserID hiện hành
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 			
@@ -84,6 +89,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[Consumes("multipart/form-data")]
 		public async Task<IActionResult> Create([FromForm]PostCreateRequest request)
 		{
+			//Khởi tạo bài viết mới nếu request truyền lên đầy đủ
+			//Lấy hình ảnh từ trang Web khác rồi upload lên Server mình đồng thời sửa lại đường dẫn vào bài viết
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 
 			if (!ModelState.IsValid)
@@ -96,11 +103,14 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			if (result.IsSuccessed)
 			{
 				var postID = result.ResultObj.PostID;
+				//Sửa lại url Hình ảnh trong bài viết thành url của server mình
 				await _postApiClient.UpdateContents(postID, new PostUpdateContentsRequest
 				{
 					id = result.ResultObj.PostID,
 					Contents = await ConvertImage(postID, oldContents)
 				});
+
+				//Gán Tag cho bài viết
 				var tagAssignRequest = await GetTagAssignRequest();
 				tagAssignRequest.SelectedTags = request.TagAssignRequest.SelectedTags;
 				var requestConvert = SelectConvertBySelectedTags(tagAssignRequest);
@@ -117,6 +127,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Edit(int id)
 		{
+			//Dẫn hướng đến trang chỉnh sửa bài viết
 			var result = await _postApiClient.GetByID(id);
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 
@@ -144,6 +155,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[Consumes("multipart/form-data")]
 		public async Task<IActionResult> Edit([FromForm]PostUpdateRequest request)
 		{
+			//Chỉnh sửa bài viết từ Form gửi lên nếu request đầy đủ
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 
 			if (!ModelState.IsValid)
@@ -166,6 +178,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public IActionResult Delete(int id)
 		{
+			//Dẫn hướng đến trang xác nhận xóa bài viết
 			return View(new PostDeleteRequest()
 			{
 				PostID = id
@@ -175,6 +188,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Delete(PostDeleteRequest request)
 		{
+			//Xóa bài viết nếu request đầy đủ
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 
 			if (!ModelState.IsValid)
@@ -193,6 +207,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		private async Task<TagAssignRequest> GetTagAssignRequest()
 		{
+			//Lấy danh sách toàn bộ Tag
 			var tagObj = await _tagApiClient.GetAll();
 			var tagAssignRequest = new TagAssignRequest();
 			foreach (var tag in tagObj.ResultObj)
@@ -209,6 +224,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		private async Task<TagAssignRequest> GetTagAssignRequest(int postID)
 		{
+			//Lấy danh sách Tag đã được gán vào bài viết dựa vào postID
 			var postObj = await _postApiClient.GetByID(postID);
 			var tagObj = await _tagApiClient.GetAll();
 			var tagAssignRequest = new TagAssignRequest();
@@ -226,6 +242,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		private TagAssignRequest SelectConvertBySelectedTags(TagAssignRequest request)
 		{
+			//Kiểm tra Tag đã tồn tại hay chưa
 			foreach(var item in request.SelectedTags)
 			{
 				var newTag = true;
@@ -237,6 +254,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 						request.Tags[i].Selected = true;
 					}
 				}
+				//Nếu chưa thì thêm mới Tag
 				if (newTag)
 				{
 					request.Tags.Add(new SelectItem
@@ -253,6 +271,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		private TagAssignRequest SelectConvertByTags(TagAssignRequest request)
 		{
+			//Thêm Tag đã được Selected
 			foreach(var item in request.Tags)
 			{
 				if (item.Selected) request.SelectedTags.Add(item.Name);
@@ -262,6 +281,10 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		private async Task<string> ConvertImage(int id,string contents)
 		{
+			//Kiểm tra hình ảnh là từ Url hình hay từ máy up lên
+			//Tùy loại thì upload nó lên API theo từng kiểu khác nhau
+			//Dùng Regex để kiểm tra
+
 			var base64Strings = new List<string>();
 			var requests = new List<PostImageBase64CreateRequest>();
 			MatchCollection matchCollImage = Regex.Matches(contents, "<img.+?src=[\"'](.+?)[\"'].*?>", RegexOptions.IgnoreCase);
@@ -298,6 +321,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		private bool checkUrl(string uriName)
 		{
+			//Kiểm tra có phải Url hay không.
 			Uri uriResult;
 			bool result = Uri.TryCreate(uriName, UriKind.Absolute, out uriResult)
 				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);

@@ -11,6 +11,9 @@ namespace AdvWeb_VN.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<PostImage> builder)
         {
+            //Cài đặt cấu hình bảng cho PostImage (Many to Many)
+            //Một bài viết có thể có nhiều hình ảnh
+            //Mỗi hình ảnh lại có thể dùng ở nhiều bài viết khác nhau
             builder.ToTable("PostImages");
             builder.HasKey(x => x.ID);
 

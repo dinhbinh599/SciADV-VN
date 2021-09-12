@@ -22,13 +22,15 @@ namespace eShopSolution.AdminApp.Controllers.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            //Lấy User hiện tại từ API
             var userResult = await _userApiClient.GetByName(User.Identity.Name);
             var userCurrent = userResult.ResultObj;
 
+            //Lấy số Comment mới từ API
             var commentResult = await _commentApiClient.GetNewCount();
             var commentCount = commentResult.ResultObj;
 
-
+            //Khởi tạo Model hiển thị lên Sidebar
             var sidebarViewModel = new SidebarViewModel()
             {
                 UserID = userCurrent.UserID,

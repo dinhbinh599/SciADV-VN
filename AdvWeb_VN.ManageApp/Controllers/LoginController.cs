@@ -32,6 +32,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
+			//Thoát ra khỏi đăng nhập hiện hành và hiển thị trang Login
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			return View();
 		}
@@ -39,7 +40,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		[HttpPost]
 		public async Task<IActionResult> Index(LoginRequest request)
-		{
+		{		
+			//Kiểm tra tên đăng nhập và mật khẩu, nếu đúng thì lưu lại JWT Token để dùng sau này.
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 			var result = await _userApiClient.Authenticate(request);
 			if (result.ResultObj == null)

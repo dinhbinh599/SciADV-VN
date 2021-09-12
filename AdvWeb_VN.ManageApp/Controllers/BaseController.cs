@@ -14,6 +14,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            //Lấy Token được gửi lên Server, nếu không có Token = Chưa Login vứt trả về trang đăng nhập
             var sessions = context.HttpContext.Session.GetString("Token");
             if (sessions == null)
             {

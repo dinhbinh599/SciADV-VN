@@ -11,6 +11,8 @@ namespace AdvWeb_VN.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<SubCategory> builder)
 		{
+			//Cài đặt cấu hình bảng cho SubCategory (One To Many)
+			//Một chuyên mục cha có thể chứa nhiều chuyên mục con
 			builder.ToTable("SubCategories");
 			builder.HasKey(x => x.SubCategoryID);
 			builder.Property(x => x.SubCategoryID).UseIdentityColumn();

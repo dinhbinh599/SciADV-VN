@@ -28,34 +28,9 @@ namespace AdvWeb_VN.WebApp.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResult<CategoryViewModel>> GetByID(int id)
-        {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.GetAsync($"/api/categories/{id}");
-            var body = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<ApiSuccessResult<CategoryViewModel>>(body);
-
-            return JsonConvert.DeserializeObject<ApiErrorResult<CategoryViewModel>>(body);
-        }
-        public async Task<List<CategoryViewModel>> GetAll()
-        {
-            var client = _httpClientFactory.CreateClient();
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
-
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.GetAsync($"/api/categories");
-            var body = await response.Content.ReadAsStringAsync();
-            var categories = JsonConvert.DeserializeObject<List<CategoryViewModel>>(body);
-            return categories;
-        }
-
         public async Task<ApiResult<List<CategoryMenuViewModel>>> GetMenuCategory()
         {
+            //Khởi tạo kết nối đến WebApi, không xác thực người dùng
             var client = _httpClientFactory.CreateClient();
 
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);

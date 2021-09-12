@@ -17,6 +17,7 @@ namespace AdvWeb_VN.Application.Common
 
         public FileStorageService(IWebHostEnvironment webHostEnvironment)
         {
+            //Trộn đường dẫn lưu File.
             _userContentFolder = Path.Combine(webHostEnvironment.WebRootPath, USER_CONTENT_FOLDER_NAME);
         }
 
@@ -43,6 +44,7 @@ namespace AdvWeb_VN.Application.Common
 
         public async Task<long> SaveFileByUrlAsync(string url, string fileName)
         {
+            //Tải file từ Url rồi lưu vào Server
             var filePath = Path.Combine(_userContentFolder, fileName);
 
             WebClient client = new WebClient();
@@ -53,6 +55,7 @@ namespace AdvWeb_VN.Application.Common
 
         private async Task<long> GetFileSizeAsync(string url)
         {
+            // Lấy dung lượng của File
             var request = WebRequest.CreateHttp(url);
             request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
             request.Method = "HEAD";

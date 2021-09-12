@@ -11,6 +11,7 @@ namespace AdvWeb_VN.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Category> builder)
 		{
+			//Cài đặt cấu hình bảng cho Category
 			builder.ToTable("Categories");
 			builder.HasKey(x => x.CategoryID);
 			builder.Property(x => x.CategoryID).UseIdentityColumn();

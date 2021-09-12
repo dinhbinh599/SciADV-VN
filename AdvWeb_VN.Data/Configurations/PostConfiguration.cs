@@ -11,6 +11,9 @@ namespace AdvWeb_VN.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Post> builder)
 		{
+			//Cài đặt cấu hình bảng cho Post (One To Many)
+			//Một chuyên mục con có thể có nhiều bài viết nhưng 1 bài viết chỉ thuộc 1 chuyên mục con
+			//Một User có thể viết nhiều bài viết nhưng 1 bài viết chỉ thuộc về 1 User
 			builder.ToTable("Posts");
 			builder.HasKey(x => x.PostID);
 			builder.Property(x => x.PostID).UseIdentityColumn();

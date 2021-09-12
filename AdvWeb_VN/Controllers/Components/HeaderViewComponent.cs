@@ -23,9 +23,11 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            //Load dữ liệu hiển thị ở Menu
             var resultCategory = await _categoryApiClient.GetMenuCategory();
             var categories = resultCategory.ResultObj;
 
+            //Load dữ liệu 1 vài bài viết để hiển thị ở NEWS
             var resultPost = await _postApiClient.GetPostsPagingsByCategoryID(new GetPublicPostPagingRequest()
             {
                 PageIndex = 1,

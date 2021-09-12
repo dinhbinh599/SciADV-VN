@@ -11,6 +11,7 @@ namespace AdvWeb_VN.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<User> builder)
 		{
+			//Cài đặt cấu hình bảng cho User
 			builder.HasKey(x => x.Id);
 			builder.Property(x => x.Avatar).IsUnicode(false).IsRequired(false).HasMaxLength(200);
 			builder.ToTable("Users");

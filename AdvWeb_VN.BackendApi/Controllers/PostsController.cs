@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Posts;
 using AdvWeb_VN.Application.System.Users;
 using AdvWeb_VN.Data.Entities;
+using AdvWeb_VN.Utilities.Constants;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.ProductImages;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,8 @@ namespace AdvWeb_VN.BackendApi.Controllers
     [Authorize]
     public class PostsController : ControllerBase
     {
+        //var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
+        //Đoạn Code trên lấy UserID hiện hành dựa vào JWT Token gửi từ Client lên
         private readonly IPostService _postService;
         private readonly IUserService _userService;
 
@@ -30,7 +33,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> Get()
         {
             var posts = await _postService.GetAll();
@@ -54,24 +57,24 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("paging-tagid")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllPagingByTagID([FromQuery]GetManagePostPagingRequest request)
+        [Authorize(Roles = RoleInfo.Admin)]
+        public async Task<IActionResult> GetManagePagingByTagID([FromQuery]GetManagePostPagingRequest request)
         {
             var posts = await _postService.GetManagePagingByTagID(request);
             return Ok(posts);
         }
 
         [HttpGet("paging-subcategoryid")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllPagingBySubCategoryID([FromQuery]GetManagePostPagingRequest request)
+        [Authorize(Roles = RoleInfo.Admin)]
+        public async Task<IActionResult> GetManagePagingBySubCategoryID([FromQuery]GetManagePostPagingRequest request)
         {
             var posts = await _postService.GetManagePagingBySubCategoryID(request);
             return Ok(posts);
         }
 
         [HttpGet("paging-categoryid")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllPagingByCategoryID([FromQuery]GetManagePostPagingRequest request)
+        [Authorize(Roles = RoleInfo.Admin)]
+        public async Task<IActionResult> GetManagePagingByCategoryID([FromQuery]GetManagePostPagingRequest request)
         {
             var posts = await _postService.GetManagePagingByCategoryID(request);
             return Ok(posts);
@@ -102,8 +105,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("{userID}/paging-categoryid")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllPagingByCategoryIDAuthenticate([FromQuery]GetManagePostPagingRequest request)
+        public async Task<IActionResult> GetManagePagingByCategoryIDAuthenticate([FromQuery]GetManagePostPagingRequest request)
         {
             var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
             var posts = await _postService.GetManagePagingByCategoryIDAuthenticate(userID, request);
@@ -144,7 +146,6 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("{userID}/{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetByIDAuthenticate(int id)
         {
             var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
@@ -166,6 +167,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> Update(int id, [FromForm]PostUpdateRequest request)
         {
             var result = await _postService.Update(id,request);
@@ -184,6 +186,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPut("{id}/contents")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> UpdateContents(int id, [FromBody]PostUpdateContentsRequest request)
         {
             var result = await _postService.UpdateImageContents(id, request);
@@ -201,6 +204,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPut("view/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> AddViewCount(int id)
         {
             var result = await _postService.AddViewCount(id);
@@ -209,6 +213,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _postService.Delete(id);
@@ -226,6 +231,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPut("{id}/tags")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> TagAssign(int id, [FromBody]TagAssignRequest request)
         {
             if (!ModelState.IsValid)
@@ -257,6 +263,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         //Images
         [HttpPost("{postId}/images")]
         [Consumes("multipart/form-data")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> CreateImage(int postId, [FromForm]PostImageCreateRequest request)
         {
             if (!ModelState.IsValid)
@@ -291,6 +298,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPost("{postId}/images/url")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> CreateImageByUrl(int postId, [FromBody]PostImageCreateUrlRequest request)
         {
             if (!ModelState.IsValid)

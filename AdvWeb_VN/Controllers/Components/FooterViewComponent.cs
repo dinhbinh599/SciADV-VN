@@ -22,9 +22,11 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            //Load dữ liệu hiển thị ở Footer
             var resultCategory = await _categoryApiClient.GetFooterCategory();
             var categories = resultCategory.ResultObj;
 
+            //Load 1 vài bài viết
             var resultPost = await _postApiClient.GetPopular();
             var posts = resultPost.ResultObj;
 

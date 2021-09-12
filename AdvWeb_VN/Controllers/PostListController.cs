@@ -24,6 +24,9 @@ namespace AdvWeb_VN.WebApp.Controllers
         [HttpGet("{controller}")]
         public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
         {
+            //Hiển thị danh sách bài viết toàn bộ được Paging
+            //aka trang tìm kiếm bài viết
+
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
             ViewData["Active"] = 99;
             var request = new GetPublicPostPagingRequestSearch()

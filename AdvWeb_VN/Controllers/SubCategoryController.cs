@@ -26,6 +26,9 @@ namespace AdvWeb_VN.WebApp.Controllers
         [HttpGet("{controller}/subcategory-{id}")]
         public async Task<IActionResult> Index(int id, int pageIndex = 1, int pageSize = 10)
         {
+            //Hiển thị danh sách bài viết theo SubCategoryID
+            //Hiển thị danh sách Tag có trong SubCategory đấy
+
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
             ViewData["Active"] = 0;
             var request = new GetPublicPostPagingRequest()

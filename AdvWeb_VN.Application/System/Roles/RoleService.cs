@@ -21,6 +21,7 @@ namespace AdvWeb_VN.Application.System.Roles
 
         public async Task<List<RoleViewModel>> GetAll()
         {
+            // Lấy toàn bộ dữ liệu về Role
             var roles = await _roleManager.Roles
                 .Select(x => new RoleViewModel()
                 {

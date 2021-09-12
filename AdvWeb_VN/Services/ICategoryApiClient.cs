@@ -10,9 +10,6 @@ namespace AdvWeb_VN.WebApp.Services
 {
 	public interface ICategoryApiClient
 	{
-
-		Task<ApiResult<CategoryViewModel>> GetByID(int id);
-		Task<List<CategoryViewModel>> GetAll();
 		Task<ApiResult<List<CategoryMenuViewModel>>> GetMenuCategory();
 		Task<ApiResult<List<CategoryViewModel>>> GetFooterCategory();
 	}

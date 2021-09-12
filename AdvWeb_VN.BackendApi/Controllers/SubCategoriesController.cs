@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Categories;
 using AdvWeb_VN.Application.Catalog.SubCategories;
+using AdvWeb_VN.Utilities.Constants;
 using AdvWeb_VN.ViewModels.Catalog.SubCategories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -49,6 +50,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> Create([FromBody]SubCategoryCreateRequest request)
         {
             var result = await _subCategoryService.Create(request);
@@ -57,6 +59,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> Update([FromBody]SubCategoryUpdateRequest request)
         {
             var result = await _subCategoryService.Update(request);
@@ -65,6 +68,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _subCategoryService.Delete(id);

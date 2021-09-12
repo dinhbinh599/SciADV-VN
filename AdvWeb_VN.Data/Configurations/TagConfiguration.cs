@@ -11,6 +11,7 @@ namespace AdvWeb_VN.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Tag> builder)
 		{
+			//Cài đặt cấu hình bảng cho Tag
 			builder.ToTable("Tags");
 			builder.HasKey(x => x.TagID);
 			builder.Property(x => x.TagID).UseIdentityColumn();

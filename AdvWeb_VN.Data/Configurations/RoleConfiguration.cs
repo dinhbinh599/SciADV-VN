@@ -11,6 +11,7 @@ namespace AdvWeb_VN.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Role> builder)
 		{
+			//Cài đặt cấu hình bảng cho Role
 			builder.ToTable("Roles");
 			builder.HasKey(x => x.Id);
 		}

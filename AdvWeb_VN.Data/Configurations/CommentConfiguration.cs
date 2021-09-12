@@ -11,6 +11,8 @@ namespace AdvWeb_VN.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Comment> builder)
 		{
+			//Cài đặt cấu hình bảng cho Comment (One To Many)
+			//Một bài viết có thể có nhiều Comment, nhưng 1 Comment chỉ thuộc 1 bài viết
 			builder.ToTable("Comments");
 			builder.HasKey(x => x.CommentID);
 			builder.Property(x => x.CommentID).UseIdentityColumn();

@@ -28,6 +28,10 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		public async Task<IActionResult> Index(string keyword, int id=0, int pageIndex = 1, int pageSize = 10)
 		{
+			//Sử dụng chung 1 View cho hiển thị danh sách Comment Theo Post ID và hiển thị danh sách Comment mới (chưa đọc)
+			//Nếu id = 0 (không truyền ID) thì hiển thị Comment chưa đọc
+			//Lấy cả Avatar của User hiện hành
+
 			var result = await _userApiClient.GetByName(User.Identity.Name);
 			var userCurrent = result.ResultObj;
 			var request = new GetManageCommentPagingRequest()
@@ -74,6 +78,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CreateComment([FromForm]CommentCreateManageRequest request)
 		{
+			//Khởi tạo bình luận mới nếu request gửi lên hợp lệ
 			if (!ModelState.IsValid)
 				return RedirectToAction("Index");
 
@@ -100,6 +105,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> EditComment(int id, int postID)
 		{
+			//Dẫn hướng đến trang chỉnh sửa bình luận, trước đó là lấy dữ liệu cũ
 			var result = await _commentApiClient.GetCommentByID(id);
 			if (result.IsSuccessed)
 			{
@@ -118,6 +124,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> EditComment([FromForm]CommentUpdateRequest request)
 		{
+			//Chỉnh sửa bình luận nếu request gửi lên hợp lệ
 			if (!ModelState.IsValid)
 				return View();
 
@@ -135,6 +142,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public IActionResult DeleteComment(int id, int postID)
 		{
+			//Dẫn hướng đến trang xóa bình luận
 			return View(new CommentDeleteRequest()
 			{
 				CommentID = id,
@@ -145,6 +153,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> DeleteComment(CommentDeleteRequest request)
 		{
+			//Xóa Comment nếu request gửi lên hợp lệ
 			if (!ModelState.IsValid)
 				return View();
 
@@ -162,6 +171,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet("[controller]/mark-comment-read")]
 		public async Task<IActionResult> MarkViewComment(int id, int currentID)
 		{
+			//Đánh dấu đã xem cho bình luận
 			if (!ModelState.IsValid)
 				return RedirectToAction("Index", new { id = currentID });
 
@@ -179,6 +189,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet("[controller]/add-comment-like")]
 		public async Task<IActionResult> AddCommentLike(int commentID, int currentID)
 		{
+			//Thêm lượt Like cho bình luận
 			if (!ModelState.IsValid)
 				return RedirectToAction("Index", new { id = currentID });
 
@@ -196,6 +207,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet("[controller]/add-comment-dislike")]
 		public async Task<IActionResult> AddCommentDisLike(int commentID, int currentID)
 		{
+			//Thêm lượt Dislike cho bình luận
 			if (!ModelState.IsValid)
 				return RedirectToAction("Index", new { id = currentID });
 

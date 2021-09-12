@@ -22,9 +22,11 @@ namespace eShopSolution.AdminApp.Controllers.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            //Lấy User hiện tại từ API
             var userResult = await _userApiClient.GetCurrentUser();
             var userCurrent = userResult.ResultObj;
 
+            //Lấy số Comment mới từ API
             var commentResult = await _commentApiClient.GetNewCount();
             var commentCount = commentResult.ResultObj;
 

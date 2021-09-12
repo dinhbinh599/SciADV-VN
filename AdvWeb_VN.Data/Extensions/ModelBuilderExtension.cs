@@ -9,6 +9,8 @@ namespace AdvWeb_VN.Data.Extensions
 {
 	public static class ModelBuilderExtension
 	{
+		//Seed dữ liệu mẫu
+		//User Seed ở đây còn thiếu Avatar nên sau khi Khởi tạo xong phải vào trang Admin để bổ sung
 		public static void Seed(this ModelBuilder modelBuilder)
 		{
 			var ROLE_ID = new Guid("706A7F4F-A6ED-4E24-BD09-DF7829865142");
@@ -210,7 +212,7 @@ namespace AdvWeb_VN.Data.Extensions
 				UserName = "hoho303",
 				NormalizedUserName = "hoho303",
 				Email = "hoangthuan2092003@gmail.com",
-				NormalizedEmail = "hoangthuan2092003@gmail.com",
+				NormalizedEmail = "nguyenhoangthuan2092003@gmail.com",
 				EmailConfirmed = true,
 				PasswordHash = hasher.HashPassword(null, "2092003"),
 				SecurityStamp = string.Empty

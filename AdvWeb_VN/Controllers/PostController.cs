@@ -27,6 +27,9 @@ namespace AdvWeb_VN.WebApp.Controllers
         [HttpGet("{controller}/{id}")]
         public async Task<IActionResult> Index(int id, int pageIndex = 1, int pageSize = 10)
         {
+            //Hiển thị nội dung bài viết
+            //Hiển thị danh sách Comment
+
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
             ViewData["Active"] = -1;
             ViewData["PostID"] = id;
@@ -50,6 +53,9 @@ namespace AdvWeb_VN.WebApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CreateComment([FromForm]CommentCreatePublicRequest request)
 		{
+            //Khởi tạo Comment mới
+            //Sau này có thể tách riêng thành Component
+
 			if (!ModelState.IsValid)
 				return View();
 

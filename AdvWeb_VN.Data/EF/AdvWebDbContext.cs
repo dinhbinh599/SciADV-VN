@@ -17,6 +17,7 @@ namespace AdvWeb_VN.Data.EF
 		}
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			//Thiết lập thêm tùy chỉnh cho các bảng
 			modelBuilder.ApplyConfiguration(new CategoryConfiguration());
 			modelBuilder.ApplyConfiguration(new TagConfiguration());
 			modelBuilder.ApplyConfiguration(new PostConfiguration());
@@ -38,6 +39,8 @@ namespace AdvWeb_VN.Data.EF
 			modelBuilder.Seed();
 			//base.OnModelCreating(modelBuilder);
 		}
+
+		//Thiết lập DbSet để sau truy vấn đối tượng
 		public DbSet<Post> Posts { set; get; }
 		public DbSet<Category> Categories { set; get; }
 		public DbSet<Comment> Comments { set; get; }

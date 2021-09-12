@@ -150,6 +150,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> RoleAssign(RoleAssignRequest request)
 		{
+			//Gán Role cho User
 			if (!ModelState.IsValid)
 				return View();
 
@@ -169,6 +170,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		private async Task<RoleAssignRequest> GetRoleAssignRequest(Guid id)
 		{
+			//Lấy danh sách Role đã được gán vào User
 			var userObj = await _userApiClient.GetByID(id);
 			var roleObj = await _roleApiClient.GetAll();
 			var roleAssignRequest = new RoleAssignRequest();

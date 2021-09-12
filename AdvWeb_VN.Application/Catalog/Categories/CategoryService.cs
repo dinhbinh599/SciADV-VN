@@ -28,6 +28,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 		public async Task<ApiResult<bool>> Create(CategoryCreateRequest request)
 		{
+			//Tạo mới chuyên mục
 			var category = new Category()
 			{
 				CategoryName = request.CategoryName,
@@ -51,6 +52,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 		public async Task<List<CategoryViewModel>> GetAll()
 		{
+			//Lấy về danh sách toàn bộ chuyên mục
 			var query = from p in _context.Categories
 						select p;
 
@@ -67,6 +69,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 		public async Task<ApiResult<CategoryViewModel>> GetByID(int categoryID)
 		{
+			//Lấy thông tin chuyên mục dựa vào ID
 			var category = await _context.Categories.FindAsync(categoryID);
 			var subs = await _context.SubCategories.Where(x => x.CategoryID.Equals(categoryID)).ToListAsync();
 			if (category == null) return new ApiErrorResult<CategoryViewModel>("Không tìm thấy chuyên mục này!");
@@ -83,6 +86,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 		public async Task<ApiResult<List<CategoryViewModel>>> GetFooterCategory()
 		{
+			//Lấy dữ liệu hiển thị cho Footer ở WebApp
 			var category = _context.Categories;
 
 			var categoryVMs = await category.Select(x => new CategoryViewModel()
@@ -99,6 +103,9 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 		public async Task<ApiResult<List<CategoryMenuViewModel>>> GetMenuCategory()
 		{
+			//Lấy dữ liệu hiển thị cho Menu ở WebApp
+			//SubCategoryAll tách riêng trộn ngẫu nhiên của các Category
+
 			var category = _context.Categories;
 
 			var categoryMenuVM = await category.Select(x => new CategoryMenuViewModel()
@@ -146,6 +153,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 
 		public async Task<ApiResult<bool>> Update(CategoryUpdateRequest request)
 		{
+			//Thay đổi thông tin của chuyên mục
 			var category = await _context.Categories.FindAsync(request.CategoryID);
 			if (category == null) return new ApiErrorResult<bool>($"Không tìm thấy chuyên mục : {request.CategoryName}");
 

@@ -24,6 +24,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<bool>> Create(TagCreateRequest request)
 		{
+			// Tạo Tag mới
 			var tag = new Tag()
 			{
 				TagName = request.TagName,
@@ -36,6 +37,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<bool>> Delete(int tagID)
 		{
+			//Xóa Tag cũ
 			var tag = await _context.Tags.FindAsync(tagID);
 			if (tag == null) return new ApiErrorResult<bool>($"Không tìm thấy Tag : {tag.TagName}");
 			_context.Tags.Remove(tag);
@@ -46,6 +48,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<List<TagViewModel>>> GetAll()
 		{
+			//Lấy danh sách toàn bộ Tag
 			var query = from p in _context.Tags
 						select p;
 
@@ -61,6 +64,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<List<TagViewModel>>> GetAllByCategoryID(int categoryID)
 		{
+			//Lấy danh sách toàn bộ Tag ở 1 chuyên mục
 			var query = from t in _context.Tags
 						join pt in _context.PostTags on t.TagID equals pt.TagID
 						join p in _context.Posts on pt.PostID equals p.PostID
@@ -80,6 +84,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<PagedResult<TagViewModel>>> GetAllPagingTagID(GetTagPagingRequest request)
 		{
+			//Lấy danh sách Paging của toàn bộ Tag
 			var query = from c in _context.Tags
 						select c;
 
@@ -115,6 +120,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<TagViewModel>> GetByID(int tagID)
 		{
+			//Lấy thông tin Tag dựa vào ID
 			var tag = await _context.Tags.FindAsync(tagID);
 			var posts = await _context.PostTags.Where(x => x.TagID.Equals(tagID)).ToListAsync();
 			if (tag == null) return new ApiErrorResult<TagViewModel>("Không tìm thấy chuyên mục này!");
@@ -130,6 +136,7 @@ namespace AdvWeb_VN.Application.Catalog.Tags
 
 		public async Task<ApiResult<bool>> Update(TagUpdateRequest request)
 		{
+			//Chỉnh sửa thông tin Tag
 			var tag = await _context.Tags.FindAsync(request.TagID);
 			if (tag == null) return new ApiErrorResult<bool>($"Không tìm thấy Tag : {request.TagName}");
 

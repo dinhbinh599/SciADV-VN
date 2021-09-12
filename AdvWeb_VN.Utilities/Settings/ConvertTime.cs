@@ -6,6 +6,7 @@ namespace AdvWeb_VN.Utilities.Settings
 {
 	public class ConvertTime
 	{
+        //Chuyển đổi định dạng từ DateTime sang kiểu đếm lùi (Ví dụ: Bao nhiêu giây, phút trước)
 		public string Convert(DateTime postTime)
 		{
             const int SECOND = 1;

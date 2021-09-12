@@ -44,6 +44,7 @@ namespace AdvWeb_VN.ManageApp.Services
 
         public async Task<ApiResult<CategoryViewModel>> GetByID(int id)
         {
+            //Khởi tạo kết nối đến Web Api đồng thời gửi JWT Token lên để Authenticate
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);

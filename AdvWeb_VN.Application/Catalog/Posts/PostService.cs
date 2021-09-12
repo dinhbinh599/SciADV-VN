@@ -37,6 +37,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> AddViewCount(int postID)
 		{
+			//Tăng lượt xem
 			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>("Không tìm thấy bài viết này!");
 			post.View += 1;
@@ -46,6 +47,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<int>> Create(PostCreateRequest request)
 		{
+			//Tạo bài viết mới
+			//Lưu ảnh Thumbnail của bài viết vào Server
+
 			var post = new Post()
 			{
 				PostName = request.PostName,
@@ -79,6 +83,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> Delete(int postID)
 		{
+			//Xóa bài viết
 			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
 			var images = _context.PostImages.Where(i => i.PostID == postID);
@@ -94,6 +99,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetManagePagingByTagID(GetManagePostPagingRequest request)
 		{
+			//Lấy danh sách bài viết được Paging dựa vào TagID - Admin (hỗ trợ Tìm kiếm bằng keyword)
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
 						join e in _context.SubCategories on p.SubCategoryID equals e.SubCategoryID
@@ -142,6 +148,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PostViewModel>> GetByID(int postID)
 		{
+			//Lấy thông tin của bài viết dựa vào ID
 			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<PostViewModel>("Không tìm thấy bài viết này!");
 			var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == post.UserID);
@@ -169,6 +176,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> Update(int id,PostUpdateRequest request)
 		{
+			//Chỉnh sửa thông tin bài viết
 			var post = await _context.Posts.FindAsync(id);
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {request.PostID}");
 			
@@ -194,6 +202,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		}
 		public async Task<List<PostViewModel>> GetAll()
 		{
+			//Lấy toàn bộ dữ liệu của bài viết
 			var query = from p in _context.Posts
 						select p;
 
@@ -215,6 +224,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<List<PostViewModel>>> GetPopular()
 		{
+			//Lấy danh sách Top 4 bài viết nhiều View nhất
 			var postVMs = await _context.Posts.Select(x => new PostViewModel()
 			{
 				PostID = x.PostID,
@@ -233,6 +243,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPublicPagingByTagID(GetPublicPostPagingRequest request)
 		{
+			//Lấy danh sách bài viết được Paging dựa vào TagID - WebApp.
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
 						join c in _context.Tags on pic.TagID equals c.TagID
@@ -276,6 +287,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPublicPagingByCategoryID(GetPublicPostPagingRequest request)
 		{
+			//Lấy danh sách bài viết được Paging dựa vào CategoryID - Webapp
+
 			var query = from c in _context.SubCategories
 						join k in _context.Categories on c.CategoryID equals k.CategoryID
 						join p in _context.Posts on c.SubCategoryID equals p.SubCategoryID
@@ -317,6 +330,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetManagePagingByCategoryID(GetManagePostPagingRequest request)
 		{
+			//Lấy danh sách bài viết được Paging dựa vào CategoryID - Admin (hỗ trợ Tìm kiếm bằng keyword)
 			var query = from sc in _context.SubCategories
 						join k in _context.Categories on sc.CategoryID equals k.CategoryID
 						join p in _context.Posts on sc.SubCategoryID equals p.SubCategoryID
@@ -363,6 +377,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> TagAssign(int id, TagAssignRequest request)
 		{
+			//Gắn Tag cho bài viết.
+			//Gắn nhiều Tag một lúc.
 			var post = await _context.Posts.FindAsync(id);
 			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
 			var removedTags = request.Tags.Where(x => x.Selected == false).Select(x => x.Name).ToList();
@@ -394,6 +410,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task RemoveFromTagAsync(Post post, List<string> tagNames)
 		{
+			//Xóa Tag khỏi post
+			//Xóa 1 loạt dựa vào tên Tag
 			foreach (var tagName in tagNames)
 			{
 				if (await IsInTagAsync(post, tagName) == true)
@@ -405,6 +423,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task RemoveFromTagAsync(Post post, string tagName)
 		{
+			////Xóa Tag khỏi post
 			var query = from c in _context.Tags
 						where c.TagName.Equals(tagName)
 						select c;
@@ -418,6 +437,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task AddToTagAsync(Post post, string tagName)
 		{
+			//Thêm Tag vào bài viết
 			var query = from c in _context.Tags
 						where c.TagName.Equals(tagName)
 						select c;
@@ -432,6 +452,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		}
 		public async Task<bool> IsInTagAsync(Post post, string tagName)
 		{
+			//Kiểm tra xem Tag đã được gán vào bài viết chưa
 			var query = from c in _context.Tags
 						join d in _context.PostTags on c.TagID equals d.TagID
 						select new { c, d};
@@ -442,6 +463,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		}
 		public async Task<bool> TagExistsAsync(string tagName)
 		{
+			//Kiểm tra sự tồn tại của Tag
 			var query = from c in _context.Tags where c.TagName.Equals(tagName)
 						select c;
 			var ls = await query.ToListAsync();
@@ -451,6 +473,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<IList<string>> GetTagsAsync(Post post)
 		{
+			//Lấy toàn bộ Tag đã được gán trong bài viết
 			var query = from c in _context.Posts
 						join d in _context.PostTags on c.PostID equals d.PostID
 						join e in _context.Tags on d.TagID equals e.TagID
@@ -462,6 +485,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<int> AddImage(int postID, PostImageCreateRequest request)
 		{
+			//Lưu hình ảnh trong bài viết vào Server
 			var postImage = new PostImage()
 			{
 				//Caption = request.Caption,
@@ -489,6 +513,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public static string GetFileExtensionFromUrl(string url)
 		{
+			//Lấy định dạng của File
 			url = url.Split('?')[0];
 			url = url.Split('/').Last();
 			return url.Contains('.') ? url.Substring(url.LastIndexOf('.')) : "";
@@ -496,6 +521,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		private async Task<ImageFileInfo> SaveFileUrl(string url, int postID)
 		{
+			//Trả về thông tin về file
 			var fileName = $"{Guid.NewGuid()}{postID}{GetFileExtensionFromUrl(url)}";
 			var fileSize =  await _storageService.SaveFileByUrlAsync(url, fileName);
 			return new ImageFileInfo(fileName, fileSize);
@@ -503,8 +529,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> RemoveImage(int imageID)
 		{
+			//Xóa hình ảnh
 			var postImage = await _context.PostImages.FindAsync(imageID);
-			if (postImage == null) new ApiErrorResult<bool>($"Cannot find an image with id {imageID}");
+			if (postImage == null) new ApiErrorResult<bool>($"Không thể tìm thấy hình ảnh {imageID}");
 			_context.PostImages.Remove(postImage);
 			await _context.SaveChangesAsync();
 			return new ApiSuccessResult<bool>();
@@ -512,6 +539,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> UpdateImage(int imageID, PostImageUpdateRequest request)
 		{
+			//Chỉnh sửa hình ảnh
 			var postImage = await _context.PostImages.FindAsync(imageID);
 			if (postImage == null) return new ApiErrorResult<bool>($"Cannot find an image with id {imageID}");
 
@@ -530,6 +558,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PostImageViewModel>> GetImageByID(int imageID)
 		{
+			//Lấy thông tin hình ảnh dựa vào ID
 			var image = await _context.PostImages.FindAsync(imageID);
 			if (image == null) return new ApiErrorResult<PostImageViewModel>($"Cannot find an image with id {imageID}");
 
@@ -547,6 +576,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<List<PostImageViewModel>> GetListImages(int postID)
 		{
+			//Lấy toàn bộ danh sách hình ảnh trong bài viết
 			return await _context.PostImages.Where(x => x.PostID == postID)
 				.Select(i => new PostImageViewModel()
 				{
@@ -561,6 +591,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<string>> AddImageByUrl(int postID, PostImageCreateUrlRequest request)
 		{
+			//Thêm đường dẫn hình ảnh vào bảng.
 			var postImage = new PostImage()
 			{
 				//Caption = request.Caption,
@@ -582,6 +613,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> UpdateImageContents(int postID, PostUpdateContentsRequest request)
 		{
+			//Chỉnh sửa nội dung bài viết
 			var post = await _context.Posts.FindAsync(postID);
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
 			post.Contents = request.Contents;
@@ -592,6 +624,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> UpdateAuthenticate(int id, Guid userID, PostUpdateRequest request)
 		{
+			//Chỉnh sửa bài viết cho Writer (Chỉ có thể sửa bài viết của chính mình)
 			var post = await _context.Posts.Where(x=>x.PostID.Equals(id)&&x.UserID.Equals(userID)).FirstOrDefaultAsync();
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {request.PostID}");
 
@@ -618,6 +651,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> DeleteAuthenticate(int postID, Guid userID)
 		{
+			//Xóa bài viết cho Writer (Chỉ có thể xóa bài viết của chính mình)
+
 			var post = await _context.Posts.Where(x=>x.PostID.Equals(postID) &&x.UserID.Equals(userID)).FirstOrDefaultAsync();
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
 			var images = _context.PostImages.Where(i => i.PostID == postID);
@@ -660,6 +695,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetManagePagingByCategoryIDAuthenticate(Guid userID, GetManagePostPagingRequest request)
 		{
+			//Lấy danh sách bài viết theo CategoryID cho Writer (Chỉ có thể lấy những bài viết do mình đăng) 
+			//(Hỗ trợ tìm kiếm bằng Keyword)
+
 			var query = from c in _context.SubCategories
 						join k in _context.Categories on c.CategoryID equals k.CategoryID
 						join p in _context.Posts on c.SubCategoryID equals p.SubCategoryID
@@ -709,6 +747,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<string>> AddImageByUrlAuthenticate(int postID, Guid userID, PostImageCreateUrlRequest request)
 		{
+			//Thêm hình ảnh vào bài viết của Writer dựa vào Url (Chỉ có thể thêm vào bài viết của mình)
 			var post = await _context.Posts.FindAsync(postID);
 			if(!post.UserID.Equals(userID)) return new ApiErrorResult<string>("Bạn không có quyền!!!");
 
@@ -733,6 +772,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> UpdateImageContentsAuthenticate(int postID, Guid userID, PostUpdateContentsRequest request)
 		{
+			//Chỉnh sửa hình ảnh vào bài viết của Writer (Chỉ có thể thêm vào bài viết của mình)
+
 			var post = await _context.Posts.FindAsync(postID);
 			if (!post.UserID.Equals(userID)) return new ApiErrorResult<bool>("Bạn không có quyền!!!");
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {postID}");
@@ -744,6 +785,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<int> AddImageAuthenticate(int postID, Guid userID, PostImageCreateRequest request)
 		{
+			//Thêm hình ảnh vào bài viết của Writer
 			var post = await _context.Posts.FindAsync(postID);
 			if (!post.UserID.Equals(userID)) throw new AdvWebException("Bạn không có quyền!!!");
 			var postImage = new PostImage()
@@ -766,6 +808,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<bool>> TagAssignAuthenticate(int postID, Guid userID, TagAssignRequest request)
 		{
+			//Gán Tag vào bài viết cho Writer
+			//Chỉ có thể gán Tag vào bài viết của chính mình.
+
 			var post = await _context.Posts.Where(x=>x.PostID.Equals(postID)&&x.UserID.Equals(userID)).FirstOrDefaultAsync();
 			if (post == null) return new ApiErrorResult<bool>("Bài viết không tồn tại");
 			var removedTags = request.Tags.Where(x => x.Selected == false).Select(x => x.Name).ToList();
@@ -838,6 +883,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetManagePagingBySubCategoryID(GetManagePostPagingRequest request)
 		{
+			//Lấy danh sách bài viết được Paging dựa vào SubCategoryID - Admin (hỗ trợ Tìm kiếm bằng keyword)
+
 			var query = from sc in _context.SubCategories
 						join k in _context.Categories on sc.CategoryID equals k.CategoryID
 						join p in _context.Posts on sc.SubCategoryID equals p.SubCategoryID
@@ -884,6 +931,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingSubCategory(GetPublicPostPagingRequest request)
 		{
+			//Lấy danh sách Paging cho WebApp dựa vào SubCategoryID
 			var query = from c in _context.Categories
 						join p in _context.Posts on c.CategoryID equals p.CategoryID
 						join u in _context.Users on p.UserID equals u.Id
@@ -925,6 +973,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTag(GetPublicPostPagingRequest request)
 		{
+			//Lấy danh sách Paging cho WebApp dựa vào TagID
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
 						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
@@ -968,6 +1017,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTagByName(GetPublicPostPagingRequestSearch request)
 		{
+			//Lấy danh sách Paging cho WebApp dựa vào tên Tag
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
 						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
@@ -1012,6 +1062,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPaging(GetPublicPostPagingRequestSearch request)
 		{
+			//Lấy toàn bộ danh sách bài viết được Paging để hiển thị ở Blog - WebApp aka luôn trang tìm kiếm
 			var query = from p in _context.Posts
 						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
 						join c in _context.Categories on p.CategoryID equals c.CategoryID

@@ -30,6 +30,7 @@ namespace AdvWeb_VN.WebApp.Controllers
 
 		public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
 		{
+			//Load dữ liệu để hiển thị ở trang chủ
 			ViewData["Active"] = 0;
 			var postRequest = new GetPublicPostPagingRequestSearch()
 			{

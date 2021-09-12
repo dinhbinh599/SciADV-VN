@@ -180,19 +180,23 @@
 			}
 		});
 
+        //Thay đổi select thì tự động chuyển trang
         $("select#category-select").change(function () {
 			var selectedCategory = $(this).children("option:selected").val();
 			window.location.href = "/Post?id=" + selectedCategory;
 		});
 
-        showCategory();
+		showCategory();
+
+        //Lấy danh sách toàn bộ chuyên mục ở API
         function showCategory() {
             fetch(endpoint + "/api/categories")
                 .then(response => response.json())
                 .then(data => _displayItemCategory(data))
-                .catch(error => console.error('Unable to get items.', error))
+                .catch(error => console.error('Không lấy được dữ liệu', error))
         }
 
+        //Add bỏ vào option
         function _displayItemCategory(data) {
 			data.forEach(item => {
 				if (id == item.categoryID) {

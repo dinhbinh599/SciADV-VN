@@ -108,6 +108,7 @@
 	<script type="text/javascript">
 		let endpoint = "@ViewData["BaseAddress"]"
 
+		//Bắt sự kiện chọn File Thumbnail Image thì hiển thị tên của File ra.
 		$(".custom-file-input").on("change", function () {
 			var fileName = $(this).val().split("\\").pop();
 			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
@@ -122,6 +123,7 @@
 			showSubCategory(selectedCategory);
 		});
 
+		//Cấu hình form hiển thị nội dung
 		$("#previewDiv").dialog({
 			title: "Xem trước",
 			height: 600,
@@ -132,6 +134,7 @@
 			hide: "explode"
 		});
 
+		//Hiển thị Form Preview nội dung khi Click vào nút Preview
 		$('#preview').click(function () {
 			var html = $('textarea.contents').val();
 			$('#previewDiv').html(html);
@@ -139,31 +142,39 @@
 			return false;
 		});
 
+		//Load dữ liệu danh sách toàn bộ Tag vào element
 		showTag();
+
+		//Hiển thị toàn bộ danh sách chuyên mục
 		showCategory();
+		//Mặc định hiển thị SubCategory với Category là 1 - News
 		showSubCategory(1);
 
 
+		//Hiển thị danh sách toàn bộ Tag
 		function showTag() {
 			fetch(endpoint + "/api/tags")
 				.then(response => response.json())
 				.then(data => _displayItemTag(data.resultObj))
-				.catch(error => console.error('Unable to get items.', error))
+				.catch(error => console.error('Không thể lấy dữ liệu.', error))
 		}
 
+		//Hiển thị toàn bộ danh sách chuyên mục
 		function showCategory() {
 			fetch(endpoint + "/api/categories")
 				.then(response => response.json())
 				.then(data => _displayItemCategory(data))
-				.catch(error => console.error('Unable to get items.', error))
+				.catch(error => console.error('Không thể lấy dữ liệu.', error))
 		}
 
+		//Thêm optione vào Category Select
 		function _displayItemCategory(data) {
 			data.forEach(item => {
 				$("#category-select").append("<option value=" + item.categoryID + ">" + item.categoryName + "</option>")
 			})
 		}
 
+		//Load dữ liệu danh sách toàn bộ Tag vào element
 		function _displayItemTag(data) {
 
 			data.forEach(item => {
@@ -172,6 +183,7 @@
 			})
 		}
 
+		//Hiển thị danh sách SubCategory theo CategoryID
 		function showSubCategory(id) {
 			$("#subcategory-select").empty()
 			fetch(endpoint + "/api/subcategories/category/" + id)
@@ -180,6 +192,7 @@
 				.catch(error => console.error('Unable to get items.', error))
 		}
 
+		//Thêm option động vào SubCategory
 		function _displayItemSubCategory(data) {
 			data.forEach(item => {
 				$("#subcategory-select").append("<option value=" + item.subCategoryID + ">" + item.subCategoryName + "</option>")

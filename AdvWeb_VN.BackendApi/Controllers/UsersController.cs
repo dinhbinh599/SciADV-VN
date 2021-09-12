@@ -19,6 +19,8 @@ namespace AdvWeb_VN.BackendApi.Controllers
     [Authorize(Roles = RoleInfo.Admin)]
     public class UsersController : ControllerBase
     {
+        //var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
+        //Đoạn Code trên lấy UserID hiện hành dựa vào JWT Token gửi từ Client lên
         private readonly IUserService _userService;
 
         public UsersController(IUserService userService)
@@ -84,7 +86,6 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("name/{name}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetByName(string name)
         {
             var user = await _userService.GetByName(name);

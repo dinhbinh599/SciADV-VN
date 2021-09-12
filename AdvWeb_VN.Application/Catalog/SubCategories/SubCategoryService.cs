@@ -22,6 +22,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 
 		public async Task<ApiResult<bool>> Create(SubCategoryCreateRequest request)
 		{
+			//Tạo chuyên mục con mới (Admin Only)
 			var category = new SubCategory()
 			{
 				CategoryName = request.CategoryName,
@@ -36,6 +37,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 
 		public async Task<ApiResult<bool>> Delete(int categoryID)
 		{
+			//Xóa chuyên mục con (Admin Only)
 			var category = await _context.SubCategories.FindAsync(categoryID);
 			if (category == null) return new ApiErrorResult<bool>($"Không tìm thấy chuyên mục : {categoryID}");
 			_context.SubCategories.Remove(category);
@@ -46,6 +48,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 
 		public async Task<List<SubCategoryViewModel>> GetAll()
 		{
+			//Lấy danh sách toàn bộ chuyên mục con
 			var query = from p in _context.SubCategories
 						join c in _context.Categories on p.CategoryID equals c.CategoryID
 						select new { p, c };
@@ -86,6 +89,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 
 		public async Task<ApiResult<SubCategoryViewModel>> GetByID(int categoryID)
 		{
+			//Lấy thông tin chuyên mục con dựa vào ID
 			var subCategory = await _context.SubCategories.FindAsync(categoryID);
 			var posts = await _context.Posts.Where(x => x.SubCategoryID.Equals(categoryID)).ToListAsync();
 			var category = (await _context.Categories.Where(x=>x.CategoryID.Equals(subCategory.CategoryID)).ToListAsync()).FirstOrDefault();
@@ -106,6 +110,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 
 		public async Task<ApiResult<bool>> Update(SubCategoryUpdateRequest request)
 		{
+			//Chỉnh sửa thông tin chuyên mục con (Admin Only)
 			var category = await _context.SubCategories.FindAsync(request.SubCategoryID);
 			if (category == null) return new ApiErrorResult<bool>($"Không tìm thấy chuyên mục : {request.CategoryName}");
 

@@ -27,6 +27,9 @@ namespace AdvWeb_VN.WebApp.Controllers
         [HttpGet("{controller}/tag-{id}")]
         public async Task<IActionResult> Index(int id, int pageIndex = 1, int pageSize = 10)
         {
+            //Hiển thị danh sách bài viết theo Tag
+            //Hiển thị danh sách Tag ngẫu nhiên
+
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
             ViewData["Active"] = 0;
             var postRequest = new GetPublicPostPagingRequest()

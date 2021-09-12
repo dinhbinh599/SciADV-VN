@@ -22,6 +22,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		}
 		public async Task<IActionResult> Index()
 		{
+			//Hiển thị toàn bộ chuyên mục ra.
+			//Thường thì phải Paging nhưng số lượng ít thì show hết ra cho rồi
 			var data = await _categoryApiClient.GetAll();
 			return View(data);
 		}
@@ -32,6 +34,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Details(int id)
 		{
+			//Lấy thông tin chi tiết của chuyên mục
 			var result = await _categoryApiClient.GetByID(id);
 			return View(result.ResultObj);
 		}
@@ -39,12 +42,14 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public IActionResult Create()
 		{
+			//Dẫn hướng đến trang tạo chuyên mục mới
 			return View();
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Create([FromForm]CategoryCreateRequest request)
 		{
+			//Khởi tạo chuyên mục mới nếu request gửi lên đầy đủ
 			if (!ModelState.IsValid)
 				return View();
 
@@ -62,6 +67,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Edit(int id)
 		{
+			//Dẫn hướng đến trang chỉnh sửa, trước đó là lấy thông tin cũ để hiển thị
 			var result = await _categoryApiClient.GetByID(id);
 			if (result.IsSuccessed)
 			{
@@ -79,6 +85,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Edit([FromForm]CategoryUpdateRequest request)
 		{
+			//Chỉnh sửa thông tin chuyên mục nếu request gửi lên từ Form đầy đủ
 			if (!ModelState.IsValid)
 				return View();
 
@@ -96,6 +103,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public IActionResult Delete(int id)
 		{
+			//Dẫn hướng đến trang xác nhận xóa chuyên mục
 			return View(new CategoryDeleteRequest()
 			{
 				CategoryID = id
@@ -105,6 +113,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Delete(CategoryDeleteRequest request)
 		{
+			//Xóa nếu request gửi lên đầy đủ
 			if (!ModelState.IsValid)
 				return View();
 

@@ -30,6 +30,9 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<bool>> CreateCommentManage(CommentCreateManageRequest request)
 		{
+			//Thêm bình luận mới cho Admin (luôn hiển thị màu riêng). 
+			//Đồng thời mặc định đánh dấu luôn là đã đọc với mọi Admin.
+
 			string Commentator = "";
 			if(request.UserID != Guid.Empty)
 			{
@@ -37,6 +40,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 				if (user == null) return new ApiErrorResult<bool>($"Không tìm thấy User : {request.UserID}");
 				Commentator = user.UserName;
 			}
+
 			var comment = new Comment()
 			{
 				Commentator = Commentator,
@@ -57,6 +61,10 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<bool>> CreateCommentAuthenticate(CommentCreateManageRequest request)
 		{
+			//Thêm bình luận mới cho Writer (hiển thị màu riêng với người đã viết bài). 
+			//Đồng thời đánh dấu chưa đọc cho Comment cũ nếu Writer không viết bài thêm SubComment mới.
+			//Mặc định cho Writer viết bài khi viết Comment sẽ luôn là đã đọc
+
 			bool isManaged = false;
 			string Commentator = "";
 			if (request.UserID != Guid.Empty)
@@ -98,6 +106,9 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<bool>> CreateCommentPublic(CommentCreatePublicRequest request)
 		{
+			//Thêm bình luận mới cho người đọc.
+			//Đồng thời đánh dấu chưa đọc cho Comment cũ nếu người đọc thêm SubComment mới.
+
 			var comment = new Comment()
 			{
 				Commentator = request.Commentator,
@@ -122,15 +133,21 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 		}
 		public async Task<ApiResult<bool>> DeleteComment(int commentID)
 		{
+			//Xóa Comment
 			var comment = await _context.Comments.FindAsync(commentID);
 			if (comment == null) return new ApiErrorResult<bool>($"Không tìm thấy bình luận : {commentID}");
 			_context.Comments.Remove(comment);
+
+			//var comments = _context.Comments.Where(x => x.ParentID.Equals(commentID));
+			//_context.Comments.RemoveRange(comments);
+
 			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Xóa bình luận thất bại");
 			return new ApiSuccessResult<bool>();
 		}
 		public async Task<List<CommentViewModel>> GetAll()
 		{
+			//Lấy danh sách toàn bộ Comment
 			var query = from p in _context.Comments
 						join c in _context.Posts on p.PostID equals c.PostID
 						select new { p, c};
@@ -149,6 +166,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<CommentViewModel>> GetByID(int commentID)
 		{
+			//Lấy danh sách Comment dựa vào ID
 			var comment = await _context.Comments.FindAsync(commentID);
 			if (comment == null) return new ApiErrorResult<CommentViewModel>("Không tìm thấy bình luận này!");
 			var post = await _context.Posts.FirstOrDefaultAsync(x => x.PostID.Equals(comment.PostID));
@@ -168,6 +186,11 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<PagedResult<CommentViewModel>>> GetManagePagingByPostID(GetManageCommentPagingRequest request)
 		{
+			//Lấy danh sách Comment cho Admin .
+			//(Toàn bộ các bài viết và có thể sửa xóa tùy ý, tìm kiếm bằng keyword,...)
+			//Sắp xếp dữ liệu hiển thị kiểu phân tầng
+			//Lấy theo ID của bài viết
+
 			var comments = _context.Comments.Where(x=>x.ParentID.Equals(0));
 
 			if (request.ID != null)
@@ -224,6 +247,9 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<PagedResult<CommentViewModel>>> GetPagingByPostID(GetPublicPostPagingRequest request)
 		{
+			//Lấy danh sách Comment cho WebApp .
+			//Sắp xếp dữ liệu hiển thị kiểu phân tầng.
+			// Lấy theo ID của bài viết.
 			var comments = _context.Comments.Where(x => x.ParentID.Equals(0));
 
 			int totalRow = await comments.Where(x => x.PostID.Equals(request.Id)).CountAsync();
@@ -267,6 +293,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<bool>> UpdateComment(CommentUpdateRequest request)
 		{
+			//Chỉnh sửa Comment
 			var comment = await _context.Comments.FindAsync(request.CommentID);
 			if (comment == null) return new ApiErrorResult<bool>($"Không tìm thấy bình luận : {request.CommentID}");
 
@@ -277,6 +304,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 		}
 		public async Task<ApiResult<CommentViewModel>> GetCommentByID(int commentID)
 		{
+			//Lấy thông tin Comment theo ID
 			var comment = await _context.Comments.FindAsync(commentID);
 			if (comment == null) return new ApiErrorResult<CommentViewModel>("Không tìm thấy bình luận này!");
 			var commentVM = new CommentViewModel()
@@ -293,6 +321,8 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<bool>> UpdateCommentAuthenticate(Guid id,CommentUpdateRequest request)
 		{
+			//Chỉnh sửa Comment cho Writer.
+			//Chỉ có thể sửa Comment của chính mình.
 			var comment = await _context.Comments
 				.Where(x=>(x.CommentID.Equals(request.CommentID))&&(x.UserID.Equals(id)))
 				.FirstAsync();
@@ -306,6 +336,10 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<PagedResult<CommentViewModel>>> GetManagePagingByPostIDAuthenticate(Guid id,GetManageCommentPagingRequest request)
 		{
+			//Lấy danh sách Comment cho Writer .
+			//Sắp xếp dữ liệu hiển thị kiểu phân tầng.
+			//Lấy theo ID của bài viết.
+			//Chỉ có thể sửa Comment của chính mình.
 			var comments = _context.Comments.Where(x => (x.ParentID.Equals(0)));
 
 			if (request.ID != null)
@@ -369,6 +403,10 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<PagedResult<CommentViewModel>>> GetPagingNewComment(GetManageCommentPagingRequest request)
 		{
+			//Lấy danh sách các bình luận mới (Được đánh dấu chưa đọc) cho Admin (toàn bộ).
+			//Hiện tại chỉ hỗ trợ tìm kiếm theo nội dung ở Comment Cha.
+			//Lấy ở toàn bộ các bài viết
+
 			var comments = _context.Comments.Where(x => x.ParentID.Equals(0));
 
 			if (!string.IsNullOrEmpty(request.Keyword))
@@ -419,6 +457,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<int>> GetNewCount()
 		{
+			//Lấy số bình luận mới (Được đánh dấu chưa đọc) cho Admin (Toàn bộ).
 			var comments = _context.Comments.Where(x => x.ParentID.Equals(0));
 
 			comments = comments.Where(x => x.IsView == false);
@@ -430,6 +469,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<bool>> AddCommentLike(int commentID)
 		{
+			//Thêm lượt thích cho Comment
 			var comment = await _context.Comments.FindAsync(commentID);
 			if (comment == null) return new ApiErrorResult<bool>($"Không tìm thấy bình luận : {commentID}");
 			comment.LikeCount = comment.LikeCount + 1;
@@ -440,6 +480,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<bool>> AddCommentDislike(int commentID)
 		{
+			//Thêm lượt không thích cho Comment
 			var comment = await _context.Comments.FindAsync(commentID);
 			if (comment == null) return new ApiErrorResult<bool>($"Không tìm thấy bình luận : {commentID}");
 			comment.DislikeCount = comment.DislikeCount + 1;
@@ -449,6 +490,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 		}
 		public async Task<ApiResult<bool>> MarkViewComment(int commentID)
 		{
+			//Đánh dấu đã đọc Comment cho Admin (được đánh dấu toàn bộ)
 			var comment = await _context.Comments.FindAsync(commentID);
 			if (comment == null) return new ApiErrorResult<bool>($"Không tìm thấy bình luận : {commentID}");
 			comment.IsView = true;
@@ -460,6 +502,10 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<PagedResult<CommentViewModel>>> GetPagingNewCommentAuthenticate(Guid id, GetManageCommentPagingRequest request)
 		{
+			//Lấy danh sách các bình luận mới (Được đánh dấu chưa đọc) cho Writer.
+			//Hiện tại chỉ hỗ trợ tìm kiếm theo nội dung ở Comment Cha.
+			//Chỉ lấy ở các bài viết do Writer này đăng.
+
 			var query = from c in _context.Comments
 						join p in _context.Posts on c.PostID equals p.PostID
 						join u in _context.Users on p.UserID equals u.Id
@@ -522,6 +568,8 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<bool>> MarkViewCommentAuthenticate(Guid id, int commentID)
 		{
+			//Đánh dấu đã đọc Comment cho Writer (chỉ được đánh dấu ở các Comment thuộc bài viết do Writer đăng)
+
 			var comment = await _context.Comments.FindAsync(commentID);
 			if (comment == null) return new ApiErrorResult<bool>($"Không tìm thấy bình luận : {commentID}");
 			comment.IsView = true;
@@ -533,6 +581,8 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 		public async Task<ApiResult<int>> GetNewCountAuthenticate(Guid id)
 		{
+			//Lấy số bình luận mới (Được đánh dấu chưa đọc) cho Writer (chỉ ở các bài viết do Writer này đăng).
+
 			var query = from c in _context.Comments
 						join p in _context.Posts on c.PostID equals p.PostID
 						join u in _context.Users on p.UserID equals u.Id

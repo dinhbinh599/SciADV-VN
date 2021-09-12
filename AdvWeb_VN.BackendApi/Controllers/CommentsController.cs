@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Comments;
+using AdvWeb_VN.Utilities.Constants;
 using AdvWeb_VN.ViewModels.Catalog.Comments;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using Microsoft.AspNetCore.Authorization;
@@ -13,9 +14,11 @@ namespace AdvWeb_VN.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class CommentsController : ControllerBase
     {
+        //var userID = new Guid(User.Claims.First(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
+        //Đoạn Code trên lấy UserID hiện hành dựa vào JWT Token gửi từ Client lên
         private readonly ICommentService _commentService;
 
         public CommentsController(ICommentService commentService)
@@ -24,6 +27,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> Get()
         {
             var comments = await _commentService.GetAll();
@@ -31,6 +35,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("new-count")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> GetNewCount()
         {
             var result = await _commentService.GetNewCount();
@@ -48,6 +53,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("new")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> GetNew([FromQuery]GetManageCommentPagingRequest request)
         {
             var comments = await _commentService.GetPagingNewComment(request);
@@ -79,6 +85,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpGet("post-manage")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> GetManagePagingByPostID([FromQuery]GetManageCommentPagingRequest request)
         {
             var comments = await _commentService.GetManagePagingByPostID(request);
@@ -103,6 +110,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
         }
 
         [HttpPost("comment-manage")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> CreateCommentManage([FromBody]CommentCreateManageRequest request)
         {
             var result = await _commentService.CreateCommentManage(request);
@@ -120,6 +128,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
 
         [HttpPut("update-comment/{id}")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> UpdateComment([FromBody]CommentUpdateRequest request)
         {
             var result = await _commentService.UpdateComment(request);
@@ -138,6 +147,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
 
         [HttpDelete("comment/{id}")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var result = await _commentService.DeleteComment(id);
@@ -147,6 +157,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
 
         [HttpPut("comment-like/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> AddCommentLike(int id)
         {
             var result = await _commentService.AddCommentLike(id);
@@ -154,15 +165,17 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(result);
         }
 
-        [HttpPut("subcomment-dislike/{id}")]
-        public async Task<IActionResult> AddSubCommentDislike(int id)
+        [HttpPut("comment-dislike/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AddCommentDislike(int id)
         {
-            var result = await _commentService.AddCommentLike(id);
+            var result = await _commentService.AddCommentDislike(id);
             if (!result.IsSuccessed) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpPut("comment-view/{id}")]
+        [Authorize(Roles = RoleInfo.Admin)]
         public async Task<IActionResult> MarkViewComment([FromBody]int id)
         {
             var result = await _commentService.MarkViewComment(id);

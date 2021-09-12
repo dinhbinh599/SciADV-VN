@@ -27,6 +27,8 @@ namespace AdvWeb_VN.WriterApp.Controllers
 
 		public async Task<IActionResult> Index(string keyword, int id = 0, int pageIndex = 1, int pageSize = 10)
 		{
+			//Sử dụng chung 1 View cho hiển thị danh sách Comment Theo Post ID và hiển thị danh sách Comment mới (chưa đọc)
+			//Nếu id = 0 (không truyền ID) thì hiển thị Comment chưa đọc
 			var result = await _userApiClient.GetCurrentUser();
 			var userCurrent = result.ResultObj;
 			var request = new GetManageCommentPagingRequest()

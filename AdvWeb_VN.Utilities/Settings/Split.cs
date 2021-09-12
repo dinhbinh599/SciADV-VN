@@ -15,16 +15,20 @@ namespace AdvWeb_VN.Utilities.Settings
 			return  new SplitResult(id,name);
 		}
 
+
 		public string NormalizeName(string text, int maxLength)
 		{
 			return Truncate(text, maxLength);
 		}
+
+		//Chuẩn hóa nội dung (Search Google nếu muốn biết chuẩn hóa tên gồm cái gì)
 		public string NormalizeContent(string contents, int maxLength)
 		{
 			string text = Regex.Replace(contents, "<((?!<)(.|\n))*?\\>","");
 			return Truncate(text, maxLength);
 		}
 
+		//Thu gọn text lại, nếu dài quá tự biến thành ....
 		public string Truncate(string text, int maxLength)
 		{
 			string newText = "";

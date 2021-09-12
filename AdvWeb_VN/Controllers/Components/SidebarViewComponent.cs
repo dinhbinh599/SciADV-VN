@@ -21,6 +21,7 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            //Load dữ liệu để hiển thị tại SideBar: Tag,...
             var tagRequest = new GetTagPagingRequest()
             {
                 PageIndex = 1,

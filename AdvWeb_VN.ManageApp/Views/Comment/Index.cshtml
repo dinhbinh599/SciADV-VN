@@ -13,7 +13,6 @@
     var currentAvatar = "https://localhost:5002/user-content/" + @ViewData["Avatar"];
     string adminColor, avatar = "";
 }
-}
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" style="min-height: 1200.88px;">
@@ -195,14 +194,16 @@
 </div>
 @section scripts{
     <script type="text/javascript">
+        //Cái này chú thích kĩ xíu
 		let id = Number($('#post-link').val());
 		let endpoint = "@ViewData["BaseAddress"]";
 		var isReply = false;
 
+        //Thay đổi giá trị của khung select dựa vào giá trị đã chọn trước
         $("select#pageSize").val(@ViewData["PageSize"]).change();
 
 		$(document).ready(function () {
-
+            //Khi giá trị khung select số lượng thay đổi thì chuyển trang với keyword, postID
 			$("select#pageSize").change(function () {
 				if ($("#keyword").val() != "" || $('#post-link').val() != "") {
                     var selected = $(this).children("option:selected").val();
@@ -211,6 +212,7 @@
 			    }    
 		    });
 
+            //Khi nhấn vào button Search thì chuyển trang với keyword,postID
             $("#btn-search").click(function () {
 				if ($("#keyword").val() != "" || $('#post-link').val() != "") {
                     let postId = $('#post-link').val().replace(/[^0-9]/g, '');
@@ -218,6 +220,7 @@
 			    }
 			});
 
+            //Khi nhấn vào button thì chuyển trang với keyword,postID
              $("#btn-post").click(function () {
 				if ($('#post-link').val() != "") {
                     let postId = $('#post-link').val().replace(/[^0-9]/g, '');
@@ -225,6 +228,7 @@
 			    }
 			 });
 
+            //Khi nhấn vào Reply, xóa hết form reply cũ và tạo form Reply mới ở vị trí Click
 			$(".comment-reply").click(function () {
 				isReply = true;
 				$(".reply").remove();
@@ -238,9 +242,12 @@
 				});
 			});
 
+            //Khi nhấn hủy thì xóa sạch form Reply
 			$(".reply-popup-cancel").click(function () {
 				$(".reply").remove();
 			});
+
+            //Thu gọn/Mở rộng SubComment
 			$(".main-comment").click(function () {
 				if (!isReply) {
 					var x = $(this).children(".comment-box");
