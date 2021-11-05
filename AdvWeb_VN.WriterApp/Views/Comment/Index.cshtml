@@ -9,8 +9,9 @@
 	var pageLast = pageNow + Model.PageSize - 1;
 	var postID = ViewData["PostID"];
 	ConvertTime convertTime = new ConvertTime();
-	var defaultAvatar = "https://localhost:5002/user-content/user-icon.jpg";
-	var currentAvatar = "https://localhost:5002/user-content/" + @ViewData["Avatar"];
+	var imageFolder = @ViewData["BaseAddress"] + "/user-content/";
+	var defaultAvatar = imageFolder + "user-icon.jpg";
+	var currentAvatar = imageFolder + @ViewData["Avatar"];
 	string adminColor, avatar = "";
 }
 }
@@ -120,7 +121,7 @@
 										{
 											<div data-id="@comment.CommentID" class="comment-box main-comment">
 												<span class="commenter-pic">
-													@if (comment.Avatar != null) { avatar = "https://localhost:5002/user-content/" + comment.Avatar; } else { avatar = defaultAvatar; }
+													@if (comment.Avatar != null) { avatar = imageFolder + comment.Avatar; } else { avatar = defaultAvatar; }
 													<img src=@avatar class="img-fluid">
 												</span>
 												@if (comment.IsManaged) { adminColor = "style= color:red"; } else { adminColor = ""; }
@@ -145,7 +146,7 @@
 												{
 													<div data-id="@comment.SubComments[i].SubCommentID" class="comment-box replied">
 														<span class="commenter-pic">
-															@if (comment.SubComments[i].Avatar != null) { avatar = "https://localhost:5002/user-content/" + comment.SubComments[i].Avatar; } else { avatar = defaultAvatar; }
+															@if (comment.SubComments[i].Avatar != null) { avatar = imageFolder + comment.SubComments[i].Avatar; } else { avatar = defaultAvatar; }
 															<img src=@avatar class="img-fluid">
 														</span>
 														@if (comment.SubComments[i].IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }

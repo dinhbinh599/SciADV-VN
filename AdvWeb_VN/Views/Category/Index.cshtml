@@ -8,23 +8,31 @@
 	Split split = new Split();
 	var postTopCount = 5;
 	if (Model.Posts.Items.Count < 5) { postTopCount = Model.Posts.Items.Count; }
+	UrlRewrite rewrite = new UrlRewrite();
+	ConvertTime convert = new ConvertTime();
+}
+
+@section style{
+	<style>
+		h1, h2, h3, h4, h5, h6, p {
+			margin: 0px;
+			line-height: unset;
+			font-weight: 400;
+			font-size: unset;
+		}
+	</style>
 }
 
 <!-- Breadcrumb -->
 <div class="container">
 	<div class="bg0 flex-wr-sb-c p-rl-20 p-tb-8">
 		<div class="f2-s-1 p-r-30 m-tb-6">
-			<a href="/home" class="breadcrumb-item f1-s-3 cl9">
+			@*<a href="/home" class="breadcrumb-item f1-s-3 cl9">
 				Home
 			</a>
-
 			<a href="#" class="breadcrumb-item f1-s-3 cl9">
-				Category
-			</a>
-
-			<span class="breadcrumb-item f1-s-3 cl9">
-				@Model.Posts.Items[0].CategoryName
-			</span>
+				Chuyên mục
+			</a>*@
 		</div>
 
 		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
@@ -49,7 +57,7 @@
 		<div class="row m-rl--1">
 			<div class="col-12 p-rl-1 p-b-2">
 				<div class="bg-img1 size-a-3 how1 pos-relative" style="background-image: url(@(imageFolder + Model.Posts.Items[0].Thumbnail));">
-					<a href="/post/@Model.Posts.Items[0].PostID" class="dis-block how1-child1 trans-03"></a>
+					<a href="/post/@(rewrite.Rewrite(Model.Posts.Items[0].PostName) + Model.Posts.Items[0].PostID)" class="dis-block how1-child1 trans-03"></a>
 
 					<div class="flex-col-e-s s-full p-rl-25 p-tb-20">
 						<a href="/subcategory/subcategory-@Model.Posts.Items[0].SubCategoryID" class="dis-block how1-child2 f1-s-2 cl0 bo-all-1 bocl0 hov-btn1 trans-03 p-rl-5 p-t-2">
@@ -57,7 +65,7 @@
 						</a>
 
 						<h3 class="how1-child2 m-t-14 m-b-10">
-							<a href="/post/@Model.Posts.Items[0].PostID" class="how-txt1 size-a-6 f1-l-1 cl0 hov-cl10 trans-03">
+							<a href="/post/@(rewrite.Rewrite(Model.Posts.Items[0].PostName) + Model.Posts.Items[0].PostID)" class="how-txt1 size-a-6 f1-l-1 cl0 hov-cl10 trans-03">
 								@split.NormalizeName(Model.Posts.Items[0].PostName, 10)
 							</a>
 						</h3>
@@ -72,7 +80,7 @@
 							</span>
 
 							<span class="f1-s-3 cl11">
-								@(Model.Posts.Items[0].WriteTime.Day + "/" + Model.Posts.Items[0].WriteTime.Month)
+								@(convert.Convert(Model.Posts.Items[0].WriteTime))
 							</span>
 						</span>
 					</div>
@@ -82,7 +90,7 @@
 			{
 				<div class="col-sm-6 col-md-3 p-rl-1 p-b-2">
 					<div class="bg-img1 size-a-14 how1 pos-relative" style="background-image: url(@(imageFolder + Model.Posts.Items[i].Thumbnail));">
-						<a href="/post/@Model.Posts.Items[i].PostID" class="dis-block how1-child1 trans-03"></a>
+						<a href="/post/@(rewrite.Rewrite(Model.Posts.Items[i].PostName) +  Model.Posts.Items[i].PostID)" class="dis-block how1-child1 trans-03"></a>
 
 						<div class="flex-col-e-s s-full p-rl-25 p-tb-20">
 							<a href="/subcategory/subcategory-@Model.Posts.Items[i].SubCategoryID" class="dis-block how1-child2 f1-s-2 cl0 bo-all-1 bocl0 hov-btn1 trans-03 p-rl-5 p-t-2">
@@ -90,7 +98,7 @@
 							</a>
 
 							<h3 class="how1-child2 m-t-14">
-								<a href="/post/@Model.Posts.Items[i].PostID" class="how-txt1 size-h-1 f1-m-1 cl0 hov-cl10 trans-03">
+								<a href="/post/@(rewrite.Rewrite(Model.Posts.Items[i].PostName) + Model.Posts.Items[i].PostID)" class="how-txt1 size-h-1 f1-m-1 cl0 hov-cl10 trans-03">
 									@split.NormalizeName(Model.Posts.Items[i].PostName, 10)
 								</a>
 							</h3>
@@ -111,36 +119,36 @@
 				<div class="row">
 					@for (int i = 0; i < Model.Posts.Items.Count; i++)
 					{
-					<div class="col-sm-6 p-r-25 p-r-15-sr991">
-						<!-- Item latest -->
-						<div class="m-b-45">
-							<a href="/post/@Model.Posts.Items[i].PostID" class="wrap-pic-w hov1 trans-03">
-								<img class="image-post" src="@(imageFolder + Model.Posts.Items[i].Thumbnail)" alt="IMG">
-							</a>
+						<div class="col-sm-6 p-r-25 p-r-15-sr991">
+							<!-- Item latest -->
+							<div class="m-b-45">
+								<a href="/post/@(rewrite.Rewrite(Model.Posts.Items[i].PostName) + Model.Posts.Items[i].PostID)" class="wrap-pic-w hov1 trans-03">
+									<img class="image-post" src="@(imageFolder + Model.Posts.Items[i].Thumbnail)" alt="IMG">
+								</a>
 
-							<div class="p-t-16">
-								<h5 class="p-b-5">
-									<a href="/post/@Model.Posts.Items[i].PostID" class="f1-m-3 cl2 hov-cl10 trans-03">
-										@split.NormalizeName(Model.Posts.Items[i].PostName, 12)
-									</a>
-								</h5>
+								<div class="p-t-16">
+									<h5 class="p-b-5">
+										<a href="/post/@(rewrite.Rewrite(Model.Posts.Items[i].PostName) + Model.Posts.Items[i].PostID)" class="f1-m-3 cl2 hov-cl10 trans-03">
+											@split.NormalizeName(Model.Posts.Items[i].PostName, 12)
+										</a>
+									</h5>
 
-								<span class="cl8">
-									<a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
-										by @Model.Posts.Items[i].UserName
-									</a>
+									<span class="cl8">
+										<a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
+											by @Model.Posts.Items[i].UserName
+										</a>
 
-									<span class="f1-s-3 m-rl-3">
-										-
+										<span class="f1-s-3 m-rl-3">
+											-
+										</span>
+
+										<span class="f1-s-3">
+											@(convert.Convert(Model.Posts.Items[i].WriteTime))
+										</span>
 									</span>
-
-									<span class="f1-s-3">
-										@(Model.Posts.Items[i].WriteTime.Day + "/" + Model.Posts.Items[i].WriteTime.Month)
-									</span>
-								</span>
+								</div>
 							</div>
 						</div>
-					</div>
 					}
 
 				</div>
@@ -163,20 +171,20 @@
 
 						<ul class="p-t-35">
 							@{
-                                var popular5 = Model.Posts.Items.OrderByDescending(i => i.View).Take(5);
+								var popular5 = Model.Posts.Items.OrderByDescending(i => i.View).Take(5);
 							}
-							@for (int i=0; i < popular5.Count(); i++) 
-                            {
+							@for (int i = 0; i < popular5.Count(); i++)
+							{
 								<li class="flex-wr-sb-s p-b-22">
 									<div class="size-a-8 flex-c-c borad-3 size-a-8 bg9 f1-m-4 cl0 m-b-6">
 										@(i + 1)
 									</div>
 
-									<a href="/post/@popular5.ElementAt(i).PostID" class="size-w-3 f1-s-7 cl3 hov-cl10 trans-03">
+									<a href="/post/@(rewrite.Rewrite(popular5.ElementAt(i).PostName) + popular5.ElementAt(i).PostID)" class="size-w-3 f1-s-7 cl3 hov-cl10 trans-03">
 										@popular5.ElementAt(i).PostName
 									</a>
 								</li>
-                            }
+							}
 
 						</ul>
 					</div>

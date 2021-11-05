@@ -8,7 +8,7 @@
 	var imagePath = "https://www.mycustomer.com/sites/all/themes/pp/img/default-user.png";
 	if (Model.AvatarImage != null)
 	{
-		imagePath = "https://localhost:5002/user-content/" + Model.AvatarImage;
+		imagePath = @ViewData["BaseAddress"] + "/user-content/" + Model.AvatarImage;
 	}
 }
 <!-- Content Wrapper. Contains page content -->

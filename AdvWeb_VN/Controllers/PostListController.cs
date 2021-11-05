@@ -21,7 +21,7 @@ namespace AdvWeb_VN.WebApp.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet("{controller}")]
+        [HttpGet("post-list")]
         public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
         {
             //Hiển thị danh sách bài viết toàn bộ được Paging

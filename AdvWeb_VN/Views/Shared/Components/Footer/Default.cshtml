@@ -2,7 +2,9 @@
 @model AdvWeb_VN.WebApp.Models.FooterViewModel
 
 @{
+	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
 	Split split = new Split();
+	UrlRewrite rewrite = new UrlRewrite();
 }
 
 <footer>
@@ -11,14 +13,14 @@
 			<div class="row">
 				<div class="col-lg-4 p-b-20">
 					<div class="size-h-3 flex-s-c">
-						<a href="index.html">
-							<img class="max-s-full" src="~/images/icons/logo-02.png" alt="LOGO">
+						<a class="logo-footer" href="/Home">
+							<img class="max-s-full logo-footer" src="~/images/logo.png" alt="LOGO">
 						</a>
 					</div>
 
 					<div>
-						<p class="f1-s-1 cl11 p-b-16">
-							Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science Adventure bao gồm Chaos;Head, Steins;Gate... của 5pb./MAGES
+						<p class="f1-s-1 cl11 p-b-16 footer">
+							Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science Adventure ("CHAOS;HEAD", "STEINS;GATE", "ROBOTICS;NOTES"...) của 5pb./MAGES
 						</p>
 
 						<p class="f1-s-1 cl11 p-b-16">
@@ -26,23 +28,23 @@
 						</p>
 
 						<div class="p-t-15">
-							<a href="#" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
+							<a href="https://www.facebook.com/GeroSagaSciADV" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
 								<span class="fab fa-facebook-f"></span>
 							</a>
 
-							<a href="#" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
+							@*<a href="#" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
 								<span class="fab fa-twitter"></span>
+							</a>*@
+
+							<a class="fs-18 cl11 hov-cl10 trans-03 m-r-8" href="https://discord.gg/jVQMg6g">
+								<span class="fab fa-discord"></span>
 							</a>
 
-							<a href="#" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
-								<span class="fab fa-pinterest-p"></span>
-							</a>
-
-							<a href="#" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
+							@*<a href="#" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
 								<span class="fab fa-vimeo-v"></span>
-							</a>
+							</a>*@
 
-							<a href="#" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
+							<a href="https://www.youtube.com/channel/UCxsie4tnIQhJ8JkUhSXJQbQ/" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
 								<span class="fab fa-youtube"></span>
 							</a>
 						</div>
@@ -57,22 +59,22 @@
 					</div>
 
 					<ul>
-						@foreach (var post in Model.PostFooters)
+						@for (int i=0;i<((Model.PostFooters.Count>=5) ? 4: Model.PostFooters.Count); i++)
 						{
 						<li class="flex-wr-sb-s p-b-20">
-							<a href="/post/@post.PostID" class="size-w-4 wrap-pic-w hov1 trans-03">
-								<img class="image-post-footer" src="https://localhost:5002/user-content/@post.Thumbnail" alt="IMG">
+							<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + "-" + Model.PostFooters[i].PostID)" class="size-w-4 wrap-pic-w hov1 trans-03">
+								<img class="image-post-footer" src="@imageFolder@Model.PostFooters[i].Thumbnail" alt="IMG">
 							</a>
 
 							<div class="size-w-5">
 								<h6 class="p-b-5">
-									<a href="/post/@post.PostID" class="f1-s-5 cl11 hov-cl10 trans-03">
-										@split.NormalizeName(post.PostName, 12)
+									<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + "-" + Model.PostFooters[i].PostID)" class="f1-s-5 cl11 hov-cl10 trans-03">
+										@split.NormalizeName(Model.PostFooters[i].PostName, 12)
 									</a>
 								</h6>
 
 								<span class="f1-s-3 cl6">
-									@(post.WriteTime.Day + "/" + post.WriteTime.Month)
+									@(Model.PostFooters[i].WriteTime.Day + "/" + Model.PostFooters[i].WriteTime.Month)
 								</span>
 							</div>
 						</li>

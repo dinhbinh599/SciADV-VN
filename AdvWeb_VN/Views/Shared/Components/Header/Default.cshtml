@@ -3,7 +3,9 @@
 
 @{
     Split split = new Split();
+	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
     var active = ViewData["Active"];
+    UrlRewrite rewrite = new UrlRewrite();
 }
 
 <header>
@@ -21,7 +23,7 @@
                             @foreach (var item in Model.PostHeaders.Items)
 							{
                             <span class="dis-inline-block slide100-txt-item animated visible-false">
-                                <a style="color:unset" href="/post/@item.PostID">@split.NormalizeName(item.PostName, 30)</a>
+                                <a style="color:unset" href="/post/@(rewrite.Rewrite(item.PostName) +  item.PostID)">@split.NormalizeName(item.PostName, 30)</a>
                             </span>
 							}
                         </span>
@@ -51,9 +53,9 @@
                             Liên lạc
                         </a>
 
-                        <a href="/" class="left-topbar-item">
+                        @*<a href="@ViewData["AdminAddress"]" class="left-topbar-item">
                             Admin
-                        </a>
+                        </a>*@
 
                         <a href="#" class="left-topbar-item"></a>
                     </div>
@@ -63,19 +65,19 @@
                             <span class="fab fa-facebook-f"></span>
                         </a>
 
-                        <a href="#">
+                        @*<a href="#">
                             <span class="fab fa-twitter"></span>
-                        </a>
+                        </a>*@
 
                         <a href="https://discord.gg/jVQMg6g">
                             <span class="fab fa-discord"></span>
                         </a>
 
-                        <a href="#">
+                        @*<a href="#">
                             <span class="fab fa-vimeo-v"></span>
-                        </a>
+                        </a>*@
 
-                        <a href="#">
+                        <a href="https://www.youtube.com/channel/UCxsie4tnIQhJ8JkUhSXJQbQ/">
                             <span class="fab fa-youtube"></span>
                         </a>
                     </div>
@@ -87,7 +89,7 @@
         <div class="wrap-header-mobile">
             <!-- Logo moblie -->
             <div class="logo-mobile">
-                <a href="/"><img src="~/images/icons/logo.svg" alt="IMG-LOGO"></a>
+                <a href="/"><img src="~/images/logo.png" alt="IMG-LOGO"></a>
             </div>
 
             <!-- Button show menu -->
@@ -134,19 +136,19 @@
                         <span class="fab fa-facebook-f"></span>
                     </a>
 
-                    <a href="#">
+                    @*<a href="#">
                         <span class="fab fa-twitter"></span>
-                    </a>
+                    </a>*@
 
                     <a href="https://discord.gg/jVQMg6g">
                         <span class="fab fa-discord"></span>
                     </a>
 
-                    <a href="#">
+                    @*<a href="#">
                         <span class="fab fa-vimeo-v"></span>
-                    </a>
+                    </a>*@
 
-                    <a href="#">
+                    <a href="https://www.youtube.com/channel/UCxsie4tnIQhJ8JkUhSXJQbQ/">
                         <span class="fab fa-youtube"></span>
                     </a>
                 </li>
@@ -178,7 +180,7 @@
         <div class="wrap-logo no-banner container">
             <!-- Logo desktop -->
             <div class="logo">
-                <a href="/"><img src="~/images/icons/logo-01.png" alt="LOGO"></a>
+                <a href="/"><img src="~/images/logo.png" alt="LOGO"></a>
             </div>
         </div>
 
@@ -188,7 +190,7 @@
                 <!-- Menu desktop -->
                 <nav class="menu-desktop">
                     <a class="logo-stick" href="/">
-                        <img src="~/images/icons/logo-01.png" alt="LOGO">
+                        <img src="~/images/logo.png" alt="LOGO">
                     </a>
 
                     <ul class="main-menu justify-content-center">
@@ -199,14 +201,14 @@
                         @foreach (var itemCategory in Model.CategoryMenus)
                         {
                             <li class="mega-menu-item@(active.Equals(itemCategory.CategoryID)? " main-menu-active" : "")">
-                                <a href="/category/category-@itemCategory.CategoryID">@itemCategory.CategoryName</a>
+                                <a class="list" href="/category/category-@itemCategory.CategoryID">@itemCategory.CategoryName</a>
 
                                 <div class="sub-mega-menu">
                                     <div class="nav flex-column nav-pills" role="tablist">
-                                        <a class="nav-link active" data-toggle="pill" href="#@(itemCategory.CategoryName + "-" + "All")" role="tab">All</a>
+                                        <a class="nav-link active" data-toggle="pill" href="#@(itemCategory.CategoryName  + "-" + "All")" role="tab">All</a>
                                         @foreach (var itemSubCategory in itemCategory.SubCategories)
                                         {
-                                            <a class="nav-link" data-toggle="pill" href="#@(itemCategory.CategoryName + "-" + itemSubCategory.SubCategoryID)" role="tab">@itemSubCategory.SubCategoryName</a>
+                                            <a class="nav-link" data-toggle="pill" href="#@(itemCategory.CategoryName  + "-" + itemSubCategory.SubCategoryID)" role="tab">@itemSubCategory.SubCategoryName</a>
                                         }
 
 
@@ -220,13 +222,13 @@
                                                     <div class="col-3">
                                                         <!-- Item post -->
                                                         <div>
-                                                            <a href="/post/@itemPost.PostID" class="wrap-pic-w hov1 trans-03">
-                                                                <img class="image-post-category" src="https://localhost:5002/user-content/@itemPost.Thumbnail" alt="IMG">
+                                                            <a href="/post/@(rewrite.Rewrite(itemPost.PostName) + itemPost.PostID)" class="wrap-pic-w hov1 trans-03">
+                                                                <img class="image-post-category" src="@imageFolder@itemPost.Thumbnail" alt="IMG">
                                                             </a>
 
                                                             <div class="p-t-10">
                                                                 <h5 class="p-b-5">
-                                                                    <a href="/post/@itemPost.PostID" class="f1-s-5 cl3 hov-cl10 trans-03">
+                                                                    <a href="/post/@(rewrite.Rewrite(itemPost.PostName) + itemPost.PostID)" class="f1-s-5 cl3 hov-cl10 trans-03">
                                                                         @split.NormalizeName(itemPost.PostName, 12)
                                                                     </a>
                                                                 </h5>
@@ -259,13 +261,13 @@
                                                         <div class="col-3">
                                                             <!-- Item post -->
                                                             <div>
-                                                                <a href="/post/@itemPost.PostID" class="wrap-pic-w hov1 trans-03">
-                                                                    <img class="image-post-category" src="https://localhost:5002/user-content/@itemPost.Thumbnail" alt="IMG">
+                                                                <a href="/post/@(rewrite.Rewrite(itemPost.PostName) + itemPost.PostID)" class="wrap-pic-w hov1 trans-03">
+                                                                    <img class="image-post-category" src="@imageFolder@itemPost.Thumbnail" alt="IMG">
                                                                 </a>
 
                                                                 <div class="p-t-10">
                                                                     <h5 class="p-b-5">
-                                                                        <a href="/post/@itemPost.PostID" class="f1-s-5 cl3 hov-cl10 trans-03">
+                                                                        <a href="/post/@(rewrite.Rewrite(itemPost.PostName) + itemPost.PostID)" class="f1-s-5 cl3 hov-cl10 trans-03">
                                                                             @split.NormalizeName(itemPost.PostName, 12)
                                                                         </a>
                                                                     </h5>
@@ -296,7 +298,7 @@
                         }
 
                         <li class="@(active.Equals(99)? "main-menu-active" : "") ">
-                            <a href="/PostList">Blog</a>
+                            <a href="/post-list">Blog</a>
                         </li>
 
                         <li>

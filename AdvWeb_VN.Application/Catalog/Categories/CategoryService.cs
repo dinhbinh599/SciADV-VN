@@ -118,7 +118,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 				{
 					SubCategoryName = "All",
 					Posts = _context.Posts
-					.Where(p => p.CategoryID.Equals(x.CategoryID))
+					.Where(p => p.CategoryID.Equals(x.CategoryID)).OrderByDescending(p=>p.WriteTime)
 					.Select(p=>new PostViewModel() 
 					{
 						PostID = p.PostID,
@@ -127,7 +127,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 						SubCategoryName = p.SubCategory.CategoryName,
 						WriteTime = p.WriteTime,
 						Thumbnail = p.Thumbnail
-					}).OrderBy(x => x.WriteTime).Take(4).ToList()
+					}).Take(4).ToList()
 				},
 				SubCategories = x.SubCategories
 					.Select(sc => new SubCategoryMenuViewModel()
@@ -136,7 +136,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 						SubCategoryName = sc.CategoryName,
 						CreateDate = sc.CreateDate,
 						PostCount = sc.Posts.Count,
-						Posts = sc.Posts
+						Posts = sc.Posts.OrderByDescending(x=>x.WriteTime)
 							.Select(p => new PostViewModel()
 							{
 								PostID = p.PostID,
@@ -145,7 +145,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 								SubCategoryName = sc.CategoryName,
 								WriteTime = p.WriteTime,
 								Thumbnail = p.Thumbnail
-							}).OrderBy(x => x.WriteTime).Take(4).ToList()
+							}).Take(4).ToList()
 					}).ToList()
 			}).ToListAsync();
 			return new ApiSuccessResult<List<CategoryMenuViewModel>>(categoryMenuVM);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AdvWeb_VN.Application.Catalog.Categories;
 using AdvWeb_VN.Application.Catalog.Comments;
 using AdvWeb_VN.Application.Catalog.Posts;
+using AdvWeb_VN.Application.Catalog.ProductImages;
 using AdvWeb_VN.Application.Catalog.SubCategories;
 using AdvWeb_VN.Application.Catalog.Tags;
 using AdvWeb_VN.Application.Common;
@@ -75,6 +76,7 @@ namespace AdvWeb_VN.BackendApi
 			services.AddTransient<ICommentService, CommentService>();
 			services.AddTransient<ICategoryService, CategoryService>();
 			services.AddTransient<ITagService, TagService>();
+			services.AddTransient<IProductImageService, ProductImageService>();
 
 			//services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
 			//services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
@@ -152,9 +154,9 @@ namespace AdvWeb_VN.BackendApi
 			{
 				app.UseExceptionHandler("/Home/Error");
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-				app.UseHsts();
+				//app.UseHsts();
 			}
-			app.UseHttpsRedirection();
+			//app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
 			app.UseAuthentication();

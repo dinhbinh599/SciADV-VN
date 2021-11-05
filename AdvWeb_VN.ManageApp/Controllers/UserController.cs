@@ -27,6 +27,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var request = new GetUserPagingRequest()
 			{
 				Keyword = keyword,
@@ -48,6 +49,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Details(Guid id)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var result = await _userApiClient.GetByID(id);
 			return View(result.ResultObj);
 		}
@@ -55,6 +57,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public IActionResult Create()
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			return View();
 		}
 
@@ -62,6 +65,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[Consumes("multipart/form-data")]
 		public async Task<IActionResult> Create([FromForm]RegisterRequest request)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			if (!ModelState.IsValid)
 				return View();
 
@@ -100,6 +104,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[Consumes("multipart/form-data")]
 		public async Task<IActionResult> Edit([FromForm]UserUpdateRequest request)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			if (!ModelState.IsValid)
 				return View();
 
@@ -117,6 +122,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public IActionResult Delete(Guid id)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			return View(new UserDeleteRequest()
 			{
 				Id = id
@@ -143,6 +149,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> RoleAssign(Guid id)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var roleAssignRequest = await GetRoleAssignRequest(id);
 			return View(roleAssignRequest);
 		}
@@ -150,6 +157,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> RoleAssign(RoleAssignRequest request)
 		{
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			//Gán Role cho User
 			if (!ModelState.IsValid)
 				return View();

@@ -6,25 +6,23 @@
 	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
 	Split split = new Split();
 	ConvertTime convertTime = new ConvertTime();
-	var defaultAvatar = "https://localhost:5002/user-content/user-icon.jpg";
-	string adminColor,avatar = "";
+	var defaultAvatar = imageFolder + "user-icon.jpg";
+	string adminColor, avatar = "";
+	UrlRewrite rewrite = new UrlRewrite();
+	var postUrl = ViewData["BaseAddress"] + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID;
 }
 
 <!-- Breadcrumb -->
 <div class="container">
 	<div class="bg0 flex-wr-sb-c p-rl-20 p-tb-8">
 		<div class="f2-s-1 p-r-30 m-tb-6">
-			<a href="index.html" class="breadcrumb-item f1-s-3 cl9">
+			@*<a href="index.html" class="breadcrumb-item f1-s-3 cl9">
 				Home
 			</a>
 
 			<a href="category-01.html" class="breadcrumb-item f1-s-3 cl9">
 				Post
-			</a>
-
-			<span class="breadcrumb-item f1-s-3 cl9">
-				@split.NormalizeName(Model.Post.PostName, 12)
-			</span>
+			</a>*@
 		</div>
 
 		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
@@ -37,46 +35,70 @@
 </div>
 
 <!-- Content -->
-<section class="bg0 p-b-70 p-t-5">
-	<!-- Title -->
-	<div class="bg-img1 size-a-18 how-overlay1" style="background-image: url(@(imageFolder + @Model.Post.Thumbnail));">
-		<div class="container h-full flex-col-e-c p-b-58">
-			<a href="#" class="f1-s-10 cl0 hov-cl10 trans-03 text-uppercase txt-center m-b-33">
-				@Model.Post.SubCategoryName
-			</a>
-
-			<h3 class="f1-l-5 cl0 p-b-16 txt-center respon2">
-				@Model.Post.PostName
-			</h3>
-
-			<div class="flex-wr-c-s">
-				<span class="f1-s-3 cl8 m-rl-7 txt-center">
-					<a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
-						by @Model.Post.UserName
-					</a>
-
-					<span class="m-rl-3">-</span>
-
-					<span>
-						@(Model.Post.WriteTime.Day + "/" + Model.Post.WriteTime.Month)
-					</span>
-				</span>
-
-				<a href="" class="f1-s-3 cl8 m-rl-7 txt-center hov-cl10 trans-03">
-					0 Bình luận
-				</a>
-			</div>
-		</div>
-	</div>
-
-	<!-- Detail -->
-	<div class="container p-t-62">
+<section class="bg0 p-b-140 p-t-10">
+	<div class="container">
 		<div class="row justify-content-center">
-			<div class="col-md-10 col-lg-8 p-b-100">
+			<div class="col-md-10 col-lg-8 p-b-30">
 				<div class="p-r-10 p-r-0-sr991">
 					<!-- Blog Detail -->
-					<div class="p-b-70 contents">
+					<div class="p-b-70">
+						<a href="/subcategory/subcategory-@Model.Post.SubCategoryID" class="f1-s-10 cl2 hov-cl10 trans-03 text-uppercase">
+							@Model.Post.SubCategoryName
+						</a>
+
+
+						@*<div class="row">
+							<div class="col-md-10 col-9">
+								<a href="/subcategory/subcategory-@Model.Post.SubCategoryID" class="f1-s-10 cl2 hov-cl10 trans-03 text-uppercase">
+									@Model.Post.SubCategoryName
+								</a>
+							</div>
+							<div class="col-md-2 col-3">
+
+								<div class="flex-s-s">
+									<a href="/post/nosidebar/@(rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID)" class="dis-block f1-s-13 cl0 bg-pinterest borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+										Nosidebar
+									</a>
+								</div>
+							</div>
+						</div>*@
+
+
+						<div style="text-align:center" class="wrap-pic-max-w p-t-30">
+							<img src="@(imageFolder + @Model.Post.Thumbnail)" alt="IMG">
+						</div>
+
+						<h3 class="f1-l-3 cl2 p-b-5 p-t-33 respon2">
+							@Model.Post.PostName
+						</h3>
+
+						<div class="flex-wr-s-s p-b-20">
+							<span class="f1-s-3 cl8 m-r-15">
+								<a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
+									by @Model.Post.UserName
+								</a>
+
+								<span class="m-rl-3">-</span>
+
+								<span>
+									@(Model.Post.WriteTime.Day + "/" + Model.Post.WriteTime.Month + "/" + Model.Post.WriteTime.Year)
+								</span>
+							</span>
+
+							<span class="f1-s-3 cl8 m-r-15">
+								@Model.Post.View lượt xem
+							</span>
+
+							<a href="#" class="f1-s-3 cl8 hov-cl10 trans-03 m-r-15">
+								@Model.Comments.TotalRecords Bình luận
+							</a>
+						</div>
+
+
+
+						<!-- Post Content-->
 						@Html.Raw(Model.Post.Contents)
+
 						<!-- Tag -->
 						<div class="flex-s-s p-t-12 p-b-15">
 							<span class="f1-s-12 cl5 m-r-8">
@@ -95,67 +117,80 @@
 
 						<!-- Share -->
 						<div class="flex-s-s">
-							<span class="f1-s-12 cl5 p-t-1 m-r-15">
+							<span class="f1-s-12 cl5 p-t-1 m-r-15 p-b-15">
 								Share:
 							</span>
 
 							<div class="flex-wr-s-s size-w-0">
-								<a href="#" class="dis-block f1-s-13 cl0 bg-facebook borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								<button id="fbShare" class="dis-block f1-s-13 cl0 bg-facebook borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
 									<i class="fab fa-facebook-f m-r-7"></i>
 									Facebook
-								</a>
+								</button>
 
-								<a href="#" class="dis-block f1-s-13 cl0 bg-twitter borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								<button id="twitterShare" class="dis-block f1-s-13 cl0 bg-twitter borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
 									<i class="fab fa-twitter m-r-7"></i>
 									Twitter
-								</a>
+								</button>
 
-								<a href="#" class="dis-block f1-s-13 cl0 bg-google borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								<button id="gplusShare" class="dis-block f1-s-13 cl0 bg-google borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
 									<i class="fab fa-google-plus-g m-r-7"></i>
 									Google+
-								</a>
-
-								<a href="#" class="dis-block f1-s-13 cl0 bg-pinterest borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
-									<i class="fab fa-pinterest-p m-r-7"></i>
-									Pinterest
-								</a>
+								</button>
 							</div>
 						</div>
+
+						<!-- Switch View -->
+						@*<div class="flex-s-s">
+							<span class="f1-s-12 cl5 p-t-1 m-r-15">
+								View:
+							</span>
+							<a href="/post/nosidebar/@(rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID)" class="dis-block f1-s-13 cl0 bg-pinterest borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								<i class="fab fa-pinterest-p m-r-7"></i>
+								No Sidebar
+							</a>
+						</div>*@
+
 					</div>
 				</div>
 			</div>
+
+
+			<!-- Sidebar -->
+			@await Component.InvokeAsync("Sidebar")
+
 			<!-- Show Comment -->
-			<div class="col-12 col-md-10 col-lg-10">
+			<div class="col-12 col-md-10 col-lg-12">
 				<h4 class="f1-l-4 cl3 p-b-12">
 					Bình Luận
 				</h4>
 			</div>
 
-			<div class="col-12 col-md-10 col-lg-10 p-b-100">
+			<div class="col-12 col-md-10 col-lg-12 p-b-100">
 				<div class="comments">
 					<div class="comments-details">
 						<span class="total-comments comments-sort">@Model.Comments.TotalRecords Bình luận</span>
-						<span class="dropdown">
+						@*<span class="dropdown">
 							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Sort By <span class="caret"></span></button>
 							<div class="dropdown-menu">
 								<a href="#" class="dropdown-item">Top Comments</a>
 								<a href="#" class="dropdown-item">Newest First</a>
 							</div>
-						</span>
+						</span>*@
 					</div>
 
 					<!-- Form Add Comment đầu -->
-					<form asp-action="CreateComment" role="form" method="post">
+					<form id="commentForm" asp-action="CreateComment" role="form" method="post">
 						<div asp-validation-summary="All" class="text-danger"></div>
 						<div class="comment-box add-comment">
 							<span class="commenter-pic">
 								<img src="~/images/user-icon.jpg" class="img-fluid">
 							</span>
 							<span class="commenter-name">
-								<input id="Commentator" type="text" placeholder="Tên" name="Commentator">
+								<input oninvalid="this.setCustomValidity('Tên và bình luận bắt buộc phải có!')" maxlength="50" id="Commentator" type="text" placeholder="Tên" name="Commentator" required>
 								<input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID">
+								<input value="@Model.Post.PostName" id="PostName" type="hidden" placeholder="Name" name="PostName">
 							</span>
-							<textarea id="Commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="Commenter"></textarea>
+							<textarea oninvalid="this.setCustomValidity('Tên và bình luận bắt buộc phải có!')" maxlength="250" id="Commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="Commenter" required></textarea>
 							<button type="submit" class="btn btn-default">Gửi</button>
 							<button type="cancel" class="btn btn-default">Hủy</button>
 						</div>
@@ -166,8 +201,8 @@
 					{
 						<div data-id="@comment.CommentID" class="comment-box main-comment">
 							<span class="commenter-pic">
-								@if (comment.Avatar != null) { avatar = "https://localhost:5002/user-content/" + comment.Avatar; } else { avatar = defaultAvatar; }
-								<img src=@avatar class="img-fluid">
+								@if (comment.Avatar != null) { avatar = imageFolder + comment.Avatar; } else { avatar = defaultAvatar; }
+								<img src=@avatar class="img-fluid img-avatar-comment">
 							</span>
 							@if (comment.IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
 							<span class="commenter-name">
@@ -183,8 +218,8 @@
 							{
 								<div data-id="@subComment.SubCommentID" class="comment-box replied">
 									<span class="commenter-pic">
-										@if (subComment.Avatar != null) { avatar = "https://localhost:5002/user-content/" + subComment.Avatar; } else { avatar = defaultAvatar; }
-										<img src=@avatar class="img-fluid">
+										@if (subComment.Avatar != null) { avatar = imageFolder + subComment.Avatar; } else { avatar = defaultAvatar; }
+										<img src=@avatar class="img-fluid img-avatar-comment">
 									</span>
 									@if (subComment.IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
 									<span class="commenter-name">
@@ -202,8 +237,11 @@
 					}
 				</div>
 			</div>
+
 			<!-- Pagination -->
 			@await Component.InvokeAsync("Pager", Model.Comments)
+
+
 		</div>
 	</div>
 </section>
@@ -279,25 +317,40 @@
 @section scripts{
 	<script type="text/javascript">
 		var isReply = false;
+		var fbShare = document.getElementById("fbShare");
+		var gplusShare = document.getElementById("gplusShare");
+		var twitterShare = document.getElementById("twitterShare");
+
+		var form  = document.getElementById('commentForm');
+		var error = document.querySelector('.error');
+		var commentator = document.getElementById('Commentator');
+		var commentator = document.getElementById('Commenter');
+
+
 		$(document).ready(function () {
 			$("img").css("max-width", "100%");
 			$("video").css("max-width", "100%");
 			$("iframe").css("max-width", "100%");
 
+			//Khi nhấn vào reply thì bật khung Reply lên
 			$(".comment-reply").click(function () {
 				isReply = true;
 				$(".reply").remove();
 				var dataID = $(this).attr("data-id");
 				var parentID = $(this).attr("parent-id");
 				var box = $("div[data-id='" + dataID + "']");
-				box.append('<form class="reply" action="/post/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="/images/user-icon.jpg" class="img-fluid"></span><span class="commenter-name"><input id="commentator" type="text" placeholder="Tên" name="commentator"><input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter"></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
+				box.append('<form class="reply" action="/post/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="/images/user-icon.jpg" class="img-fluid img-avatar-comment"></span><span class="commenter-name"><input oninvalid="this.setCustomValidity(\'Tên và bình luận bắt buộc phải có!\')" maxlength="50"  id="commentator" type="text" placeholder="Tên" name="commentator" required><input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="@Model.Post.PostName" id="PostName" type="hidden" placeholder="Name" name="PostName"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea oninvalid="this.setCustomValidity(\'Tên và bình luận bắt buộc phải có!\')" maxlength="250"  id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter" required></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
 					$(".reply-popup-cancel").click(function () {
 					$(".reply").remove();
 				});
 			});
+
+			//Nhấn Cancel thì xóa khung reply đi
 			$(".reply-popup-cancel").click(function () {
 				$(".reply").remove();
 			});
+
+			//Ấn vào Comment bự thì ẩn Comment nhỏ đi
 			$(".main-comment").click(function () {
 				if (!isReply) {
 					var x = $(this).children(".comment-box");
@@ -310,7 +363,50 @@
 					}
 				}
 			});
+
+			fbShare.onclick = function () {
+				window.open("https://www.facebook.com/sharer.php?u=@postUrl", "", "height=368,width=600,left=100,top=100,menubar=0");
+				return false;
+			}
+
+			gplusShare.onclick = function () {
+				window.open("https://plus.google.com/share?url=@postUrl", "", "height=550,width=525,left=100,top=100,menubar=0");
+				return false;
+			}
+
+			twitterShare.onclick = function () {
+				window.open("https://twitter.com/share?url=@postUrl" + "&text=@Model.Post.PostName", "", "height=260,width=500,left=100,top=100,menubar=0");
+				return false;
+			}
+
+			form.addEventListener("submit", function (event) {
+				// kiểm tra khi user click submit.
+				if (!commentator.validity.valid||!commenter.validity.valid) {
+					alert("Tên hoặc bình luận không hợp lệ!");
+					// chặn việc submit form
+					event.preventDefault();
+				}
+			}, false);
+
+
+			@*//FB share
+			$(".fbShare").click(function () {
+				alert("https://www.facebook.com/sharer.php?u=@postUrl");
+				window.open("https://www.facebook.com/sharer.php?u=@postUrl", "", "height=368,width=600,left=100,top=100,menubar=0");
+			});
+
+			//gplus share
+			$(".gplusShare").click(function() {
+				window.open("https://plus.google.com/share?url=@postUrl", "", "height=550,width=525,left=100,top=100,menubar=0");
+			});
+
+			//Twitter Share
+			$(".twitterShare").click(function () {
+				window.open("https://twitter.com/share?url=@postUrl" + "&text=@Model.Post.PostName", "", "height=260,width=500,left=100,top=100,menubar=0");
+			});*@
+
 		});
 	</script>
 }
+
 

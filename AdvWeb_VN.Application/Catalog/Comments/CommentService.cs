@@ -109,27 +109,32 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 			//Thêm bình luận mới cho người đọc.
 			//Đồng thời đánh dấu chưa đọc cho Comment cũ nếu người đọc thêm SubComment mới.
 
-			var comment = new Comment()
+			if (request.Commentator != "" && request.Commenter != "" && request.Commentator.Length <= 50 && request.Commenter.Length <= 250)
 			{
-				Commentator = request.Commentator,
-				Commenter = request.Commenter,
-				CommentTime = DateTime.Now,
-				ParentID = request.ParentID,
-				PostID = request.PostID,
-				IsManaged = false
-			};
 
-			_context.Comments.Add(comment);
+				var comment = new Comment()
+				{
+					Commentator = request.Commentator,
+					Commenter = request.Commenter,
+					CommentTime = DateTime.Now,
+					ParentID = request.ParentID,
+					PostID = request.PostID,
+					IsManaged = false
+				};
 
-			if(request.ParentID!=0)
-			{
-				var parentComment = await _context.Comments.Where(x => x.CommentID.Equals(request.ParentID)).FirstAsync();
-				parentComment.IsView = false;
+				_context.Comments.Add(comment);
+
+				if (request.ParentID != 0)
+				{
+					var parentComment = await _context.Comments.Where(x => x.CommentID.Equals(request.ParentID)).FirstAsync();
+					parentComment.IsView = false;
+				}
+
+				var result = await _context.SaveChangesAsync();
+				if (result == 0) return new ApiErrorResult<bool>("Thêm bình luận thất bại");
+				return new ApiSuccessResult<bool>();
 			}
-
-			var result = await _context.SaveChangesAsync();
-			if (result == 0) return new ApiErrorResult<bool>("Thêm bình luận thất bại");
-			return new ApiSuccessResult<bool>();
+			return new ApiErrorResult<bool>("Thêm bình luận thất bại");
 		}
 		public async Task<ApiResult<bool>> DeleteComment(int commentID)
 		{
@@ -152,7 +157,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 						join c in _context.Posts on p.PostID equals c.PostID
 						select new { p, c};
 
-			var data = await query.Select(x => new CommentViewModel()
+			var data = await query.OrderByDescending(x=>x.p.CommentTime).Select(x => new CommentViewModel()
 			{
 				CommentID = x.p.CommentID,
 				Commentator = x.p.Commentator,
@@ -205,7 +210,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 			int totalRow = await comments.CountAsync();
 
-			var data = await comments.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await comments.OrderByDescending(x=>x.CommentTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new CommentViewModel()
 				{
@@ -234,7 +239,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 										LikeCount = p.LikeCount,
 										DislikeCount = p.DislikeCount,
 									}).ToList()
-				}).OrderBy(x => x.CommentTime).ToListAsync();
+				}).ToListAsync();
 			var pagedResult = new PagedResult<CommentViewModel>()
 			{
 				TotalRecords = totalRow,
@@ -254,7 +259,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 			int totalRow = await comments.Where(x => x.PostID.Equals(request.Id)).CountAsync();
 			
-			var data = await comments.Where(x => x.PostID.Equals(request.Id))
+			var data = await comments.Where(x => x.PostID.Equals(request.Id)).OrderByDescending(x => x.CommentTime)
 				.Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new CommentViewModel()
@@ -265,6 +270,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 					CommentTime = x.CommentTime,
 					IsManaged = x.IsManaged,
 					LikeCount = x.LikeCount,
+					Avatar = _context.Users.FirstOrDefault(u => u.Id.Equals(x.UserID)).Avatar,
 					PostID = x.PostID,
 					IsView = x.IsView,
 					DislikeCount = x.DislikeCount,
@@ -275,12 +281,13 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 										Commenter = p.Commenter,
 										CommentTime = p.CommentTime,
 										IsManaged = p.IsManaged,
+										Avatar = _context.Users.FirstOrDefault(u => u.Id.Equals(p.UserID)).Avatar,
 										PostID = p.PostID,
 										IsView = p.IsView,
 										LikeCount = p.LikeCount,
 										DislikeCount = p.DislikeCount,
 									}).ToList()
-				}).OrderBy(x=>x.CommentTime).ToListAsync();
+				}).ToListAsync();
 			var pagedResult = new PagedResult<CommentViewModel>()
 			{
 				TotalRecords = totalRow,
@@ -356,7 +363,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 			int totalRow = await comments.CountAsync();
 
-			var data = await comments.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await comments.OrderByDescending(x=>x.CommentTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new CommentViewModel()
 				{
@@ -388,7 +395,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 										IsOwner = (p.UserID.Equals(id)) ? true : false,
 										DislikeCount = p.DislikeCount,
 									}).ToList()
-				}).OrderBy(x => x.CommentTime).ToListAsync();
+				}).ToListAsync();
 
 
 			var pagedResult = new PagedResult<CommentViewModel>()
@@ -418,7 +425,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 			int totalRow = await comments.CountAsync();
 
-			var data = await comments.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await comments.OrderByDescending(x=>x.CommentTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new CommentViewModel()
 				{
@@ -429,6 +436,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 					IsManaged = x.IsManaged,
 					IsView = false,
 					LikeCount = x.LikeCount,
+					Avatar = _context.Users.FirstOrDefault(u => u.Id.Equals(x.UserID)).Avatar,
 					PostID = x.PostID,
 					DislikeCount = x.DislikeCount,
 					SubComments = _context.Comments.Where(p => p.ParentID.Equals(x.CommentID))
@@ -439,12 +447,13 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 										Commenter = p.Commenter,
 										CommentTime = p.CommentTime,
 										IsManaged = p.IsManaged,
+										Avatar = _context.Users.FirstOrDefault(u => u.Id.Equals(p.UserID)).Avatar,
 										PostID = p.PostID,
 										IsView = false,
 										LikeCount = p.LikeCount,
 										DislikeCount = p.DislikeCount,
 									}).ToList()
-				}).OrderBy(x => x.CommentTime).ToListAsync();
+				}).ToListAsync();
 			var pagedResult = new PagedResult<CommentViewModel>()
 			{
 				TotalRecords = totalRow,
@@ -524,7 +533,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 
 			int totalRow = await query.CountAsync();
 
-			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.OrderByDescending(x=>x.c.CommentTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new CommentViewModel()
 				{
@@ -555,7 +564,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 										LikeCount = p.LikeCount,
 										DislikeCount = p.DislikeCount,
 									}).ToList()
-				}).OrderBy(x => x.CommentTime).ToListAsync();
+				}).ToListAsync();
 			var pagedResult = new PagedResult<CommentViewModel>()
 			{
 				TotalRecords = totalRow,

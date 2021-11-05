@@ -120,7 +120,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			
 			int totalRow = await query.CountAsync();
 
-			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -129,7 +129,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.e.CategoryName,
@@ -206,14 +206,14 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var query = from p in _context.Posts
 						select p;
 
-			var data = await query.Select(x => new PostViewModel()
+			var data = await query.OrderByDescending(x=>x.WriteTime).Select(x => new PostViewModel()
 			{
 				PostID = x.PostID,
 				PostName = x.PostName,
 				WriteTime = x.WriteTime,
 				View = x.View,
 				Thumbnail = x.Thumbnail,
-				Contents = x.Contents,
+				//Contents = x.Contents,
 				SubCategoryID = x.SubCategoryID,
 				UserName = x.User.UserName,
 				SubCategoryName = x.SubCategory.CategoryName
@@ -232,11 +232,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				WriteTime = x.WriteTime,
 				View = x.View,
 				Thumbnail = x.Thumbnail,
-				Contents = x.Contents,
+				//Contents = x.Contents,
 				SubCategoryID = x.SubCategoryID,
 				UserName = x.User.UserName,
 				SubCategoryName = x.SubCategory.CategoryName
-			}).OrderByDescending(x=>x.View).Take(4).ToListAsync();
+			}).OrderByDescending(x=>x.View).Take(5).ToListAsync();
 
 			return new ApiSuccessResult<List<PostViewModel>>(postVMs);
 		}
@@ -259,7 +259,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -268,7 +268,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.e.CategoryName,
@@ -302,7 +302,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -311,13 +311,13 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.c.CategoryName,
 					CategoryID = x.c.CategoryID,
 					CategoryName = x.k.CategoryName
-				}).OrderBy(x=>x.WriteTime).ToListAsync();
+				}).ToListAsync();
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
 				TotalRecords = totalRow,
@@ -349,7 +349,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -358,7 +358,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.sc.CategoryName,
@@ -718,7 +718,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -854,7 +854,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			}
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -863,7 +863,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.sc.CategoryName,
@@ -903,7 +903,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -912,7 +912,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.sc.CategoryName,
@@ -938,13 +938,16 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
 						select new { c, p, u.UserName, sc.CategoryName };
 
+			var subCategory = await _context.SubCategories.FindAsync(request.Id);
+
 			if (request.Id.HasValue && request.Id.Value > 0)
 			{
-				query = query.Where(x => x.p.SubCategoryID.Equals(request.Id));
+				query = query.Where(x => x.p.SubCategory.CategoryName.Contains(subCategory.CategoryName));
 			}
+
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -953,7 +956,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.CategoryName,
@@ -988,7 +991,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			}
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -997,7 +1000,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.CategoryName,
@@ -1033,7 +1036,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -1042,7 +1045,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.CategoryName,
@@ -1076,7 +1079,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -1085,7 +1088,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
-					Contents = x.p.Contents,
+					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.CategoryName,

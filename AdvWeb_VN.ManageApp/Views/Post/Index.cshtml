@@ -8,6 +8,7 @@
     var pageNow = (Model.PageIndex - 1) * Model.PageSize + 1;
     var pageLast = pageNow + Model.PageSize - 1;
     var split = new Split();
+    UrlRewrite rewrite = new UrlRewrite();
 }
 
 <!-- Content Wrapper. Contains page content -->
@@ -117,10 +118,9 @@
                                                             </td>
                                                             <td>
                                                                 <a href="/Post/Edit/@item.PostID" class="btn btn-outline-primary"> Sửa</a>
-                                                                <a href="/Post/Details/@item.PostID" class="btn btn-outline-info">Xem</a>
+                                                                <a target="_blank" rel="noopener noreferrer" href="@(ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(item.PostName) + item.PostID)" class="btn btn-outline-info">Xem</a>
                                                                 <a href="/Post/Delete/@item.PostID"  class="btn btn-outline-danger">Xóa</a>
                                                                 <a href="/Comment?id=@item.PostID" style="margin-top:5px" class="btn btn-outline-dark">Thêm bình luận</a>
-
                                                             </td>
                                                         </tr>
                                                     }
@@ -165,6 +165,7 @@
     <script type="text/javascript">
 		let id = Number(@ViewData["ID"])
 		let endpoint = "@ViewData["BaseAddress"]"
+
 
         $("select#pageSize").val(@ViewData["PageSize"]).change();
 		$("select#category-select").val(id).change();

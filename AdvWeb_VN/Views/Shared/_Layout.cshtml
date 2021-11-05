@@ -28,24 +28,11 @@
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<style>
-
-		img.image-post-category {
-			object-fit: cover;
-			object-position: center;
-			height: 100px;
+		img.img-avatar-comment{
+			width:55px;
+			height:55px
 		}
-
-		img.image-post {
-			object-fit: cover;
-			object-position: center;
-			height: 210px;
-		}
-
-		img.image-post-footer {
-			object-fit: cover;
-			object-position: center;
-			height: 70px;
-		}
+		
 	</style>
 
 	@RenderSection("Style", required: false)
@@ -79,6 +66,7 @@
 	<script src="~/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<!--===============================================================================================-->
 	<script src="~/js/main.js"></script>
+
 	@RenderSection("Scripts", required: false)
 
 	<script type="text/javascript">
@@ -86,13 +74,13 @@
 			var keycode = (event.keyCode ? event.keyCode : event.which);
 			if (keycode == '13') {
 				if ($('#search').val() != "") {
-					window.location.href = "/PostList?keyword=" + $('#search').val();
+					window.location.href = "/post-list?keyword=" + $('#search').val();
 				}
 			}
 		});
 		$('button#search').click(function () {
 			if ($('#search').val() != "") {
-				window.location.href = "/PostList?keyword=" + $('#search').val();
+				window.location.href = "/post-list?keyword=" + $('#search').val();
 			}
 		});
 	</script>

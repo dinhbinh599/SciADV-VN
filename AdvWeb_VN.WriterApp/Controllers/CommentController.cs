@@ -41,6 +41,7 @@ namespace AdvWeb_VN.WriterApp.Controllers
 
 			ViewData["PostID"] = id;
 			ViewData["PageSize"] = pageSize;
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 
 			ViewBag.Keyword = keyword;
 			ViewBag.ID = id;

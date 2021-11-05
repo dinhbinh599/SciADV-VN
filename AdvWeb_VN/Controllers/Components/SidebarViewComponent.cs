@@ -12,15 +12,19 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
     {
         private readonly ITagApiClient _tagApiClient;
         private readonly IConfiguration _configuration;
+        private readonly IPostApiClient _postApiClient;
 
-        public SidebarViewComponent(ITagApiClient tagApiClient, IConfiguration configuration)
+        public SidebarViewComponent(ITagApiClient tagApiClient, IConfiguration configuration, IPostApiClient postApiClient)
         {
             _tagApiClient = tagApiClient;
             _configuration = configuration;
+            _postApiClient = postApiClient;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            ViewData["BaseAddress"] = _configuration["BaseAddress"];
+
             //Load dữ liệu để hiển thị tại SideBar: Tag,...
             var tagRequest = new GetTagPagingRequest()
             {
@@ -28,9 +32,12 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
                 PageSize = 10
             };
             var resultTag = await _tagApiClient.GetTagsPagings(tagRequest);
+            var resultPost = await _postApiClient.GetPopular();
+
             var sidebarViewModel = new SidebarViewModel()
             {
-                Tags = resultTag.ResultObj
+                Tags = resultTag.ResultObj,
+                Posts = resultPost.ResultObj
             };
             return View("Default", sidebarViewModel);
         }

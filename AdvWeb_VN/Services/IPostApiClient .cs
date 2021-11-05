@@ -18,5 +18,6 @@ namespace AdvWeb_VN.WebApp.Services
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsSubCategory(GetPublicPostPagingRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsTag(GetPublicPostPagingRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagingsTagByName(GetPublicPostPagingRequestSearch request);
+		Task<ApiResult<bool>> AddViewCount(int id);
 	}
 }

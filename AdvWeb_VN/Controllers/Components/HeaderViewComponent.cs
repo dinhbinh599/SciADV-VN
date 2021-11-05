@@ -23,6 +23,9 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            ViewData["BaseAddress"] = _configuration["BaseAddress"];
+            ViewData["AdminAddress"] = _configuration["AdminAddress"];
+
             //Load dữ liệu hiển thị ở Menu
             var resultCategory = await _categoryApiClient.GetMenuCategory();
             var categories = resultCategory.ResultObj;

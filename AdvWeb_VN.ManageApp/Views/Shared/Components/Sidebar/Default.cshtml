@@ -3,7 +3,7 @@
 	var imagePath = "https://www.mycustomer.com/sites/all/themes/pp/img/default-user.png";
 	if (Model.AvatarImage != null)
 	{
-		imagePath = "https://localhost:5002/user-content/" + Model.AvatarImage;
+		imagePath = @ViewData["BaseAddress"] + "/user-content/" + Model.AvatarImage;
 	}
 }
 <!-- Main Sidebar Container -->
@@ -91,7 +91,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="pages/gallery.html" class="nav-link">
+					<a href="/gallery" class="nav-link">
 						<i class="nav-icon far fa-image"></i>
 						<p>
 							Gallery

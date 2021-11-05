@@ -22,6 +22,8 @@ namespace eShopSolution.AdminApp.Controllers.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            ViewData["BaseAddress"] = _configuration["BaseAddress"];
+
             //Lấy User hiện tại từ API
             var userResult = await _userApiClient.GetCurrentUser();
             var userCurrent = userResult.ResultObj;

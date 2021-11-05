@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using AdvWeb_VN.ViewModels.Catalog.Posts;
+using AdvWeb_VN.ViewModels.Catalog.ProductImages;
+using AdvWeb_VN.ViewModels.Common;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;

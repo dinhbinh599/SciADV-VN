@@ -18,12 +18,14 @@ namespace AdvWeb_VN.WebApp.Controllers
 	public class HomeController : Controller
 	{
 		private readonly IPostApiClient _postApiClient;
+		private readonly ICategoryApiClient _categoryApiClient;
 		private readonly IConfiguration _configuration;
 		private readonly ILogger<HomeController> _logger;
 
-		public HomeController(IPostApiClient postApiClient, IConfiguration configuration, ILogger<HomeController> logger)
+		public HomeController(IPostApiClient postApiClient, ICategoryApiClient categoryApiClient, IConfiguration configuration, ILogger<HomeController> logger)
 		{
 			_postApiClient = postApiClient;
+			_categoryApiClient = categoryApiClient;
 			_configuration = configuration;
 			_logger = logger;
 		}
@@ -32,15 +34,21 @@ namespace AdvWeb_VN.WebApp.Controllers
 		{
 			//Load dữ liệu để hiển thị ở trang chủ
 			ViewData["Active"] = 0;
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+
 			var postRequest = new GetPublicPostPagingRequestSearch()
 			{
 				PageIndex = pageIndex,
 				PageSize = pageSize
 			};
+
+			var resultCategory = await _categoryApiClient.GetMenuCategory();
 			var resultPost = await _postApiClient.GetPostsPagings(postRequest);
+
 			var homeVM = new HomePageViewModel()
 			{
-				Posts = resultPost.ResultObj
+				Posts = resultPost.ResultObj,
+				CategoryMenus = resultCategory.ResultObj
 			};
 			if (TempData["result"] != null)
 			{

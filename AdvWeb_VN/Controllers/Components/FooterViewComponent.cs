@@ -30,6 +30,7 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
             var resultPost = await _postApiClient.GetPopular();
             var posts = resultPost.ResultObj;
 
+            ViewData["BaseAddress"] = _configuration["BaseAddress"];
             var footerViewModel = new FooterViewModel()
             {
                 CategoryFooters = categories,

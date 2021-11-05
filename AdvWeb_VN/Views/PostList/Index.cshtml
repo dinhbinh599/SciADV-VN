@@ -8,19 +8,33 @@
 	Split split = new Split();
 	var postTopCount = 5;
 	if (Model.Posts.Items.Count < 5) { postTopCount = Model.Posts.Items.Count; }
+	UrlRewrite rewrite = new UrlRewrite();
+	ConvertTime convert = new ConvertTime();
+
+}
+
+@section style{
+	<style>
+		h1, h2, h3, h4, h5, h6, p {
+			margin: 0px;
+			line-height: unset;
+			font-weight: 400;
+			font-size: unset;
+		}
+	</style>
 }
 
 <!-- Breadcrumb -->
 <div class="container">
 	<div class="bg0 flex-wr-sb-c p-rl-20 p-tb-8">
 		<div class="f2-s-1 p-r-30 m-tb-6">
-			<a href="/" class="breadcrumb-item f1-s-3 cl9">
+			@*<a href="/" class="breadcrumb-item f1-s-3 cl9">
 				Home
 			</a>
 
 			<span class="breadcrumb-item f1-s-3 cl9">
 				Blog
-			</span>
+			</span>*@
 		</div>
 
 		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
@@ -59,13 +73,13 @@
 						<div class="col-sm-6 p-r-25 p-r-15-sr991">
 							<!-- Item latest -->
 							<div class="m-b-45">
-								<a href="/post/@item.PostID" class="wrap-pic-w hov1 trans-03">
-									<img class="image-post" src="https://localhost:5002/user-content/@item.Thumbnail" alt="IMG">
+								<a href="/post/@(rewrite.Rewrite(item.PostName) + item.PostID)" class="wrap-pic-w hov1 trans-03">
+									<img class="image-post" src="@imageFolder@item.Thumbnail" alt="IMG">
 								</a>
 
 								<div class="p-t-16">
 									<h5 class="p-b-5">
-										<a href="/post/@item.PostID" class="f1-m-3 cl2 hov-cl10 trans-03">
+										<a href="/post/@(rewrite.Rewrite(item.PostName) + item.PostID)" class="f1-m-3 cl2 hov-cl10 trans-03">
 											@split.NormalizeName(item.PostName, 12)
 										</a>
 									</h5>
@@ -80,7 +94,7 @@
 										</span>
 
 										<span class="f1-s-3">
-											@(item.WriteTime.Day + "/" + item.WriteTime.Month)
+											@(convert.Convert(item.WriteTime))
 										</span>
 									</span>
 								</div>
@@ -93,9 +107,9 @@
 				@await Component.InvokeAsync("Pager", Model.Posts)
 
 				@*<div class="flex-wr-s-c m-rl--7 p-t-15">
-				<a href="#" class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7 pagi-active">1</a>
-				<a href="#" class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7">2</a>
-				</div>*@
+					<a href="#" class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7 pagi-active">1</a>
+					<a href="#" class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7">2</a>
+					</div>*@
 			</div>
 
 			<!-- Sidebar -->

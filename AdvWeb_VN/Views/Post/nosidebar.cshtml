@@ -1,0 +1,348 @@
+﻿@model AdvWeb_VN.WebApp.Models.PostPageViewModel
+@using AdvWeb_VN.Utilities.Settings
+@{
+	ViewData["Title"] = "Bài viết";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
+	Split split = new Split();
+	ConvertTime convertTime = new ConvertTime();
+	var defaultAvatar = imageFolder + "user-icon.jpg";
+	string adminColor,avatar = "";
+	UrlRewrite rewrite = new UrlRewrite();
+	var postUrl = ViewData["BaseAddress"] + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID;
+}
+
+<!-- Breadcrumb -->
+<div class="container">
+	<div class="bg0 flex-wr-sb-c p-rl-20 p-tb-8">
+		<div class="f2-s-1 p-r-30 m-tb-6">
+			@*<a href="index.html" class="breadcrumb-item f1-s-3 cl9">
+				Home
+			</a>
+
+			<a href="category-01.html" class="breadcrumb-item f1-s-3 cl9">
+				Post
+			</a>
+
+			<span class="breadcrumb-item f1-s-3 cl9">
+				@split.NormalizeName(Model.Post.PostName, 12)
+			</span>*@
+		</div>
+
+		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
+			<input id="search" class="f1-s-1 cl6 plh9 s-full p-l-25 p-r-45" type="text" name="search" placeholder="Search">
+			<button id="search" class="flex-c-c size-a-1 ab-t-r fs-20 cl2 hov-cl10 trans-03">
+				<i class="zmdi zmdi-search"></i>
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- Content -->
+<section class="bg0 p-b-70 p-t-5">
+	<!-- Title -->
+	<div class="bg-img1 size-a-18 how-overlay1" style="background-image: url(@(imageFolder + @Model.Post.Thumbnail));">
+		<div class="container h-full flex-col-e-c p-b-58">
+			<a href="#" class="f1-s-10 cl0 hov-cl10 trans-03 text-uppercase txt-center m-b-33">
+				@Model.Post.SubCategoryName
+			</a>
+
+			<h3 class="f1-l-5 cl0 p-b-16 txt-center respon2">
+				@Model.Post.PostName <a href="/post/@(rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID)"><i class="fas fa-retweet switch"></i></a>
+			</h3>
+
+			<div class="flex-wr-c-s">
+				<span class="f1-s-3 cl0 m-rl-7 txt-center">
+					<a href="#" class="f1-s-4 cl0 hov-cl10 trans-03">
+						by @Model.Post.UserName
+					</a>
+
+					<span class="m-rl-3">-</span>
+
+					<span>
+						@(Model.Post.WriteTime.Day + "/" + Model.Post.WriteTime.Month)
+					</span>
+				</span>
+
+				<span class="f1-s-3 cl0 m-rl-7 txt-center hov-cl10 trans-03">
+					@(Model.Post.View) lượt xem
+				</span>
+
+				<a href="" class="f1-s-3 cl0 m-rl-7 txt-center hov-cl10 trans-03">
+					@Model.Comments.TotalRecords Bình luận
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Detail -->
+	<div class="container p-t-62">
+		<div class="row justify-content-center">
+			<div class="col-md-10 col-lg-8 p-b-100">
+				<div class="p-r-10 p-r-0-sr991">
+					<!-- Blog Detail -->
+					<div class="p-b-70 contents">
+						@Html.Raw(Model.Post.Contents)
+						<!-- Tag -->
+						<div class="flex-s-s p-t-12 p-b-15">
+							<span class="f1-s-12 cl5 m-r-8">
+								Tags:
+							</span>
+
+							<div class="flex-wr-s-s size-w-0">
+								@foreach (var tag in Model.Post.Tags)
+								{
+									<a href="/tag/@tag" class="f1-s-12 cl8 hov-link1 m-r-15">
+										@tag
+									</a>
+								}
+							</div>
+						</div>
+
+						<!-- Share -->
+						<div class="flex-s-s">
+							<span class="f1-s-12 cl5 p-t-1 p-b-15 m-r-15">
+								Share:
+							</span>
+
+							<div class="flex-wr-s-s size-w-0">
+								<button id="fbShare"  class="dis-block f1-s-13 cl0 bg-facebook borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+									<i class="fab fa-facebook-f m-r-7"></i>
+									Facebook
+								</button>
+
+								<button id="twitterShare" class="dis-block f1-s-13 cl0 bg-twitter borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+									<i class="fab fa-twitter m-r-7"></i>
+									Twitter
+								</button>
+
+								<button id="gplusShare" class="dis-block f1-s-13 cl0 bg-google borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+									<i class="fab fa-google-plus-g m-r-7"></i>
+									Google+
+								</button>
+
+							</div>
+						</div>
+
+						<!-- Switch View -->
+						<div class="flex-s-s">
+							<span class="f1-s-12 cl5 p-t-1 m-r-15">
+								View:
+							</span>
+							<a href="/post/@(rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID)" class="dis-block f1-s-13 cl0 bg-pinterest borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								<i class="fab fa-pinterest-p m-r-7"></i>
+								Sidebar
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Show Comment -->
+			<div class="col-12 col-md-10 col-lg-10">
+				<h4 class="f1-l-4 cl3 p-b-12">
+					Bình Luận
+				</h4>
+			</div>
+
+			<div class="col-12 col-md-10 col-lg-10 p-b-100">
+				<div class="comments">
+					<div class="comments-details">
+						<span class="total-comments comments-sort">@Model.Comments.TotalRecords Bình luận</span>
+						<span class="dropdown">
+							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Sort By <span class="caret"></span></button>
+							<div class="dropdown-menu">
+								<a href="#" class="dropdown-item">Top Comments</a>
+								<a href="#" class="dropdown-item">Newest First</a>
+							</div>
+						</span>
+					</div>
+
+					<!-- Form Add Comment đầu -->
+					<form asp-action="CreateComment" role="form" method="post">
+						<div asp-validation-summary="All" class="text-danger"></div>
+						<div class="comment-box add-comment">
+							<span class="commenter-pic">
+								<img src="~/images/user-icon.jpg" class="img-fluid">
+							</span>
+							<span class="commenter-name">
+								<input id="Commentator" type="text" placeholder="Tên" name="Commentator">
+								<input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID">
+							</span>
+							<textarea id="Commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="Commenter"></textarea>
+							<button type="submit" class="btn btn-default">Gửi</button>
+							<button type="cancel" class="btn btn-default">Hủy</button>
+						</div>
+					</form>
+
+					<!-- List Comment Hiện ở đây -->
+					@foreach (var comment in Model.Comments.Items)
+					{
+						<div data-id="@comment.CommentID" class="comment-box main-comment">
+							<span class="commenter-pic">
+								@if (comment.Avatar != null) { avatar = imageFolder + comment.Avatar; } else { avatar = defaultAvatar; }
+								<img src=@avatar class="img-fluid">
+							</span>
+							@if (comment.IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
+							<span class="commenter-name">
+								<a @adminColor href="#">@comment.Commentator</a> <span class="comment-time">@convertTime.Convert(comment.CommentTime)</span>
+							</span>
+							<p class="comment-txt more">@comment.Commenter</p>
+							<div class="comment-meta">
+								<button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @comment.LikeCount</button>
+								<button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @comment.DislikeCount</button>
+								<button parent-id="@comment.CommentID" data-id="@comment.CommentID" class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>
+							</div>
+							@foreach (var subComment in comment.SubComments)
+							{
+								<div data-id="@subComment.SubCommentID" class="comment-box replied">
+									<span class="commenter-pic">
+										@if (subComment.Avatar != null) { avatar = imageFolder + subComment.Avatar; } else { avatar = defaultAvatar; }
+										<img src=@avatar class="img-fluid">
+									</span>
+									@if (subComment.IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
+									<span class="commenter-name">
+										<a @adminColor href="#">@subComment.Commentator</a> <span class="comment-time">@convertTime.Convert(subComment.CommentTime)</span>
+									</span>
+									<p class="comment-txt more">@subComment.Commenter</p>
+									<div class="comment-meta">
+										<button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @subComment.LikeCount</button>
+										<button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @subComment.DislikeCount</button>
+										<button parent-id="@comment.CommentID" data-id="@subComment.SubCommentID" class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>
+									</div>
+								</div>
+							}
+						</div>
+					}
+				</div>
+			</div>
+			<!-- Pagination -->
+			@await Component.InvokeAsync("Pager", Model.Comments)
+		</div>
+	</div>
+</section>
+
+@section style{
+	<style>
+		.contents {
+			font-size: 18px;
+		}
+
+			.contents h1 {
+				display: block;
+				font-size: 2em;
+				margin-top: 0.67em;
+				margin-bottom: 0.67em;
+				margin-left: 0;
+				margin-right: 0;
+				font-weight: bold;
+			}
+
+			.contents h2 {
+				display: block;
+				font-size: 1.5em;
+				margin-top: 0.83em;
+				margin-bottom: 0.83em;
+				margin-left: 0;
+				margin-right: 0;
+				font-weight: bold;
+			}
+
+			.contents h3 {
+				display: block;
+				font-size: 1.17em;
+				margin-top: 1em;
+				margin-bottom: 1em;
+				margin-left: 0;
+				margin-right: 0;
+				font-weight: bold;
+			}
+
+			.contents h4 {
+				display: block;
+				font-size: 1em;
+				margin-top: 1.33em;
+				margin-bottom: 1.33em;
+				margin-left: 0;
+				margin-right: 0;
+				font-weight: bold;
+			}
+
+			.contents h5 {
+				display: block;
+				font-size: .83em;
+				margin-top: 1.67em;
+				margin-bottom: 1.67em;
+				margin-left: 0;
+				margin-right: 0;
+				font-weight: bold;
+			}
+
+			.contents h6 {
+				display: block;
+				font-size: .67em;
+				margin-top: 2.33em;
+				margin-bottom: 2.33em;
+				margin-left: 0;
+				margin-right: 0;
+				font-weight: bold;
+			}
+	</style>
+}
+
+@section scripts{
+	<script type="text/javascript">
+		var isReply = false;
+		var fbShare = document.getElementById("fbShare");
+		var gplusShare = document.getElementById("gplusShare");
+		var twitterShare = document.getElementById("twitterShare");
+
+		$(document).ready(function () {
+			$("img").css("max-width", "100%");
+			$("video").css("max-width", "100%");
+			$("iframe").css("max-width", "100%");
+
+			$(".comment-reply").click(function () {
+				isReply = true;
+				$(".reply").remove();
+				var dataID = $(this).attr("data-id");
+				var parentID = $(this).attr("parent-id");
+				var box = $("div[data-id='" + dataID + "']");
+				box.append('<form class="reply" action="/post/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="/images/user-icon.jpg" class="img-fluid"></span><span class="commenter-name"><input id="commentator" type="text" placeholder="Tên" name="commentator"><input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter"></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
+					$(".reply-popup-cancel").click(function () {
+					$(".reply").remove();
+				});
+			});
+			$(".reply-popup-cancel").click(function () {
+				$(".reply").remove();
+			});
+			$(".main-comment").click(function () {
+				if (!isReply) {
+					var x = $(this).children(".comment-box");
+					for (let i = 0; i < x.length; i++) {
+						if (x[i].style.display === "none") {
+							x[i].style.display = "block";
+						} else {
+							x[i].style.display = "none";
+						}
+					}
+				}
+			});
+
+			fbShare.onclick = function () {
+				window.open("https://www.facebook.com/sharer.php?u=@postUrl", "", "height=368,width=600,left=100,top=100,menubar=0");
+				return false;
+			}
+
+			gplusShare.onclick = function () {
+				window.open("https://plus.google.com/share?url=@postUrl", "", "height=550,width=525,left=100,top=100,menubar=0");
+				return false;
+			}
+
+			twitterShare.onclick = function () {
+				window.open("https://twitter.com/share?url=@postUrl" + "&text=@Model.Post.PostName", "", "height=260,width=500,left=100,top=100,menubar=0");
+				return false;
+			}
+		});
+	</script>
+}
+

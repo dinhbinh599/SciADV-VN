@@ -9,8 +9,9 @@
     var pageLast = pageNow + Model.PageSize - 1;
     var postID = ViewData["PostID"];
     ConvertTime convertTime = new ConvertTime();
-    var defaultAvatar = "https://localhost:5002/user-content/user-icon.jpg";
-    var currentAvatar = "https://localhost:5002/user-content/" + @ViewData["Avatar"];
+    var imageFolder = @ViewData["BaseAddress"] + "/user-content/";
+    var defaultAvatar = imageFolder + "user-icon.jpg";
+    var currentAvatar = imageFolder + @ViewData["Avatar"];
     string adminColor, avatar = "";
 }
 
@@ -121,8 +122,8 @@
                                         {
                                             <div data-id="@comment.CommentID" class="comment-box main-comment">
                                                 <span class="commenter-pic">
-                                                    @if (comment.Avatar != null) { avatar = "https://localhost:5002/user-content/" + comment.Avatar; } else { avatar = defaultAvatar; }
-                                                    <img src=@avatar class="img-fluid">
+                                                    @if (comment.Avatar != null) { avatar = imageFolder + comment.Avatar; } else { avatar = defaultAvatar; }
+                                                    <img src=@avatar class="img-fluid img-avatar-comment">
                                                 </span>
                                                 @if (comment.IsManaged) { adminColor = "style= color:red"; } else { adminColor = ""; }
                                                 <span class="commenter-name">
@@ -134,8 +135,9 @@
                                                     {
                                                         <a href="/Comment/mark-comment-read?id=@comment.CommentID&currentID=@ViewData["PostID"]" class="mark-read"> Đánh dấu đã đọc</a>
                                                     }
-                                                    @Html.ActionLink("Sửa", "EditComment", new { id = comment.CommentID, postID = comment.PostID })
-                                                    | @Html.ActionLink("Xóa", "DeleteComment", new { id = comment.CommentID, postID = comment.PostID })
+                                                    <a href="/Comment?id=@comment.PostID" class="btn btn-outline-danger">Tới bài viết</a>
+                                                    <div class="btn btn-outline-primary">@Html.ActionLink("Sửa", "EditComment", new { id = comment.CommentID, postID = comment.PostID })</div>
+                                                    <div class="btn btn-outline-primary">@Html.ActionLink("Xóa", "DeleteComment", new { id = comment.CommentID, postID = comment.PostID })</div>
                                                     <button class="comment-like"><i class="far fa-thumbs-up" aria-hidden="true"></i>@comment.LikeCount</button>
                                                     <button class="comment-dislike"><i class="far fa-thumbs-down" aria-hidden="true"></i> @comment.DislikeCount</button>
                                                     <button post-id="@comment.PostID" parent-id="@comment.CommentID" data-id="@comment.CommentID" class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>
@@ -144,8 +146,8 @@
                                                 {
                                                     <div data-id="@comment.SubComments[i].SubCommentID" class="comment-box replied">
                                                         <span class="commenter-pic">
-                                                            @if (comment.SubComments[i].Avatar != null) { avatar = "https://localhost:5002/user-content/" + comment.SubComments[i].Avatar; } else { avatar = defaultAvatar; }
-                                                            <img src=@avatar class="img-fluid">
+                                                            @if (comment.SubComments[i].Avatar != null) { avatar = imageFolder + comment.SubComments[i].Avatar; } else { avatar = defaultAvatar; }
+                                                            <img src=@avatar class="img-fluid img-avatar-comment">
                                                         </span>
                                                         @if (comment.SubComments[i].IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
                                                         <span class="commenter-name">
@@ -153,12 +155,13 @@
                                                         </span>
                                                         <p class="comment-txt more">@comment.SubComments[i].Commenter</p>
                                                         <div class="comment-meta">
-                                                            @if ((!comment.SubComments[i].IsView)&&(i>=comment.SubComments.Count-1))
+                                                            @if ((!comment.SubComments[i].IsView) && (i >= comment.SubComments.Count - 1))
                                                             {
                                                                 <a href="/Comment/mark-comment-read?id=@comment.SubComments[i].SubCommentID&currentID=@ViewData["PostID"]" class="mark-read"> Đánh dấu đã đọc</a>
                                                             }
-                                                            @Html.ActionLink("Sửa", "EditComment", new { id = comment.SubComments[i].SubCommentID, postID = comment.SubComments[i].PostID })
-                                                            | @Html.ActionLink("Xóa", "DeleteComment", new { id = comment.SubComments[i].SubCommentID, postID = comment.SubComments[i].PostID })
+                                                            <a href="/Comment?id=@comment.SubComments[i].PostID" class="btn btn-outline-danger">Tới bài viết</a>
+                                                            <div class="btn btn-outline-primary">@Html.ActionLink("Sửa", "EditComment", new { id = comment.SubComments[i].SubCommentID, postID = comment.SubComments[i].PostID })</div>
+                                                            <div class="btn btn-outline-primary">@Html.ActionLink("Xóa", "DeleteComment", new { id = comment.SubComments[i].SubCommentID, postID = comment.SubComments[i].PostID })</div>
                                                             <button class="comment-like"><i class="far fa-thumbs-up" aria-hidden="true"></i> @comment.SubComments[i].LikeCount</button>
                                                             <button class="comment-dislike"><i class="far fa-thumbs-down" aria-hidden="true"></i> @comment.SubComments[i].DislikeCount</button>
                                                             <button post-id="@comment.SubComments[i].PostID" parent-id="@comment.CommentID" data-id="@comment.SubComments[i].SubCommentID" class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>
@@ -236,7 +239,7 @@
 				var parentID = $(this).attr("parent-id");
 				var postID = $(this).attr("post-id");
 				var box = $("div[data-id='" + dataID + "']");
-				box.append('<form class="reply" action="/comment/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="@currentAvatar" class="img-fluid"></span><span class="commenter-name"><input value="' + postID + '" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="' + @postID +'" id="CurrentID" type="hidden" placeholder="ID" name="CurrentID"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea style="height:120px" id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter"></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
+				box.append('<form class="reply" action="/comment/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="@currentAvatar" class="img-fluid img-avatar-comment"></span><span class="commenter-name"><input value="' + postID + '" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="' + @postID +'" id="CurrentID" type="hidden" placeholder="ID" name="CurrentID"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea style="height:120px" id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter"></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
 					$(".reply-popup-cancel").click(function () {
 					$(".reply").remove();
 				});

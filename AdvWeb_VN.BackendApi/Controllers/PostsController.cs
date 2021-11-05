@@ -203,7 +203,7 @@ namespace AdvWeb_VN.BackendApi.Controllers
             return Ok(result);
         }
 
-        [HttpPut("view/{id}")]
+        [HttpGet("view/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> AddViewCount(int id)
         {

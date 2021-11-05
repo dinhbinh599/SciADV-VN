@@ -41,6 +41,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			//Hiển thị Post Paging theo CategoryID
 			//Sau có lẽ thêm hiển thị All nữa ???
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+			ViewData["PortalAddress"] = _configuration["PortalAddress"];
+
 			ViewData["ID"] = id;
 			var request = new GetManagePostPagingRequest()
 			{

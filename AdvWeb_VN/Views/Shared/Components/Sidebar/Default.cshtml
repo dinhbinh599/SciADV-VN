@@ -2,13 +2,43 @@
 @model AdvWeb_VN.WebApp.Models.SidebarViewModel
 
 @{
+	UrlRewrite rewrite = new UrlRewrite();
 	Split split = new Split();
 }
 
 	<div class="col-md-10 col-lg-4">
 		<div class="p-l-10 p-rl-0-sr991 p-b-20">
+			<!-- Most Popular -->
+			<div class="p-b-23">
+				<div class="how2 how2-cl4 flex-s-c">
+					<h3 class="f1-m-2 cl3 tab01-title">
+						Tiêu biểu
+					</h3>
+				</div>
+
+				<ul class="p-t-35">
+					@{
+						var popular5 = Model.Posts.OrderByDescending(i => i.View).Take(5);
+					}
+
+					@for (int i = 0; i < popular5.Count(); i++)
+					{
+						<li class="flex-wr-sb-s p-b-22">
+							<div class="size-a-8 flex-c-c borad-3 size-a-8 bg9 f1-m-4 cl0 m-b-6">
+								@(i + 1)
+							</div>
+
+							<a href="/post/@(rewrite.Rewrite(popular5.ElementAt(i).PostName) + popular5.ElementAt(i).PostID)" class="size-w-3 f1-s-7 cl3 hov-cl10 trans-03">
+								@popular5.ElementAt(i).PostName
+							</a>
+						</li>
+					}
+
+				</ul>
+			</div>
+
 			<!-- Youtube -->
-			<div class="p-b-55">
+			@*<div class="p-b-55">
 				<div class="how2 how2-cl4 flex-s-c m-b-35">
 					<h3 class="f1-m-2 cl3 tab01-title">
 						Youtube
@@ -16,7 +46,8 @@
 				</div>
 				<script src="~/js/platform.js" defer></script>
 				<div class="elfsight-app-153a1c86-f9fb-413b-b617-9121263064d1"></div>
-			</div>
+			</div>*@
+
 
 			<!-- Discord -->
 			<div class="p-b-55">
@@ -25,7 +56,7 @@
 						Discord
 					</h3>
 				</div>
-				<iframe src="https://discord.com/widget?id=720979619175727154&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+				<iframe src="https://discord.com/widget?id=524195587126722589&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
 				</iframe>
 			</div>
 

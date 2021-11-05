@@ -42,6 +42,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 				PageSize = pageSize
 			};
 
+			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			ViewData["PostID"] = id;
 			ViewData["PageSize"] = pageSize;
 

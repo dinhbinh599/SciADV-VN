@@ -9,5 +9,6 @@ namespace AdvWeb_VN.ViewModels.Catalog.Comments
 		public string Commenter { set; get; }
 		public int ParentID { set; get; }
 		public int PostID { set; get; }
+		public string PostName { set; get; }
 	}
 }

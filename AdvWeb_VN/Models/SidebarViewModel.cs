@@ -12,5 +12,6 @@ namespace AdvWeb_VN.WebApp.Models
 	public class SidebarViewModel
 	{
 		public PagedResult<TagViewModel> Tags { set; get; }
+		public List<PostViewModel> Posts { set; get; }
 	}
 }
