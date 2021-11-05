@@ -9,7 +9,7 @@
 	var defaultAvatar = imageFolder + "user-icon.jpg";
 	string adminColor, avatar = "";
 	UrlRewrite rewrite = new UrlRewrite();
-	var postUrl = ViewData["BaseAddress"] + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID;
+	var postUrl = ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID;
 }
 
 <!-- Breadcrumb -->
@@ -186,11 +186,11 @@
 								<img src="~/images/user-icon.jpg" class="img-fluid">
 							</span>
 							<span class="commenter-name">
-								<input oninvalid="this.setCustomValidity('Tên và bình luận bắt buộc phải có!')" maxlength="50" id="Commentator" type="text" placeholder="Tên" name="Commentator" required>
+								<input oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Tên bắt buộc phải có, dài tối đa 50 kí tự!')" maxlength="50" id="Commentator" type="text" placeholder="Tên" name="Commentator" required>
 								<input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID">
 								<input value="@Model.Post.PostName" id="PostName" type="hidden" placeholder="Name" name="PostName">
 							</span>
-							<textarea oninvalid="this.setCustomValidity('Tên và bình luận bắt buộc phải có!')" maxlength="250" id="Commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="Commenter" required></textarea>
+							<textarea oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Bình luận bắt buộc phải có, dài tối đa 250 kí tự!')" maxlength="250" id="Commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="Commenter" required></textarea>
 							<button type="submit" class="btn btn-default">Gửi</button>
 							<button type="cancel" class="btn btn-default">Hủy</button>
 						</div>
@@ -339,7 +339,7 @@
 				var dataID = $(this).attr("data-id");
 				var parentID = $(this).attr("parent-id");
 				var box = $("div[data-id='" + dataID + "']");
-				box.append('<form class="reply" action="/post/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="/images/user-icon.jpg" class="img-fluid img-avatar-comment"></span><span class="commenter-name"><input oninvalid="this.setCustomValidity(\'Tên và bình luận bắt buộc phải có!\')" maxlength="50"  id="commentator" type="text" placeholder="Tên" name="commentator" required><input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="@Model.Post.PostName" id="PostName" type="hidden" placeholder="Name" name="PostName"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea oninvalid="this.setCustomValidity(\'Tên và bình luận bắt buộc phải có!\')" maxlength="250"  id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter" required></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
+				box.append('<form class="reply" action="/post/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="/images/user-icon.jpg" class="img-fluid img-avatar-comment"></span><span class="commenter-name"><input oninput="this.setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'Tên bắt buộc phải có, dài tối đa 50 kí tự!\')" maxlength="50"  id="commentator" type="text" placeholder="Tên" name="commentator" required><input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="@Model.Post.PostName" id="PostName" type="hidden" placeholder="Name" name="PostName"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea oninput="this.setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'Bình luận bắt buộc phải có, dài tối đa 250 kí tự!\')" maxlength="250"  id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter" required></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
 					$(".reply-popup-cancel").click(function () {
 					$(".reply").remove();
 				});

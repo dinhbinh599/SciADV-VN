@@ -62,13 +62,13 @@
 						@for (int i=0;i<((Model.PostFooters.Count>=5) ? 4: Model.PostFooters.Count); i++)
 						{
 						<li class="flex-wr-sb-s p-b-20">
-							<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + "-" + Model.PostFooters[i].PostID)" class="size-w-4 wrap-pic-w hov1 trans-03">
+							<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + Model.PostFooters[i].PostID)" class="size-w-4 wrap-pic-w hov1 trans-03">
 								<img class="image-post-footer" src="@imageFolder@Model.PostFooters[i].Thumbnail" alt="IMG">
 							</a>
 
 							<div class="size-w-5">
 								<h6 class="p-b-5">
-									<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + "-" + Model.PostFooters[i].PostID)" class="f1-s-5 cl11 hov-cl10 trans-03">
+									<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + Model.PostFooters[i].PostID)" class="f1-s-5 cl11 hov-cl10 trans-03">
 										@split.NormalizeName(Model.PostFooters[i].PostName, 12)
 									</a>
 								</h6>

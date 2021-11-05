@@ -32,6 +32,8 @@ namespace AdvWeb_VN.WebApp.Controllers
             //Hiển thị danh sách Comment
 
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
+            ViewData["PortalAddress"] = _configuration["PortalAddress"];
+
             ViewData["Active"] = -1;
             ViewData["PostID"] = id;
 
@@ -60,6 +62,8 @@ namespace AdvWeb_VN.WebApp.Controllers
             //Hiển thị danh sách Comment
 
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
+            ViewData["PortalAddress"] = _configuration["PortalAddress"];
+
             ViewData["Active"] = -1;
             ViewData["PostID"] = id;
 
