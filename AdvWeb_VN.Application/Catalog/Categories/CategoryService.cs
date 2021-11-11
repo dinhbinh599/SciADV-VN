@@ -32,7 +32,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 			var category = new Category()
 			{
 				CategoryName = request.CategoryName,
-				CreateDate = DateTime.Now,
+				CreateDate = DateTime.Now.ToUniversalTime(),
 			};
 			_context.Categories.Add(category);
 			var result = await _context.SaveChangesAsync();

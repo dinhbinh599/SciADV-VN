@@ -37,10 +37,15 @@ namespace AdvWeb_VN.WebApp.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
+            string categoryName = "Chuyên mục";
             var resultPost = await _postApiClient.GetPostsPagingsCategory(request);
             var resultTag = await _tagApiClient.GetAllByCategoryID(request.Id.GetValueOrDefault(1));
+
+            if (resultPost.ResultObj.TotalRecords > 0) categoryName = resultPost.ResultObj.Items[0].CategoryName + " | Gerosaga" ;
+
             var categoryVM = new CategoryPageViewModel()
             {
+                CategoryName = categoryName,
                 Posts = resultPost.ResultObj,
                 Tags = resultTag.ResultObj
             };

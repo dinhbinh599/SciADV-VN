@@ -9,6 +9,7 @@ namespace AdvWeb_VN.WebApp.Models
 {
 	public class TagPageViewModel
 	{
+		public string TagName;
 		public PagedResult<AdvWeb_VN.ViewModels.Catalog.Posts.PostViewModel> Posts;
 		public PagedResult<TagViewModel> Tags;
 	}

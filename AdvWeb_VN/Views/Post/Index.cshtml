@@ -1,7 +1,7 @@
 ﻿@model AdvWeb_VN.WebApp.Models.PostPageViewModel
 @using AdvWeb_VN.Utilities.Settings
 @{
-	ViewData["Title"] = "Bài viết";
+	ViewData["Title"] = Model.Post.PostName;
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
 	Split split = new Split();

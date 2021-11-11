@@ -58,7 +58,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				UserID = request.UserID,
 				CategoryID = request.CategoryID,
 				SubCategoryID = request.SubCategoryID,
-				WriteTime = DateTime.Now,
+				WriteTime = DateTime.Now.ToUniversalTime(),
 			};
 			if (request.ThumbnailFile != null)
 			{
@@ -67,7 +67,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					new PostImage()
 					{
 						//Caption = "Thumbnail image",
-						DateCreated = DateTime.Now,
+						DateCreated = DateTime.Now.ToUniversalTime().ToUniversalTime(),
 						FileSize = request.ThumbnailFile.Length,
 						ImagePath = await this.SaveFile(request.ThumbnailFile),
 						IsDefault = true
@@ -182,7 +182,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			
 			post.PostName = request.PostName;
 			post.Contents = request.Contents;
-			post.WriteTime = DateTime.Now;
+			post.WriteTime = DateTime.Now.ToUniversalTime();
 			post.SubCategoryID = request.SubCategoryID;
 			post.CategoryID = request.CategoryID;
 			if (request.ThumbnailFile != null)
@@ -489,7 +489,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var postImage = new PostImage()
 			{
 				//Caption = request.Caption,
-				DateCreated = DateTime.Now,
+				DateCreated = DateTime.Now.ToUniversalTime(),
 				PostID = postID,
 				IsDefault = false
 			};
@@ -544,7 +544,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			if (postImage == null) return new ApiErrorResult<bool>($"Cannot find an image with id {imageID}");
 
 			//postImage.Caption = request.Caption;
-			postImage.DateCreated = DateTime.Now;
+			postImage.DateCreated = DateTime.Now.ToUniversalTime();
 			
 			if (request.ImageFile != null)
 			{
@@ -595,7 +595,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var postImage = new PostImage()
 			{
 				//Caption = request.Caption,
-				DateCreated = DateTime.Now,
+				DateCreated = DateTime.Now.ToUniversalTime(),
 				PostID = postID,
 				IsDefault = false
 			};
@@ -630,7 +630,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			post.PostName = request.PostName;
 			post.Contents = request.Contents;
-			post.WriteTime = DateTime.Now;
+			post.WriteTime = DateTime.Now.ToUniversalTime();
 			post.SubCategoryID = request.SubCategoryID;
 			post.CategoryID = request.CategoryID;
 			if (request.ThumbnailFile != null)
@@ -754,7 +754,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var postImage = new PostImage()
 			{
 				//Caption = request.Caption,
-				DateCreated = DateTime.Now,
+				DateCreated = DateTime.Now.ToUniversalTime(),
 				PostID = postID,
 				IsDefault = false
 			};
@@ -791,7 +791,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			var postImage = new PostImage()
 			{
 				//Caption = request.Caption,
-				DateCreated = DateTime.Now,
+				DateCreated = DateTime.Now.ToUniversalTime(),
 				PostID = postID,
 				IsDefault = false
 			};

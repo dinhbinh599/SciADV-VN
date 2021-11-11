@@ -2,7 +2,7 @@
 @using AdvWeb_VN.WebApp.Models
 @model CategoryPageViewModel
 @{
-	ViewData["Title"] = "Chuyên mục con";
+	ViewData["Title"] = Model.CategoryName;
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
 	Split split = new Split();
@@ -200,7 +200,7 @@
 						<div class="flex-wr-s-s m-rl--5">
 							@foreach (var tag in Model.Tags)
 							{
-								<a href="/Tag/tag-@tag.TagID" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
+								<a href="/Tag/@tag.TagName" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
 									@tag.TagName
 								</a>
 							}

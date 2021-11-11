@@ -26,7 +26,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 			var category = new SubCategory()
 			{
 				CategoryName = request.CategoryName,
-				CreateDate = DateTime.Now,
+				CreateDate = DateTime.Now.ToUniversalTime(),
 				CategoryID = request.CategoryID
 			};
 			_context.SubCategories.Add(category);

@@ -210,7 +210,8 @@
 			$("select#pageSize").change(function () {
 				if ($("#keyword").val() != "" || $('#post-link').val() != "") {
                     var selected = $(this).children("option:selected").val();
-					let postId = $('#post-link').val().replace(/[^0-9]/g, '');
+					let postLink = $('#post-link').val();
+					let postId = postLink.slice(postLink.lastIndexOf("-")+1);
 					window.location.href = "/Comment?id=" + postId + "&pageSize=" + selected + "&keyword=" + $("#keyword").val() ;
 			    }    
 		    });
@@ -218,7 +219,8 @@
             //Khi nhấn vào button Search thì chuyển trang với keyword,postID
             $("#btn-search").click(function () {
 				if ($("#keyword").val() != "" || $('#post-link').val() != "") {
-                    let postId = $('#post-link').val().replace(/[^0-9]/g, '');
+					let postLink = $('#post-link').val();
+					let postId = postLink.slice(postLink.lastIndexOf("-")+1);
 					window.location.href = "/Comment?id=" + postId + "&keyword=" + $("#keyword").val();
 			    }
 			});
@@ -226,7 +228,8 @@
             //Khi nhấn vào button thì chuyển trang với keyword,postID
              $("#btn-post").click(function () {
 				if ($('#post-link').val() != "") {
-                    let postId = $('#post-link').val().replace(/[^0-9]/g, '');
+                    let postLink = $('#post-link').val();
+					let postId = postLink.slice(postLink.lastIndexOf("-")+1);
 					window.location.href = "/Comment?id=" + postId + "&keyword=" + $("#keyword").val();
 			    }
 			 });

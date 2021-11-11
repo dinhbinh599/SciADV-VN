@@ -75,7 +75,7 @@ namespace AdvWeb_VN.Application.System.Users
 			var token = new JwtSecurityToken(_configuration["Tokens:Issuer"],
 				_configuration["Tokens:Issuer"],
 				claims,
-				expires: DateTime.Now.AddHours(3),
+				expires: DateTime.Now.ToUniversalTime().AddHours(3),
 				signingCredentials: creds);
 
 			var tokenOut = new JwtSecurityTokenHandler().WriteToken(token);

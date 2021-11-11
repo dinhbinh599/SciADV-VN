@@ -5,11 +5,11 @@
 @model HomePageViewModel
 @{
 	Split split = new Split();
-	ViewData["Title"] = "Trang chủ";
+	ViewData["Title"] = "Gerosaga";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	ConvertTime convertTime = new ConvertTime();
 	var imageFolder = @ViewData["BaseAddress"] + "/user-content/";
-	var listCarouselCount = (7 > Model.Posts.Items.Count) ? 7 : Model.Posts.Items.Count;
+	var listCarouselCount = (Model.Posts.Items.Count>7) ? 7 : Model.Posts.Items.Count;
 	UrlRewrite rewrite = new UrlRewrite();
 }
 

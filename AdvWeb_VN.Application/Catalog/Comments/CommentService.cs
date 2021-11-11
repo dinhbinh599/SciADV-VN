@@ -45,7 +45,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 			{
 				Commentator = Commentator,
 				Commenter = request.Commenter,
-				CommentTime = DateTime.Now,
+				CommentTime = DateTime.Now.ToUniversalTime(),
 				PostID = request.PostID,
 				UserID = request.UserID,
 				ParentID = request.ParentID,
@@ -90,7 +90,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 			{
 				Commentator = Commentator,
 				Commenter = request.Commenter,
-				CommentTime = DateTime.Now,
+				CommentTime = DateTime.Now.ToUniversalTime(),
 				PostID = request.PostID,
 				UserID = request.UserID,
 				ParentID = request.ParentID,
@@ -116,7 +116,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 				{
 					Commentator = request.Commentator,
 					Commenter = request.Commenter,
-					CommentTime = DateTime.Now,
+					CommentTime = DateTime.Now.ToUniversalTime(),
 					ParentID = request.ParentID,
 					PostID = request.PostID,
 					IsManaged = false

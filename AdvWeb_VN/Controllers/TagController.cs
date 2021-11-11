@@ -24,8 +24,8 @@ namespace AdvWeb_VN.WebApp.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet("{controller}/tag-{id}")]
-        public async Task<IActionResult> Index(int id, int pageIndex = 1, int pageSize = 10)
+        [HttpGet("{controller}/{name}-{id}")]
+        public async Task<IActionResult> Index(string name, int id, int pageIndex = 1, int pageSize = 10)
         {
             //Hiển thị danh sách bài viết theo Tag
             //Hiển thị danh sách Tag ngẫu nhiên
@@ -47,8 +47,11 @@ namespace AdvWeb_VN.WebApp.Controllers
 
             var resultPost = await _postApiClient.GetPostsPagingsTag(postRequest);
             var resultTag = await _tagApiClient.GetTagsPagings(tagRequest);
+
+
             var tagVM = new TagPageViewModel()
             {
+                TagName = name,
                 Posts = resultPost.ResultObj,
                 Tags = resultTag.ResultObj
             };
@@ -77,6 +80,7 @@ namespace AdvWeb_VN.WebApp.Controllers
             var resultTag = await _tagApiClient.GetTagsPagings(tagRequest);
             var tagVM = new TagPageViewModel()
             {
+                TagName = name + " | Gerosaga",
                 Posts = resultPost.ResultObj,
                 Tags = resultTag.ResultObj
             };
