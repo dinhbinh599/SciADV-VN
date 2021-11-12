@@ -60,6 +60,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				SubCategoryID = request.SubCategoryID,
 				WriteTime = DateTime.Now.ToUniversalTime(),
 			};
+
 			if (request.ThumbnailFile != null)
 			{
 				post.PostImages = new List<PostImage>()
@@ -67,7 +68,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					new PostImage()
 					{
 						//Caption = "Thumbnail image",
-						DateCreated = DateTime.Now.ToUniversalTime().ToUniversalTime(),
+						DateCreated = DateTime.Now.ToUniversalTime(),
 						FileSize = request.ThumbnailFile.Length,
 						ImagePath = await this.SaveFile(request.ThumbnailFile),
 						IsDefault = true
@@ -187,7 +188,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			post.CategoryID = request.CategoryID;
 			if (request.ThumbnailFile != null)
 			{
-				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.PostID == request.PostID);
+				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.ImagePath == post.Thumbnail);
 				if (thumbnailFile != null)
 				{
 					thumbnailFile.FileSize = request.ThumbnailFile.Length;
@@ -635,7 +636,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			post.CategoryID = request.CategoryID;
 			if (request.ThumbnailFile != null)
 			{
-				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.PostID == request.PostID);
+				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.ImagePath == post.Thumbnail);
 				if (thumbnailFile != null)
 				{
 					thumbnailFile.FileSize = request.ThumbnailFile.Length;

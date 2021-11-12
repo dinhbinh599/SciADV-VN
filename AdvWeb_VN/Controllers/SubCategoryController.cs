@@ -42,7 +42,7 @@ namespace AdvWeb_VN.WebApp.Controllers
             var resultPost = await _postApiClient.GetPostsPagingsSubCategory(request);
             var resultTag = await _tagApiClient.GetAllByCategoryID(request.Id.GetValueOrDefault(1));
 
-            if (resultPost.ResultObj.TotalRecords > 0) subcategoryName = resultPost.ResultObj.Items[0].SubCategoryName + " | Gerosaga";
+            if (resultPost.ResultObj.TotalRecords > 0) subcategoryName = resultPost.ResultObj.Items[0].SubCategoryName + " | Gero Saga";
 
             var subCategoryVM = new CategoryPageViewModel()
             {

@@ -80,7 +80,7 @@ namespace AdvWeb_VN.WebApp.Controllers
             var resultTag = await _tagApiClient.GetTagsPagings(tagRequest);
             var tagVM = new TagPageViewModel()
             {
-                TagName = name + " | Gerosaga",
+                TagName = name + " | Gero Saga",
                 Posts = resultPost.ResultObj,
                 Tags = resultTag.ResultObj
             };

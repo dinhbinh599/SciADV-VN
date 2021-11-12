@@ -15,7 +15,7 @@ namespace AdvWeb_VN.Utilities.Settings
             const int DAY = 24 * HOUR;
             const int MONTH = 30 * DAY;
 
-            var ts = DateTime.Now.ToUniversalTime().Subtract(postTime.ToUniversalTime());
+            var ts = DateTime.Now.ToUniversalTime().Subtract(postTime);
 
             double delta = Math.Abs(ts.TotalSeconds);
 
