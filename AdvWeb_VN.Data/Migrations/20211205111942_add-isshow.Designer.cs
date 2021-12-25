@@ -4,14 +4,16 @@ using AdvWeb_VN.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AdvWeb_VN.Data.Migrations
 {
     [DbContext(typeof(AdvWebDbContext))]
-    partial class AdvWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211205111942_add-isshow")]
+    partial class addisshow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,8 +39,7 @@ namespace AdvWeb_VN.Data.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("IsShow")
-                        .IsRequired()
+                    b.Property<bool>("IsShow")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -52,25 +53,29 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             CategoryID = 1,
                             CategoryName = "News",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 370, DateTimeKind.Local).AddTicks(3526)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 641, DateTimeKind.Local).AddTicks(1934),
+                            IsShow = false
                         },
                         new
                         {
                             CategoryID = 2,
                             CategoryName = "Review",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 371, DateTimeKind.Local).AddTicks(5409)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 642, DateTimeKind.Local).AddTicks(2019),
+                            IsShow = false
                         },
                         new
                         {
                             CategoryID = 3,
                             CategoryName = "Project",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 371, DateTimeKind.Local).AddTicks(5450)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 642, DateTimeKind.Local).AddTicks(2046),
+                            IsShow = false
                         },
                         new
                         {
                             CategoryID = 4,
                             CategoryName = "Donate",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 371, DateTimeKind.Local).AddTicks(5453)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 642, DateTimeKind.Local).AddTicks(2049),
+                            IsShow = false
                         });
                 });
 
@@ -153,8 +158,7 @@ namespace AdvWeb_VN.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .IsUnicode(true);
 
-                    b.Property<bool?>("IsShow")
-                        .IsRequired()
+                    b.Property<bool>("IsShow")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -268,14 +272,14 @@ namespace AdvWeb_VN.Data.Migrations
                         new
                         {
                             Id = new Guid("706a7f4f-a6ed-4e24-bd09-df7829865142"),
-                            ConcurrencyStamp = "ec177e6a-098d-414b-853b-b416d69d6ff4",
+                            ConcurrencyStamp = "45239fe7-ac57-4e69-b49c-5faff90e073c",
                             Name = "admin",
                             NormalizedName = "admin"
                         },
                         new
                         {
                             Id = new Guid("d00409db-a6ed-4985-a3b7-4036774572cd"),
-                            ConcurrencyStamp = "0a935a83-b4f2-4f83-b110-3eb9c27ba296",
+                            ConcurrencyStamp = "64c2b8ba-2a6e-4e7a-9ce0-d3d938563a21",
                             Name = "Writer",
                             NormalizedName = "Writer"
                         });
@@ -302,8 +306,7 @@ namespace AdvWeb_VN.Data.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("IsShow")
-                        .IsRequired()
+                    b.Property<bool>("IsShow")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -320,35 +323,40 @@ namespace AdvWeb_VN.Data.Migrations
                             SubCategoryID = 1,
                             CategoryID = 1,
                             CategoryName = "Chaos;Head",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 373, DateTimeKind.Local).AddTicks(5313)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 643, DateTimeKind.Local).AddTicks(9584),
+                            IsShow = false
                         },
                         new
                         {
                             SubCategoryID = 2,
                             CategoryID = 1,
                             CategoryName = "Chaos;Child",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 373, DateTimeKind.Local).AddTicks(6706)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 644, DateTimeKind.Local).AddTicks(940),
+                            IsShow = false
                         },
                         new
                         {
                             SubCategoryID = 3,
                             CategoryID = 1,
                             CategoryName = "Steins;Gate",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 373, DateTimeKind.Local).AddTicks(6743)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 644, DateTimeKind.Local).AddTicks(975),
+                            IsShow = false
                         },
                         new
                         {
                             SubCategoryID = 4,
                             CategoryID = 2,
                             CategoryName = "Chaos;Child",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 373, DateTimeKind.Local).AddTicks(6746)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 644, DateTimeKind.Local).AddTicks(978),
+                            IsShow = false
                         },
                         new
                         {
                             SubCategoryID = 5,
                             CategoryID = 3,
                             CategoryName = "Chaos;Head",
-                            CreateDate = new DateTime(2021, 12, 5, 19, 40, 28, 373, DateTimeKind.Local).AddTicks(6748)
+                            CreateDate = new DateTime(2021, 12, 5, 18, 19, 41, 644, DateTimeKind.Local).AddTicks(980),
+                            IsShow = false
                         });
                 });
 
@@ -446,13 +454,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("0cfe64bd-645b-4f5a-91d1-c3082c132ed8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a057a0d5-946a-4792-87c2-6aa66b018ff2",
+                            ConcurrencyStamp = "74257c37-87d5-4c11-b266-2133f25a66ca",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "hoangthuan2092003@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEqwoTn2oCzCP4I+Ovnbom4SO6zbB8G4ntdlaWvbk9kCGLqybN/7tJbXknSnKAMzyQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHl6WBXjbfUaZwtHjBTV0dn8/MWBSxTTSn455IDOPz0kksySb9UYA8Z9kgWcFX1kVw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -462,13 +470,13 @@ namespace AdvWeb_VN.Data.Migrations
                         {
                             Id = new Guid("5581e8dc-2614-4392-a95c-2e9411bfdb14"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "477e7007-d595-472f-80eb-4719685521aa",
+                            ConcurrencyStamp = "60a4b0f7-b58c-4f8b-8406-9674947aee27",
                             Email = "hoangthuan2092003@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "nguyenhoangthuan2092003@gmail.com",
                             NormalizedUserName = "hoho303",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFtBGY+j6FTQb162MaaztZ/vruzvQJLCEprqBSsV2a1Cpx0/1OujWxXtGFrUBKL0PA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM91I+nFvoXdWK1n2o6e/wKM42h38FOUUVE0KgGwJkgPARts7LGmSmA5qL7WBjZclw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AdvWeb_VN.ManageApp.Models;
 using AdvWeb_VN.ManageApp.Services;
 using AdvWeb_VN.Utilities.Constants;
+using AdvWeb_VN.Utilities.Settings;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Catalog.ProductImages;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
@@ -36,7 +37,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			_tagApiClient = tagApiClient;
 		}
 
-		public async Task<IActionResult> Index(string keyword, int id = 1, int pageIndex = 1, int pageSize = 10)
+		public async Task<IActionResult> Index(string keyword, int id = 0, int pageIndex = 1, int pageSize = 10)
 		{
 			//Hiển thị Post Paging theo CategoryID
 			//Sau có lẽ thêm hiển thị All nữa ???
@@ -82,7 +83,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			
 			var postCreateRequest = new PostCreateRequest()
 			{
-				UserID = userID			
+				UserID = userID
 			};
 			return View(postCreateRequest);
 		}
@@ -100,6 +101,11 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 			var oldContents = request.Contents;
 			request.Contents = "oldContents";
+
+			//Convert Format của Write Time
+			DateTime writeTime = DateTime.ParseExact(request.TimePicker, "MM/dd/yyyy h:mm tt",
+									   System.Globalization.CultureInfo.InvariantCulture);
+			request.WriteTime = writeTime;
 
 			var result = await _postApiClient.CreatePost(request);
 			if (result.IsSuccessed)
@@ -132,7 +138,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			//Dẫn hướng đến trang chỉnh sửa bài viết
 			var result = await _postApiClient.GetByID(id);
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
-
+			var convert = new ConvertTime();
 			if (result.IsSuccessed)
 			{
 				var post = result.ResultObj;
@@ -145,7 +151,9 @@ namespace AdvWeb_VN.ManageApp.Controllers
 					Thumbnail = post.Thumbnail,
 					CategoryName = post.CategoryName,
 					SubCategoryName = post.SubCategoryName,
+					IsShow = post.IsShow ?? false,
 					CategoryID = post.CategoryID,
+					TimePicker = convert.ConvertToGMT7(post.WriteTime).ToString("MM/dd/yyyy hh:mm tt"),
 					TagAssignRequest = SelectConvertByTags(await GetTagAssignRequest(post.PostID))
 				};
 				return View(updateRequest);
@@ -164,6 +172,12 @@ namespace AdvWeb_VN.ManageApp.Controllers
 				return View();
 
 			request.Contents = await ConvertImage(request.PostID, request.Contents);
+
+			//Convert Format của Write Time
+			DateTime writeTime = DateTime.ParseExact(request.TimePicker, "MM/dd/yyyy h:mm tt",
+									   System.Globalization.CultureInfo.InvariantCulture);
+			request.WriteTime = writeTime;
+
 			var result = await _postApiClient.UpdatePost(request.PostID, request);
 			if (result.IsSuccessed)
 			{
@@ -172,6 +186,13 @@ namespace AdvWeb_VN.ManageApp.Controllers
 				TempData["result"] = "Cập nhật bài viết thành công";
 				return RedirectToAction("Index");
 			}
+			var resultEdit = await _postApiClient.GetByID(request.PostID);
+			var post = resultEdit.ResultObj;
+
+			request.Thumbnail = post.Thumbnail;
+			request.CategoryID = post.CategoryID;
+			request.SubCategoryID = post.SubCategoryID;
+			request.IsShow = post.IsShow ?? false;
 
 			ModelState.AddModelError("", result.Message);
 			return View(request);

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AdvWeb_VN.Utilities.Settings;
 using AdvWeb_VN.ViewModels.Catalog.Comments;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.WebApp.Models;
 using AdvWeb_VN.WebApp.Services;
+using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -52,6 +54,33 @@ namespace AdvWeb_VN.WebApp.Controllers
                 Post = resultPost.ResultObj,
                 Comments = comments.ResultObj
             };
+
+            UrlRewrite rewrite = new UrlRewrite();
+            Split split = new Split();
+            var doc = new HtmlDocument();
+            doc.LoadHtml(resultPost.ResultObj.Contents);
+
+            var root = doc.DocumentNode;
+            var description = "";
+
+            foreach (var node in root.DescendantNodesAndSelf())
+            {
+                if (!node.HasChildNodes)
+                {
+                    string text = node.InnerText;
+                    if (!string.IsNullOrEmpty(text))
+                        description += text + " ";
+                }
+            }
+
+            ViewBag.description = split.Truncate(description,70);
+            ViewBag.keywords = resultPost.ResultObj.PostName;
+            ViewBag.ogtype = "Article";
+            ViewBag.ogtitle = resultPost.ResultObj.PostName;
+            //ViewBag.ogimage = ViewData["BaseAddress"] + "/user-content/" + resultPost.ResultObj.Thumbnail;
+            ViewBag.ogimage = "";
+            ViewBag.ogdescription = split.Truncate(description, 70);
+            ViewBag.ogurl = ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(resultPost.ResultObj.PostName) + resultPost.ResultObj.PostID;
             return View(postVM);
         }
 

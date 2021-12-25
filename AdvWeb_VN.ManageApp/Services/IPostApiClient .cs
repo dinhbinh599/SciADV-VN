@@ -12,7 +12,7 @@ namespace AdvWeb_VN.ManageApp.Services
 	{
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagings(GetManagePostPagingRequest request);
 
-		Task<ApiResult<PostViewModel>> CreatePost(PostCreateRequest registerRequest);
+		Task<ApiResult<PostViewModel>> CreatePost(PostCreateRequest createRequest);
 
 		Task<ApiResult<bool>> UpdatePost(int id, PostUpdateRequest request);
 

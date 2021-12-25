@@ -4,14 +4,16 @@ using AdvWeb_VN.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AdvWeb_VN.Data.Migrations
 {
     [DbContext(typeof(AdvWebDbContext))]
-    partial class AdvWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211205124029_fix-bool")]
+    partial class fixbool
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

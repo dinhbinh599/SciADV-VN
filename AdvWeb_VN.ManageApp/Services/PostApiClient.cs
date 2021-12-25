@@ -85,7 +85,6 @@ namespace AdvWeb_VN.ManageApp.Services
             var requestContent = new MultipartFormDataContent();
 
             if (createRequest.ThumbnailFile != null)
-
             {
                 byte[] data;
                 using (var br = new BinaryReader(createRequest.ThumbnailFile.OpenReadStream()))
@@ -101,6 +100,8 @@ namespace AdvWeb_VN.ManageApp.Services
             requestContent.Add(new StringContent(createRequest.SubCategoryID.ToString()), "subCategoryID");
             requestContent.Add(new StringContent(createRequest.UserID.ToString()), "userID");
             requestContent.Add(new StringContent(createRequest.Contents), "contents");
+            requestContent.Add(new StringContent(createRequest.WriteTime.ToString()), "writeTime");
+            requestContent.Add(new StringContent(createRequest.IsShow.ToString()), "isShow");
 
             var response = await client.PostAsync($"/api/posts/", requestContent);
             var result = await response.Content.ReadAsStringAsync();
@@ -169,6 +170,8 @@ namespace AdvWeb_VN.ManageApp.Services
             requestContent.Add(new StringContent(request.CategoryID.ToString()), "categoryID");
             requestContent.Add(new StringContent(request.SubCategoryID.ToString()), "subCategoryID");
             requestContent.Add(new StringContent(request.Contents), "contents");
+            requestContent.Add(new StringContent(request.WriteTime.ToString()), "writeTime");
+            requestContent.Add(new StringContent(request.IsShow.ToString()), "isShow");
 
             var response = await client.PutAsync($"/api/posts/{request.PostID}", requestContent);
             var result = await response.Content.ReadAsStringAsync();

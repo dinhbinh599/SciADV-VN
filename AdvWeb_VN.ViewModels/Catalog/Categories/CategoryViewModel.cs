@@ -17,6 +17,8 @@ namespace AdvWeb_VN.ViewModels.Catalog.Categories
 
 		[Display(Name = "Ngày Tạo")]
 		public DateTime CreateDate { set; get; }
+		[Display(Name = "Hiển thị")]
+		public bool? IsShow { set; get; }
 
 	}
 }

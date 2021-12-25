@@ -88,6 +88,8 @@
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                         aria-label="Platform(s): activate to sort column ascending">Ngày Tạo</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                                        aria-label="Platform(s): activate to sort column ascending">Hiển Thị</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                         aria-label="CSS grade: activate to sort column ascending"></th>
                                                 </tr>
                                             </thead>
@@ -111,6 +113,9 @@
                                                         @Html.DisplayFor(modelItem => item.CreateDate)
                                                     </td>
                                                     <td>
+                                                        @Html.DisplayFor(modelItem => item.IsShow)
+                                                    </td>
+                                                    <td>
                                                         @Html.ActionLink("Sửa", "Edit", new { id = item.SubCategoryID }) |
                                                         @Html.ActionLink("Xem", "Details", new { id = item.SubCategoryID }) |
                                                         @Html.ActionLink("Xóa", "Delete", new { id = item.SubCategoryID })
@@ -125,6 +130,7 @@
                                                     <th rowspan="1" colspan="1">Tên Chuyên Mục Cha</th>
                                                     <th rowspan="1" colspan="1">Số Bài Viết</th>
                                                     <th rowspan="1" colspan="1">Ngày Tạo</th>
+                                                    <th rowspan="1" colspan="1">Hiển Thị</th>
                                                     <th rowspan="1" colspan="1"></th>
                                                 </tr>
                                             </tfoot>

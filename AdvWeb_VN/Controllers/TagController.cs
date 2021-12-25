@@ -48,13 +48,22 @@ namespace AdvWeb_VN.WebApp.Controllers
             var resultPost = await _postApiClient.GetPostsPagingsTag(postRequest);
             var resultTag = await _tagApiClient.GetTagsPagings(tagRequest);
 
-
+            name = name + " | Gero Saga";
             var tagVM = new TagPageViewModel()
             {
                 TagName = name,
                 Posts = resultPost.ResultObj,
                 Tags = resultTag.ResultObj
             };
+
+            ViewBag.description = "Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science Adventure (\"CHAOS; HEAD\", \"STEINS; GATE\", \"ROBOTICS; NOTES\"...) của 5pb./MAGES";
+            ViewBag.keywords = "Visual Novel, Science Adventure, " + name;
+            ViewBag.ogtype = "Website";
+            ViewBag.ogtitle = name;
+            ViewBag.ogimage = ViewData["BaseAddress"] + "/user-content/" + resultPost.ResultObj.Items[0].Thumbnail;
+            ViewBag.ogdescription = "Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science Adventure (\"CHAOS; HEAD\", \"STEINS; GATE\", \"ROBOTICS; NOTES\"...) của 5pb./MAGES";
+            ViewBag.ogurl = ViewData["PortalAddress"] + "/tag/name-" + id;
+
             return View(tagVM);
         }
 
@@ -76,6 +85,9 @@ namespace AdvWeb_VN.WebApp.Controllers
                 PageSize = 10
             };
 
+            name = name + " | Gero Saga";
+
+
             var resultPost = await _postApiClient.GetPostsPagingsTagByName(postRequest);
             var resultTag = await _tagApiClient.GetTagsPagings(tagRequest);
             var tagVM = new TagPageViewModel()
@@ -84,6 +96,15 @@ namespace AdvWeb_VN.WebApp.Controllers
                 Posts = resultPost.ResultObj,
                 Tags = resultTag.ResultObj
             };
+
+            ViewBag.description = "Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science Adventure (\"CHAOS; HEAD\", \"STEINS; GATE\", \"ROBOTICS; NOTES\"...) của 5pb./MAGES";
+            ViewBag.keywords = "Visual Novel, Science Adventure, " + name;
+            ViewBag.ogtype = "Website";
+            ViewBag.ogtitle = name + " | Gero Saga";
+            ViewBag.ogimage = ViewData["BaseAddress"] + "/user-content/" + resultPost.ResultObj.Items[0].Thumbnail;
+            ViewBag.ogdescription = "Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science Adventure (\"CHAOS; HEAD\", \"STEINS; GATE\", \"ROBOTICS; NOTES\"...) của 5pb./MAGES";
+            ViewBag.ogurl = ViewData["PortalAddress"] + "/tag/" + name;
+
             return View(tagVM);
         }
     }

@@ -16,6 +16,7 @@ namespace AdvWeb_VN.Data.Configurations
 			builder.ToTable("SubCategories");
 			builder.HasKey(x => x.SubCategoryID);
 			builder.Property(x => x.SubCategoryID).UseIdentityColumn();
+			builder.Property(x => x.IsShow).IsRequired().HasDefaultValue(true);
 			builder.Property(x => x.CategoryName).IsRequired()
 				.HasMaxLength(200).IsUnicode();
 			builder.HasOne(x => x.Category).WithMany(x => x.SubCategories).HasForeignKey(x => x.CategoryID);

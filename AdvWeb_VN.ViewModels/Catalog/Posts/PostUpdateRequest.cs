@@ -27,5 +27,12 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 		public string SubCategoryName { set; get; }
 		[Display(Name = "Tên chuyên mục cha")]
 		public string CategoryName { set; get; }
+
+		[Display(Name = "Ngày tạo")]
+		public DateTime WriteTime { set; get; }
+		[Display(Name = "Ngày tạo")]
+		public string TimePicker { set; get; }
+		[Display(Name = "Hiển thị")]
+		public bool IsShow { set; get; }
 	}
 }

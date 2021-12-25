@@ -179,8 +179,8 @@
         <!--  -->
         <div class="wrap-logo no-banner container">
             <!-- Logo desktop -->
-            <div class="logo">
-                <a href="/"><img src="~/images/logo.png" alt="LOGO"></a>
+            <div class="logo">      
+                <a href="/"><img src="~/images/logo_final.png" alt="LOGO"></a>
             </div>
         </div>
 
@@ -299,6 +299,10 @@
 
                         <li class="@(active.Equals(99)? "main-menu-active" : "") ">
                             <a href="/post-list">Blog</a>
+                        </li>
+
+                        <li class="@(active.Equals(100)? "main-menu-active" : "") ">
+                            <a href="@ViewData["DonateAddress"]">Donate</a>
                         </li>
 
                         <li>

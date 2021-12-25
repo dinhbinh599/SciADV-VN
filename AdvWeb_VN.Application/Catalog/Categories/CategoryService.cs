@@ -32,6 +32,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 			var category = new Category()
 			{
 				CategoryName = request.CategoryName,
+				IsShow = request.IsShow,
 				CreateDate = DateTime.Now.ToUniversalTime(),
 			};
 			_context.Categories.Add(category);
@@ -61,6 +62,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 				CategoryID = x.CategoryID,
 				CategoryName = x.CategoryName,
 				SubCount = x.SubCategories.Count,
+				IsShow = x.IsShow,
 				CreateDate = x.CreateDate
 			}).ToListAsync();
 
@@ -77,6 +79,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 			{
 				CategoryID = category.CategoryID,
 				CategoryName = category.CategoryName,
+				IsShow = category.IsShow,
 				SubCount = subs.Count,
 				CreateDate = category.CreateDate
 			};
@@ -89,7 +92,9 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 			//Lấy dữ liệu hiển thị cho Footer ở WebApp
 			var category = _context.Categories;
 
-			var categoryVMs = await category.Select(x => new CategoryViewModel()
+
+			var categoryVMs = await category.Where(x => x.IsShow == true)
+				.Select(x => new CategoryViewModel()
 			{
 				CategoryID = x.CategoryID,
 				CategoryName = x.CategoryName,
@@ -106,41 +111,53 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 			//Lấy dữ liệu hiển thị cho Menu ở WebApp
 			//SubCategoryAll tách riêng trộn ngẫu nhiên của các Category
 
-			var category = _context.Categories;
+			var timeNow = DateTime.Now.ToUniversalTime();
 
-			var categoryMenuVM = await category.Select(x => new CategoryMenuViewModel()
+			var category = _context.Categories;
+			
+			var categoryMenuVM = await category.Where(x => x.IsShow == true)
+				.Select(x => new CategoryMenuViewModel()
 			{
 				CategoryID = x.CategoryID,
 				CategoryName = x.CategoryName,
 				CreateDate = x.CreateDate,
+				IsShow = x.IsShow,
 				SubCount = x.SubCategories.Count,
 				SubCategoryAll = new SubCategoryMenuViewModel()
 				{
 					SubCategoryName = "All",
 					Posts = _context.Posts
-					.Where(p => p.CategoryID.Equals(x.CategoryID)).OrderByDescending(p=>p.WriteTime)
+					.Where(p => p.CategoryID.Equals(x.CategoryID) && p.IsShow == true 
+					&& p.WriteTime.CompareTo(timeNow) < 0)
+					.OrderByDescending(p=>p.WriteTime)
 					.Select(p=>new PostViewModel() 
 					{
 						PostID = p.PostID,
 						PostName = p.PostName,
 						SubCategoryID = p.SubCategoryID,
+						IsShow = p.IsShow,
 						SubCategoryName = p.SubCategory.CategoryName,
 						WriteTime = p.WriteTime,
 						Thumbnail = p.Thumbnail
 					}).Take(4).ToList()
 				},
 				SubCategories = x.SubCategories
+					.Where(x => x.IsShow == true)
 					.Select(sc => new SubCategoryMenuViewModel()
 					{
 						SubCategoryID = sc.SubCategoryID,
 						SubCategoryName = sc.CategoryName,
 						CreateDate = sc.CreateDate,
+						IsShow = sc.IsShow,
 						PostCount = sc.Posts.Count,
 						Posts = sc.Posts.OrderByDescending(x=>x.WriteTime)
+							.Where(x => x.IsShow == true 
+							&& x.WriteTime.CompareTo(timeNow) < 0)
 							.Select(p => new PostViewModel()
 							{
 								PostID = p.PostID,
 								PostName = p.PostName,
+								IsShow = p.IsShow,
 								SubCategoryID = p.SubCategoryID,
 								SubCategoryName = sc.CategoryName,
 								WriteTime = p.WriteTime,
@@ -158,6 +175,7 @@ namespace AdvWeb_VN.Application.Catalog.Categories
 			if (category == null) return new ApiErrorResult<bool>($"Không tìm thấy chuyên mục : {request.CategoryName}");
 
 			category.CategoryName = request.CategoryName;
+			category.IsShow = request.IsShow;
 			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Cập nhật chuyên mục thất bại");
 			return new ApiSuccessResult<bool>();

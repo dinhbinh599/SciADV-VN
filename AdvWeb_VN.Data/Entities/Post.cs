@@ -16,6 +16,7 @@ namespace AdvWeb_VN.Data.Entities
 		public Guid UserID { set; get; }
 		public int View { set; get; }
 		public User User { set; get; }
+		public bool? IsShow { set; get; }
 		public List<PostTag> PostTags { set; get; }
 		public SubCategory SubCategory { set; get; }
 		public List<Comment> Comments {set;get;}

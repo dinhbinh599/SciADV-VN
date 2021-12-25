@@ -72,10 +72,12 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			if (result.IsSuccessed)
 			{
 				var category = result.ResultObj;
+
 				var updateRequest = new CategoryUpdateRequest()
 				{
 					CategoryID = category.CategoryID,
-					CategoryName = category.CategoryName
+					CategoryName = category.CategoryName,
+					IsShow = category.IsShow ?? false
 				};
 				return View(updateRequest);
 			}

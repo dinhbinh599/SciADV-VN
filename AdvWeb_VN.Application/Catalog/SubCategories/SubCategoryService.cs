@@ -27,6 +27,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 			{
 				CategoryName = request.CategoryName,
 				CreateDate = DateTime.Now.ToUniversalTime(),
+				IsShow = request.IsShow,
 				CategoryID = request.CategoryID
 			};
 			_context.SubCategories.Add(category);
@@ -59,6 +60,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 				SubCategoryName = x.p.CategoryName,
 				CategoryName = x.c.CategoryName,
 				PostCount = x.p.Posts.Count,
+				IsShow = x.p.IsShow,
 				CreateDate = x.p.CreateDate,
 				CategoryID = x.c.CategoryID
 			}).ToListAsync();
@@ -81,6 +83,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 				CategoryName = x.c.CategoryName,
 				PostCount = x.p.Posts.Count,
 				CreateDate = x.p.CreateDate,
+				IsShow = x.p.IsShow,
 				CategoryID = x.c.CategoryID
 			}).ToListAsync();
 
@@ -100,6 +103,7 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 				SubCategoryName = subCategory.CategoryName,
 				CategoryName = category.CategoryName,
 				PostCount = posts.Count,
+				IsShow = subCategory.IsShow,
 				CategoryID = category.CategoryID,
 				CreateDate = subCategory.CreateDate
 			};
@@ -116,6 +120,8 @@ namespace AdvWeb_VN.Application.Catalog.SubCategories
 
 			category.CategoryName = request.SubCategoryName;
 			category.CategoryID = request.CategoryID;
+			category.IsShow = request.IsShow;
+
 			var result = await _context.SaveChangesAsync();
 			if (result == 0) return new ApiErrorResult<bool>("Cập nhật chuyên mục thất bại");
 			return new ApiSuccessResult<bool>();

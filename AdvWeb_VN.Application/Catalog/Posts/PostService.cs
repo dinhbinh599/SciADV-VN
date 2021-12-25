@@ -57,8 +57,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				View = 0,
 				UserID = request.UserID,
 				CategoryID = request.CategoryID,
+				IsShow = request.IsShow,
 				SubCategoryID = request.SubCategoryID,
-				WriteTime = DateTime.Now.ToUniversalTime(),
+				WriteTime = request.WriteTime.ToUniversalTime(),
 			};
 
 			if (request.ThumbnailFile != null)
@@ -133,6 +134,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
+					IsShow = x.p.IsShow,
 					SubCategoryName = x.e.CategoryName,
 					CategoryID = x.e.CategoryID,
 					CategoryName = x.CategoryName
@@ -162,6 +164,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				PostName = post.PostName,
 				WriteTime = post.WriteTime,
 				View = post.View,
+				IsShow = post.IsShow,
 				Thumbnail = post.Thumbnail,
 				Contents = post.Contents,
 				SubCategoryID = post.SubCategoryID,
@@ -180,12 +183,13 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			//Chỉnh sửa thông tin bài viết
 			var post = await _context.Posts.FindAsync(id);
 			if (post == null) return new ApiErrorResult<bool>($"Không tìm thấy bài viết : {request.PostID}");
-			
+
 			post.PostName = request.PostName;
 			post.Contents = request.Contents;
-			post.WriteTime = DateTime.Now.ToUniversalTime();
+			post.WriteTime = request.WriteTime.ToUniversalTime();
 			post.SubCategoryID = request.SubCategoryID;
 			post.CategoryID = request.CategoryID;
+			post.IsShow = request.IsShow;
 			if (request.ThumbnailFile != null)
 			{
 				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.ImagePath == post.Thumbnail);
@@ -198,7 +202,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				}
 			}
 			var result = await _context.SaveChangesAsync();
-			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại");
+			if (result == 0) return new ApiErrorResult<bool>("Cập nhật bài viết thất bại. Thông tin sai hoặc bài viết của bạn không thay đổi. Nếu muốn Edit với nhiều thông tin cũ hơn vui lòng thoát ra và chọn Edit lại.");
 			return new ApiSuccessResult<bool>();
 		}
 		public async Task<List<PostViewModel>> GetAll()
@@ -225,8 +229,13 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<List<PostViewModel>>> GetPopular()
 		{
+
+			var timeNow = DateTime.Now.ToUniversalTime();
+
 			//Lấy danh sách Top 4 bài viết nhiều View nhất
-			var postVMs = await _context.Posts.Select(x => new PostViewModel()
+			var postVMs = await _context.Posts.Where(x => x.IsShow == true 
+			&& x.WriteTime.CompareTo(timeNow) < 0)
+				.Select(x => new PostViewModel()
 			{
 				PostID = x.PostID,
 				PostName = x.PostName,
@@ -244,6 +253,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPublicPagingByTagID(GetPublicPostPagingRequest request)
 		{
+
+			var timeNow = DateTime.Now.ToUniversalTime();
+
 			//Lấy danh sách bài viết được Paging dựa vào TagID - WebApp.
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
@@ -260,7 +272,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var data = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.Where(x => x.p.IsShow == true 
+					&& x.p.WriteTime.CompareTo(timeNow) < 0)
+				.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -288,8 +302,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPublicPagingByCategoryID(GetPublicPostPagingRequest request)
 		{
-			//Lấy danh sách bài viết được Paging dựa vào CategoryID - Webapp
 
+			var timeNow = DateTime.Now.ToUniversalTime();
+
+			//Lấy danh sách bài viết được Paging dựa vào CategoryID - Webapp
 			var query = from c in _context.SubCategories
 						join k in _context.Categories on c.CategoryID equals k.CategoryID
 						join p in _context.Posts on c.SubCategoryID equals p.SubCategoryID
@@ -303,7 +319,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var data = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
+			var data = await query.Where(x => x.p.IsShow == true 
+				&& x.p.WriteTime.CompareTo(timeNow) < 0)
+				.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -343,7 +361,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				query = query.Where(x => x.k.CategoryName.Contains(request.Keyword)||x.p.PostName.Contains(request.Keyword));
 			}
 
-			if (request.ID != null)
+			if (request.ID != null && request.ID != 0)
 			{
 				query = query.Where(x => request.ID.Equals(x.k.CategoryID)||request.ID==x.p.PostID);
 			}
@@ -359,6 +377,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
+					IsShow = x.p.IsShow,
 					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
@@ -631,9 +650,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			post.PostName = request.PostName;
 			post.Contents = request.Contents;
-			post.WriteTime = DateTime.Now.ToUniversalTime();
+			post.WriteTime = request.WriteTime.ToUniversalTime();
 			post.SubCategoryID = request.SubCategoryID;
 			post.CategoryID = request.CategoryID;
+			post.IsShow = request.IsShow;
+
 			if (request.ThumbnailFile != null)
 			{
 				var thumbnailFile = await _context.PostImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.ImagePath == post.Thumbnail);
@@ -683,6 +704,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				View = post.View,
 				Thumbnail = post.Thumbnail,
 				Contents = post.Contents,
+				IsShow = post.IsShow,
 				SubCategoryID = post.SubCategoryID,
 				UserName = user.UserName,
 				SubCategoryName = subCategory.CategoryName,
@@ -729,6 +751,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
 					Contents = x.p.Contents,
+					IsShow = x.p.IsShow,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
 					SubCategoryName = x.c.CategoryName,
@@ -843,6 +866,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingCategory(GetPublicPostPagingRequest request)
 		{
+			var timeNow = DateTime.Now.ToUniversalTime();
+
 			var query = from c in _context.Categories
 						join p in _context.Posts on c.CategoryID equals p.CategoryID
 						join u in _context.Users on p.UserID equals u.Id
@@ -855,7 +880,10 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			}
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.Where(x => x.p.IsShow == true
+				&& x.p.WriteTime.CompareTo(timeNow) < 0)
+				.Where(x => x.p.IsShow == true)
+				.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -885,7 +913,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetManagePagingBySubCategoryID(GetManagePostPagingRequest request)
 		{
 			//Lấy danh sách bài viết được Paging dựa vào SubCategoryID - Admin (hỗ trợ Tìm kiếm bằng keyword)
-
 			var query = from sc in _context.SubCategories
 						join k in _context.Categories on sc.CategoryID equals k.CategoryID
 						join p in _context.Posts on sc.SubCategoryID equals p.SubCategoryID
@@ -913,6 +940,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
+					IsShow = x.p.IsShow,
 					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
@@ -932,6 +960,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingSubCategory(GetPublicPostPagingRequest request)
 		{
+
+			var timeNow = DateTime.Now.ToUniversalTime();
+
 			//Lấy danh sách Paging cho WebApp dựa vào SubCategoryID
 			var query = from c in _context.Categories
 						join p in _context.Posts on c.CategoryID equals p.CategoryID
@@ -948,7 +979,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.Where(x => x.p.IsShow == true
+				&& x.p.WriteTime.CompareTo(timeNow) < 0)
+				.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -977,6 +1010,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTag(GetPublicPostPagingRequest request)
 		{
+
+			var timeNow = DateTime.Now.ToUniversalTime();
+
 			//Lấy danh sách Paging cho WebApp dựa vào TagID
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
@@ -992,7 +1028,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			}
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.Where(x => x.p.IsShow == true
+				&& x.p.WriteTime.CompareTo(timeNow) < 0)
+				.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -1021,6 +1059,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTagByName(GetPublicPostPagingRequestSearch request)
 		{
+			var timeNow = DateTime.Now.ToUniversalTime();
+
 			//Lấy danh sách Paging cho WebApp dựa vào tên Tag
 			var query = from p in _context.Posts
 						join pic in _context.PostTags on p.PostID equals pic.PostID
@@ -1037,7 +1077,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.Where(x => x.p.IsShow == true
+				&& x.p.WriteTime.CompareTo(timeNow) < 0)
+				.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -1066,6 +1108,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPaging(GetPublicPostPagingRequestSearch request)
 		{
+			var timeNow = DateTime.Now.ToUniversalTime();
+
 			//Lấy toàn bộ danh sách bài viết được Paging để hiển thị ở Blog - WebApp aka luôn trang tìm kiếm
 			var query = from p in _context.Posts
 						join sc in _context.SubCategories on p.SubCategoryID equals sc.SubCategoryID
@@ -1080,7 +1124,9 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			int totalRow = await query.CountAsync();
 
-			var postVMs = await query.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
+			var postVMs = await query.Where(x => x.p.IsShow == true
+				&& x.p.WriteTime.CompareTo(timeNow) < 0)
+				.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -1089,6 +1135,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					WriteTime = x.p.WriteTime,
 					View = x.p.View,
 					Thumbnail = x.p.Thumbnail,
+					IsShow = x.p.IsShow,
 					//Contents = x.p.Contents,
 					SubCategoryID = x.p.SubCategoryID,
 					UserName = x.UserName,
@@ -1106,5 +1153,6 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			};
 			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
+
 	}
 }

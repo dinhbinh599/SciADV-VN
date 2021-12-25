@@ -73,7 +73,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 					SubCategoryID = category.CategoryID,
 					SubCategoryName = category.SubCategoryName,
 					CategoryName = category.CategoryName,
-					CategoryID = category.CategoryID
+					CategoryID = category.CategoryID,
+					IsShow = category.IsShow ?? false
 				};
 				return View(updateRequest);
 			}

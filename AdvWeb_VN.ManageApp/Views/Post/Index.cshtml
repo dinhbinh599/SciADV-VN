@@ -9,6 +9,7 @@
     var pageLast = pageNow + Model.PageSize - 1;
     var split = new Split();
     UrlRewrite rewrite = new UrlRewrite();
+    ConvertTime convert = new ConvertTime();
 }
 
 <!-- Content Wrapper. Contains page content -->
@@ -92,6 +93,8 @@
                                                         <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                             aria-label="Engine version: activate to sort column ascending">Ngày viết</th>
                                                         <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                                            aria-label="Engine version: activate to sort column ascending">Hiển Thị</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                             aria-label="Engine version: activate to sort column ascending">Lượt xem</th>
                                                         <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                                                             aria-label="CSS grade: activate to sort column ascending"></th>
@@ -99,30 +102,34 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach (var item in Model.Items)
-                                                    {
-                                                        <tr role="row" class="odd">
-                                                            <td>
-                                                                @split.NormalizeName(item.PostName, 10)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.UserName)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.SubCategoryName)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.WriteTime)
-                                                            </td>
-                                                            <td>
-                                                                @Html.DisplayFor(modelItem => item.View)
-                                                            </td>
-                                                            <td>
-                                                                <a href="/Post/Edit/@item.PostID" class="btn btn-outline-primary"> Sửa</a>
-                                                                <a target="_blank" rel="noopener noreferrer" href="@(ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(item.PostName) + item.PostID)" class="btn btn-outline-info">Xem</a>
-                                                                <a href="/Post/Delete/@item.PostID"  class="btn btn-outline-danger">Xóa</a>
-                                                                <a href="/Comment?id=@item.PostID" style="margin-top:5px" class="btn btn-outline-dark">Thêm bình luận</a>
-                                                            </td>
-                                                        </tr>
+													{
+                                                    <tr role="row" class="odd">
+                                                        <td>
+                                                            @split.NormalizeName(item.PostName, 10)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.UserName)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.SubCategoryName)
+                                                        </td>
+                                                        <td>
+                                                            @{DateTime newTime = convert.ConvertToGMT7(item.WriteTime);}
+                                                            @Html.DisplayFor(modelItem => newTime)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.IsShow)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.View)
+                                                        </td>
+                                                        <td>
+                                                            <a href="/Post/Edit/@item.PostID" class="btn btn-outline-primary"> Sửa</a>
+                                                            <a target="_blank" rel="noopener noreferrer" href="@(ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(item.PostName) + item.PostID)" class="btn btn-outline-info">Xem</a>
+                                                            <a href="/Post/Delete/@item.PostID" class="btn btn-outline-danger">Xóa</a>
+                                                            <a href="/Comment?id=@item.PostID" style="margin-top:5px" class="btn btn-outline-dark">Thêm bình luận</a>
+                                                        </td>
+                                                    </tr>
                                                     }
                                                 </tbody>
                                                 <tfoot>
@@ -131,6 +138,7 @@
                                                         <th rowspan="1" colspan="1">Người viết</th>
                                                         <th rowspan="1" colspan="1">Chuyên mục con</th>
                                                         <th rowspan="1" colspan="1">Ngày viết</th>
+                                                        <th rowspan="1" colspan="1">Hiển Thị</th>
                                                         <th rowspan="1" colspan="1">Lượt xem</th>
                                                         <th rowspan="1" colspan="1"></th>
                                                     </tr>
@@ -186,6 +194,16 @@
 			var selectedCategory = $(this).children("option:selected").val();
 			window.location.href = "/Post?id=" + selectedCategory;
 		});
+
+        //Add Category All
+		if (id == "")
+		{
+			$("#category-select").append("<option value=0 selected >Tất cả</option>")
+		}
+		else
+		{
+           $("#category-select").append("<option value=>Tất cả</option>")
+		}
 
 		showCategory();
 

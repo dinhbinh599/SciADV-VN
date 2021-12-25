@@ -51,5 +51,13 @@ namespace AdvWeb_VN.Utilities.Settings
                 return years <= 1 ? "1 năm trước" : Math.Abs(years) + " năm trước";
             }
         }
+
+        public DateTime ConvertToGMT7(DateTime myDate)
+        {
+            string nzTimeZoneKey = "SE Asia Standard Time";
+            TimeZoneInfo nzTimeZone = TimeZoneInfo.FindSystemTimeZoneById(nzTimeZoneKey);
+            DateTime nzDateTime = TimeZoneInfo.ConvertTimeFromUtc(myDate, nzTimeZone);
+            return nzDateTime;
+        }
 	}
 }

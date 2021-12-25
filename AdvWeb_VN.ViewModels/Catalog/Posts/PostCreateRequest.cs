@@ -21,5 +21,12 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 		[Display(Name = "Thumbnail")]
 		public IFormFile ThumbnailFile { get; set; }
 		public Guid UserID { get; set; }
+
+		[Display(Name = "Ngày tạo")]
+		public DateTime WriteTime { set; get; }
+		[Display(Name = "Ngày tạo")]
+		public string TimePicker { set; get; }
+		[Display(Name = "Hiển thị")]
+		public bool IsShow { set; get; }
 	}
 }

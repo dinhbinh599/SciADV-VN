@@ -49,6 +49,13 @@
 									<select asp-for="CategoryID" class="form-control category-select" id="category-select"></select>
 									<span asp-validation-for="CategoryID" class="text-danger"></span>
 								</div>
+
+								<div class="form-group">
+									<label asp-for="IsShow" class="control-label col-12"></label>
+									<input asp-for="IsShow" class="form-control" type="checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+									<span asp-validation-for="IsShow" class="text-danger"></span>
+								</div>
+
 							</div>
 							<div class="card-footer">
 								<div class="form-group">

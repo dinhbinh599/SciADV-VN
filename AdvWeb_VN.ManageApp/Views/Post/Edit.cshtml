@@ -80,6 +80,37 @@
 									</select>
 								</div>
 								<input type="hidden" asp-for="PostID" />
+								<!-- Date -->
+								<div class="form-group col-md-6 col-sm-12">
+									<label asp-for="TimePicker" class="control-label"></label>
+									<div class="input-group date" id="reservationdate" data-target-input="nearest">
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i class="far fa-clock"></i></span>
+										</div>
+										<input asp-for="TimePicker" id="datepicker" type="text" class="form-control float-right" />
+										<div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+											<div id="#datetimepicker" class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+									</div>
+									<span asp-validation-for="TimePicker" class="text-danger"></span>
+								</div>
+
+								<div class="form-group">
+									<label asp-for="IsShow" class="control-label col-12"></label>
+									@{
+										if (Model.IsShow == true)
+										{
+											<input asp-for="IsShow" class="form-control" type="checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+										}
+										else
+										{
+											<input asp-for="IsShow" class="form-control" type="checkbox" data-bootstrap-switch data-off-color="danger" data-on-color="success">
+										}
+									}									
+									<span asp-validation-for="IsShow" class="text-danger"></span>
+								</div>
+
+								<!-- /.form group -->
 								<div class="form-group">
 									<label asp-for="ThumbnailFile">Thumbnail</label>
 									<div class="input-group">
@@ -101,11 +132,11 @@
 											<input type="submit" value="Lưu lại" class="btn btn-outline-primary" />
 										</div>
 									</div>
-									<div class="col-1">
+									@*<div class="col-1">
 										<div class="form-group">
 											<input type="button" id="preview" value="Xem trước" class="btn btn-outline-info" />
 										</div>
-									</div>
+									</div>*@
 								</div>
 							</div>
 						</form>

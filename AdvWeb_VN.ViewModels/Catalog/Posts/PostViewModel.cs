@@ -35,6 +35,8 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 
 		[Display(Name = "Ngày viết")]
 		public DateTime WriteTime { set; get; }
+		[Display(Name = "Hiển thị")]
+		public bool? IsShow { set; get; }
 		public IList<string> Tags { set; get; }
 	}
 }
