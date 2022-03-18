@@ -73,12 +73,12 @@ namespace AdvWeb_VN.WebApp.Controllers
                 }
             }
 
-            ViewBag.description = split.Truncate(description,70);
+            ViewBag.description = split.Truncate(description,30);
             ViewBag.keywords = resultPost.ResultObj.PostName;
             ViewBag.ogtype = "Article";
             ViewBag.ogtitle = resultPost.ResultObj.PostName;
-            //ViewBag.ogimage = ViewData["BaseAddress"] + "/user-content/" + resultPost.ResultObj.Thumbnail;
-            ViewBag.ogimage = "";
+            ViewBag.ogimage = ViewData["BaseAddress"] + "/user-content/" + resultPost.ResultObj.Thumbnail;
+            //ViewBag.ogimage = "";
             ViewBag.ogdescription = split.Truncate(description, 70);
             ViewBag.ogurl = ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(resultPost.ResultObj.PostName) + resultPost.ResultObj.PostID;
             return View(postVM);
