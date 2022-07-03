@@ -26,25 +26,33 @@
 	<link rel="stylesheet" type="text/css" href="~/css/comment.css">
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<!-- HTML Meta Tags -->
 	<meta content="@ViewBag.description" name="description">
 	<meta content="@ViewBag.keywords" name="description">
 	<meta name="Author" content="Hoang Thuan, nguyenhoangthuan2092003@gmail.com">
 
+	<!-- Google / Search Engine Tags -->
+	<meta itemprop="name" content="@ViewBag.ogtitle">
+	<meta itemprop="description" content="@ViewBag.ogdescription">
+	<meta itemprop="image" content="@ViewBag.ogimage">
+
 	<!-- [ Social Media meta tag ] -->
+	<!-- Facebook Meta Tags -->
 	<meta content="@ViewBag.ogtype" property="og:type">
-	<meta property="og:title" content="@ViewBag.ogtitle" />
-	<meta property="og:url" content="@ViewBag.ogurl" />
-	<meta property="og:image" content="@ViewBag.ogimage" />
-	@*<meta property="og:image:width" content="1920">
-	<meta property="og:image:height" content="1080">*@
+	<meta property="og:title" content="@ViewBag.ogtitle">
+	<meta property="og:url" content="@ViewBag.ogurl">
+	<meta property="og:image" content="@ViewBag.ogimage">
 	<meta content="@ViewBag.ogdescription" property="og:description">
 	<meta content="Gero Saga" property="og:site_name">
-	<meta name="twitter: title" content="@ViewBag.ogtitle">
-	<meta name="twitter: description" content="@ViewBag.description">
-	<meta name="twitter: image" content="@ViewBag.ogthumbnail">
 
-	@*<meta name=”twitter: site” content=”@ USERNAME”>
-		<meta name=”twitter: creator” content=”@ USERNAME”>*@
+	<!-- Twitter Meta Tags -->
+	<meta property="twitter:title" content="@ViewBag.ogtitle">
+	<meta property="twitter:description" content="@ViewBag.description">
+	<meta property="twitter:image" content="@ViewBag.ogimage">
+	<meta property="twitter:card" content="summary_large_image">
+	<meta property="twitter:url" content="@ViewBag.ogurl">
+
 
 
 	<style>

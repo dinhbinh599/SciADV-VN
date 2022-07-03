@@ -301,8 +301,12 @@
                             <a href="/post-list">Blog</a>
                         </li>
 
-                        <li class="@(active.Equals(100)? "main-menu-active" : "") ">
+                        @*<li class="@(active.Equals(100)? "main-menu-active" : "") ">
                             <a href="@ViewData["DonateAddress"]">Donate</a>
+                        </li>*@
+
+                        <li class="@(active.Equals(101)? "main-menu-active" : "") ">
+                            <a href="@ViewData["AboutAddress"]">About</a>
                         </li>
 
                         <li>

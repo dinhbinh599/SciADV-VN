@@ -26,6 +26,7 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
             ViewData["BaseAddress"] = _configuration["BaseAddress"];
             ViewData["AdminAddress"] = _configuration["AdminAddress"];
             ViewData["DonateAddress"] = _configuration["DonateAddress"];
+            ViewData["AboutAddress"] = _configuration["AboutAddress"];
 
             //Load dữ liệu hiển thị ở Menu
             var resultCategory = await _categoryApiClient.GetMenuCategory();
