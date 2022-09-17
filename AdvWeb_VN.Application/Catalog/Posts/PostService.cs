@@ -454,7 +454,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			_context.Remove(postTag);
 			await _context.SaveChangesAsync();
 		}
-
+        
 		public async Task AddToTagAsync(Post post, string tagName)
 		{
 			//Thêm Tag vào bài viết

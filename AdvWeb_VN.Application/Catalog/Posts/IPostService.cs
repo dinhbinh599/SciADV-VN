@@ -28,7 +28,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<ApiResult<List<PostViewModel>>> GetPopular();
 		Task<ApiResult<bool>> TagAssign(int postID, TagAssignRequest request);
 		Task<ApiResult<bool>> TagAssignAuthenticate(int postID, Guid userID, TagAssignRequest request);
-		Task<int> AddImage(int postID, PostImageCreateRequest request);
+        Task<int> AddImage(int postID, PostImageCreateRequest request);
 		Task<int> AddImageAuthenticate(int postID, Guid userID, PostImageCreateRequest request);
 		Task<ApiResult<string>> AddImageByUrl(int postID, PostImageCreateUrlRequest request);
 		Task<ApiResult<string>> AddImageByUrlAuthenticate(int postID, Guid userID, PostImageCreateUrlRequest request);

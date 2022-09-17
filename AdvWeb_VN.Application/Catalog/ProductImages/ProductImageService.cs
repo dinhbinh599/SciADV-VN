@@ -16,15 +16,41 @@ using AdvWeb_VN.ViewModels.Catalog.Categories;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
 using AdvWeb_VN.ViewModels.Catalog.SubCategories;
 using AdvWeb_VN.ViewModels.Catalog.ProductImages;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
+using System.IO;
+using AdvWeb_VN.Application.Common;
 
 namespace AdvWeb_VN.Application.Catalog.ProductImages
 {
 	public class ProductImageService : IProductImageService
 	{
 		private readonly AdvWebDbContext _context;
-		public ProductImageService(AdvWebDbContext context)
+		private readonly IStorageService _storageService;
+		private const string USER_CONTENT_FOLDER_NAME = "user-content";
+		public ProductImageService(AdvWebDbContext context, IStorageService storageService)
 		{
 			_context = context;
+			_storageService = storageService;
+		}
+
+		public async Task<ApiResult<string>> Create(PostImageCreateRequest request)
+		{
+			if (request.ImageFile != null)
+			{
+				var imagePath = await this.SaveFile(request.ImageFile);
+				imagePath = USER_CONTENT_FOLDER_NAME + "/" + imagePath;
+				return new ApiSuccessResult<string>(imagePath);
+			}
+			return new ApiErrorResult<string>("Không tạo hình ảnh được");
+		}
+
+		private async Task<string> SaveFile(IFormFile file)
+		{
+			var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+			var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+			await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
+			return fileName;
 		}
 
 		public async Task<ApiResult<PagedResult<PostImageViewModel>>> GetImagesPaging(GetManagePostPagingRequest request)
@@ -53,8 +79,38 @@ namespace AdvWeb_VN.Application.Catalog.ProductImages
 				TotalRecords = totalRow
 			};
 			return new ApiSuccessResult<PagedResult<PostImageViewModel>>(pagedResult);
-
-
 		}
-	}
+
+		public async Task<ApiResult<bool>> ImageAssign(ImageAssignRequest request)
+		{
+			//Gắn Image cho bài viết.
+			//Gắn nhiều Image một lúc.
+			foreach (var postImage in request.postImages)
+			{
+                if (!_context.PostImages.Any(x => x.ImagePath == postImage.ImagePath))
+                {
+                    _context.PostImages.Add(new PostImage()
+                    {
+                        ImagePath = postImage.ImagePath,
+                        PostID = postImage.PostID,
+                        Caption = postImage.Caption,
+                        DateCreated = DateTime.Now,
+						IsDefault = false,
+                        FileSize = postImage.FileSize
+                    });
+                }
+            }
+            var result = await _context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<bool>("Thêm hình ảnh thất bại.");
+			return new ApiSuccessResult<bool>();
+		}
+
+        public async Task<ApiResult<bool>> ImageUnassignAll(int postId)
+        {
+            _context.PostImages.RemoveRange(_context.PostImages.Where(x => x.PostID == postId));
+			var result = await _context.SaveChangesAsync();
+			if (result == 0) return new ApiErrorResult<bool>("Xóa hình ảnh thất bại.");
+            return new ApiSuccessResult<bool>();
+        }
+    }
 }

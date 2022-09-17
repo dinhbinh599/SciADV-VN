@@ -12,5 +12,8 @@ namespace AdvWeb_VN.Application.Catalog.ProductImages
 	public interface IProductImageService
 	{
 		Task<ApiResult<PagedResult<PostImageViewModel>>> GetImagesPaging(GetManagePostPagingRequest request);
-	}
+		Task<ApiResult<string>> Create(PostImageCreateRequest request);
+		Task<ApiResult<bool>> ImageAssign(ImageAssignRequest request);
+        Task<ApiResult<bool>> ImageUnassignAll(int postId);
+    }
 }

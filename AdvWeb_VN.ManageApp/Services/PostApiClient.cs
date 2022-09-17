@@ -16,10 +16,10 @@ using System.Threading.Tasks;
 
 namespace AdvWeb_VN.ManageApp.Services
 {
-	public class PostApiClient : IPostApiClient
-	{
-		private readonly IHttpClientFactory _httpClientFactory;
-		private readonly IConfiguration _configuration;
+    public class PostApiClient : IPostApiClient
+    {
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public PostApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
@@ -81,7 +81,7 @@ namespace AdvWeb_VN.ManageApp.Services
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            
+
             var requestContent = new MultipartFormDataContent();
 
             if (createRequest.ThumbnailFile != null)
@@ -210,7 +210,7 @@ namespace AdvWeb_VN.ManageApp.Services
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync($"/api/posts/{id}/images/url",httpContent);
+            var response = await client.PostAsync($"/api/posts/{id}/images/url", httpContent);
             var body = await response.Content.ReadAsStringAsync();
             var imagePath = JsonConvert.DeserializeObject<ApiSuccessResult<string>>(body);
             return imagePath;
@@ -229,6 +229,69 @@ namespace AdvWeb_VN.ManageApp.Services
             var body = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(body);
             return result;
+        }
+
+        public async Task<ApiResult<string>> UploadImage(PostImageCreateRequest createRequest)
+        {
+            var sessions = _httpContextAccessor
+                .HttpContext
+                .Session
+                .GetString(SystemConstants.AppSettings.Token);
+
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var requestContent = new MultipartFormDataContent();
+
+            if (createRequest.ImageFile != null)
+            {
+                byte[] data;
+                using (var br = new BinaryReader(createRequest.ImageFile.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)createRequest.ImageFile.OpenReadStream().Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "imageFile", createRequest.ImageFile.FileName);
+            }
+
+            var response = await client.PostAsync($"/api/images/", requestContent);
+            var body = await response.Content.ReadAsStringAsync();
+            var imagePath = JsonConvert.DeserializeObject<ApiSuccessResult<string>>(body);
+            return imagePath;
+        }
+
+        public async Task<ApiResult<bool>> ImageAssign(ImageAssignRequest request)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync($"/api/images/assign", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(result);
+
+            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
+        }
+
+        public async Task<ApiResult<bool>> ImageUnassignAll(int postID)
+        {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.DeleteAsync($"/api/images/{postID}");
+            var body = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(body);
+
+            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(body);
         }
     }
 }

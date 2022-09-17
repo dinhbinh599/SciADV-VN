@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AdvWeb_VN.Data.Entities;
 using AdvWeb_VN.ManageApp.Models;
 using AdvWeb_VN.ManageApp.Services;
 using AdvWeb_VN.Utilities.Constants;
@@ -12,6 +14,7 @@ using AdvWeb_VN.ViewModels.Catalog.ProductImages;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
 using AdvWeb_VN.ViewModels.Common;
 using AdvWeb_VN.ViewModels.System.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -63,7 +66,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		}
 
 		// GET: /<controller>/
-		
+
 
 		[HttpGet]
 		public async Task<IActionResult> Details(int id)
@@ -80,7 +83,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			//Lấy UserID hiện hành
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
-			
+
 			var postCreateRequest = new PostCreateRequest()
 			{
 				UserID = userID
@@ -90,7 +93,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		[HttpPost]
 		[Consumes("multipart/form-data")]
-		public async Task<IActionResult> Create([FromForm]PostCreateRequest request)
+		public async Task<IActionResult> Create([FromForm] PostCreateRequest request)
 		{
 			//Khởi tạo bài viết mới nếu request truyền lên đầy đủ
 			//Lấy hình ảnh từ trang Web khác rồi upload lên Server mình đồng thời sửa lại đường dẫn vào bài viết
@@ -99,8 +102,8 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			if (!ModelState.IsValid)
 				return View();
 
-			var oldContents = request.Contents;
-			request.Contents = "oldContents";
+			//var oldContents = request.Contents;
+			//request.Contents = "oldContents";
 
 			//Convert Format của Write Time
 			DateTime writeTime = DateTime.ParseExact(request.TimePicker, "MM/dd/yyyy h:mm tt",
@@ -108,21 +111,29 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			request.WriteTime = writeTime;
 
 			var result = await _postApiClient.CreatePost(request);
+            
 			if (result.IsSuccessed)
 			{
 				var postID = result.ResultObj.PostID;
-				//Sửa lại url Hình ảnh trong bài viết thành url của server mình
-				await _postApiClient.UpdateContents(postID, new PostUpdateContentsRequest
-				{
-					id = result.ResultObj.PostID,
-					Contents = await ConvertImage(postID, oldContents)
-				});
+                
+				////Sửa lại url Hình ảnh trong bài viết thành url của server mình
+				//await _postApiClient.UpdateContents(postID, new PostUpdateContentsRequest
+				//{
+				//	id = result.ResultObj.PostID,
+				//	Contents = await ConvertImage(postID, oldContents)
+				//});
 
 				//Gán Tag cho bài viết
 				var tagAssignRequest = await GetTagAssignRequest();
 				tagAssignRequest.SelectedTags = request.TagAssignRequest.SelectedTags;
 				var requestConvert = SelectConvertBySelectedTags(tagAssignRequest);
 				await _postApiClient.TagAssign(postID, requestConvert);
+
+				await _postApiClient.ImageAssign(new ImageAssignRequest()
+				{ 
+					postImages = getPostImages(postID, request.Contents)
+				});
+         
 				TempData["result"] = "Thêm mới bài viết thành công";
 				return RedirectToAction("Index");
 			}
@@ -163,7 +174,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 		[HttpPost]
 		[Consumes("multipart/form-data")]
-		public async Task<IActionResult> Edit([FromForm]PostUpdateRequest request)
+		public async Task<IActionResult> Edit([FromForm] PostUpdateRequest request)
 		{
 			//Chỉnh sửa bài viết từ Form gửi lên nếu request đầy đủ
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
@@ -171,7 +182,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			if (!ModelState.IsValid)
 				return View();
 
-			request.Contents = await ConvertImage(request.PostID, request.Contents);
+			//request.Contents = await ConvertImage(request.PostID, request.Contents);
 
 			//Convert Format của Write Time
 			DateTime writeTime = DateTime.ParseExact(request.TimePicker, "MM/dd/yyyy h:mm tt",
@@ -183,7 +194,11 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			{
 				var requestConvert = SelectConvertBySelectedTags(request.TagAssignRequest);
 				await _postApiClient.TagAssign(request.PostID, requestConvert);
-				TempData["result"] = "Cập nhật bài viết thành công";
+                await _postApiClient.ImageAssign(new ImageAssignRequest()
+                {
+                    postImages = getPostImages(request.PostID, request.Contents)
+                });
+                TempData["result"] = "Cập nhật bài viết thành công";
 				return RedirectToAction("Index");
 			}
 			var resultEdit = await _postApiClient.GetByID(request.PostID);
@@ -220,12 +235,61 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			var result = await _postApiClient.Delete(request.PostID);
 			if (result.IsSuccessed)
 			{
+                var resultUnassign = await _postApiClient.ImageUnassignAll(request.PostID);
 				TempData["result"] = "Xóa bài viết thành công";
 				return RedirectToAction("Index");
 			}
 
 			ModelState.AddModelError("", result.Message);
 			return View(request);
+		}
+
+		[HttpPost("UploadFiles")]
+		[Produces("application/json")]
+		public async Task<IActionResult> Post(List<IFormFile> files)
+		{
+			var imageServerUrl = _configuration["BaseAddress"];
+
+			// Get the file from the POST request
+			var theFile = HttpContext.Request.Form.Files.GetFile("file");
+
+			// Get the mime type
+			var mimeType = HttpContext.Request.Form.Files.GetFile("file").ContentType;
+
+			// Get File Extension
+			string extension = System.IO.Path.GetExtension(theFile.FileName);
+
+			// Generate Random name.
+			string name = Guid.NewGuid().ToString().Substring(0, 8) + extension;
+
+			// Basic validation on mime types and file extension
+			string[] imageMimetypes = { "image/gif", "image/jpeg", "image/pjpeg", "image/x-png", "image/png", "image/svg+xml" };
+			string[] imageExt = { ".gif", ".jpeg", ".jpg", ".png", ".svg", ".blob" };
+
+			try
+			{
+				if (Array.IndexOf(imageMimetypes, mimeType) >= 0 && (Array.IndexOf(imageExt, extension) >= 0))
+				{
+					var createRequest = new PostImageCreateRequest()
+					{
+						ImageFile = theFile
+					};
+
+					var result = await _postApiClient.UploadImage(createRequest);
+
+					// Return the file path as json
+					Hashtable imageUrl = new Hashtable();
+					imageUrl.Add("link", imageServerUrl + "/" + result.ResultObj);
+
+					return Json(imageUrl);
+				}
+				throw new ArgumentException("The image did not pass the validation");
+			}
+
+			catch (ArgumentException ex)
+			{
+				return Json(ex.Message);
+			}
 		}
 
 		private async Task<TagAssignRequest> GetTagAssignRequest()
@@ -266,12 +330,12 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		private TagAssignRequest SelectConvertBySelectedTags(TagAssignRequest request)
 		{
 			//Kiểm tra Tag đã tồn tại hay chưa
-			foreach(var item in request.SelectedTags)
+			foreach (var item in request.SelectedTags)
 			{
 				var newTag = true;
-				for(int i=0;i<request.Tags.Count;i++)
+				for (int i = 0; i < request.Tags.Count; i++)
 				{
-					if(request.Tags[i].Name.Equals(item))
+					if (request.Tags[i].Name.Equals(item))
 					{
 						newTag = false;
 						request.Tags[i].Selected = true;
@@ -295,14 +359,14 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		private TagAssignRequest SelectConvertByTags(TagAssignRequest request)
 		{
 			//Thêm Tag đã được Selected
-			foreach(var item in request.Tags)
+			foreach (var item in request.Tags)
 			{
 				if (item.Selected) request.SelectedTags.Add(item.Name);
 			}
 			return request;
 		}
 
-		private async Task<string> ConvertImage(int id,string contents)
+		private async Task<string> ConvertImage(int id, string contents)
 		{
 			//Kiểm tra hình ảnh là từ Url hình hay từ máy up lên
 			//Tùy loại thì upload nó lên API theo từng kiểu khác nhau
@@ -310,13 +374,15 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 			var base64Strings = new List<string>();
 			var requests = new List<PostImageBase64CreateRequest>();
+
 			MatchCollection matchCollImage = Regex.Matches(contents, "<img.+?src=[\"'](.+?)[\"'].*?>", RegexOptions.IgnoreCase);
 			MatchCollection matchCollFileName = Regex.Matches(contents, "data-filename=[\"'](.+?)[\"'].*?>", RegexOptions.IgnoreCase);
+
 			foreach (Match match in matchCollImage)
 			{
 				var image = match.Groups[1].Value;
 				if (!image.Contains(_configuration["BaseAddress"]))
-				{ 
+				{
 					if (checkUrl(image))
 					{
 						var result = await _postApiClient.AddImageByUrl(id, new PostImageCreateUrlRequest
@@ -333,7 +399,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 				}
 			}
 
-			for(int i=0; i<requests.Count;i++)
+			for (int i = 0; i < requests.Count; i++)
 			{
 				requests[i].FileName = matchCollFileName[i].Groups[1].Value;
 				var result = await _postApiClient.AddImageBase64(id, requests[i]);
@@ -350,5 +416,26 @@ namespace AdvWeb_VN.ManageApp.Controllers
 				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 			return result;
 		}
-	}
+
+        private List<PostImage> getPostImages(int postID, string contents)
+        {
+            var postImages = new List<PostImage>();
+			MatchCollection matchCollImage = Regex.Matches(contents, "<img.+?src=[\"'](.+?)[\"'].*?>", RegexOptions.IgnoreCase);
+			
+			foreach (Match match in matchCollImage)
+			{
+				var image = match.Groups[1].Value;
+				if (image.Contains(_configuration["BaseAddress"]))
+				{
+                    postImages.Add(new PostImage
+                    {
+                        PostID = postID,
+                        DateCreated = DateTime.Now,
+                        ImagePath = image.Replace(_configuration["BaseAddress"] + "/user-content/", "")
+                    });
+                }
+			}
+            return postImages;
+        }
+    }
 }

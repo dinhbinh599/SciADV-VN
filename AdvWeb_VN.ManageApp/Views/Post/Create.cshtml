@@ -128,11 +128,20 @@
 	</section>
 	<!-- /.content -->
 </div>
+
 @section scripts{
 	<script type="text/javascript">
+
+		var editor = new FroalaEditor('.contents',
+		{
+            imageUploadURL: '/UploadFiles',
+			imageUploadParams: {
+				id: 'my_editor'
+			},
+		});
+        
 		let endpoint = "@ViewData["BaseAddress"]"
-
-
+		        
 		//Bắt sự kiện chọn File Thumbnail Image thì hiển thị tên của File ra.
 		$(".custom-file-input").on("change", function () {
 			var fileName = $(this).val().split("\\").pop();
