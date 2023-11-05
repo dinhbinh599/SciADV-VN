@@ -104,9 +104,10 @@ namespace AdvWeb_VN.BackendApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> CreateCommentPublic([FromBody]CommentCreatePublicRequest request)
         {
-            var result = await _commentService.CreateCommentPublic(request);
-            if (!result.IsSuccessed) return BadRequest(result);
-            return Ok(result);
+            //var result = await _commentService.CreateCommentPublic(request);
+            //if (!result.IsSuccessed) return BadRequest(result);
+            //return Ok(result);
+            return BadRequest();
         }
 
         [HttpPost("comment-manage")]

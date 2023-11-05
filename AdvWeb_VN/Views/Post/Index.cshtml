@@ -179,7 +179,7 @@
 					</div>
 
 					<!-- Form Add Comment đầu -->
-					<form id="commentForm" asp-action="CreateComment" role="form" method="post">
+					@*<form id="commentForm" asp-action="CreateComment" role="form" method="post">
 						<div asp-validation-summary="All" class="text-danger"></div>
 						<div class="comment-box add-comment">
 							<span class="commenter-pic">
@@ -194,7 +194,7 @@
 							<button type="submit" class="btn btn-default">Gửi</button>
 						</div>
 					</form>
-
+*@
 					<!-- List Comment Hiện ở đây -->
 					@foreach (var comment in Model.Comments.Items)
 					{
