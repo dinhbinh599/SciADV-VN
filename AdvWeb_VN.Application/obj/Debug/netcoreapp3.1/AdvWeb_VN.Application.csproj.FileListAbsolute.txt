@@ -1,0 +1,17 @@
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.Application.deps.json
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.Application.dll
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.Application.pdb
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.Data.dll
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.Utilities.dll
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.ViewModels.dll
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.Data.pdb
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.Utilities.pdb
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\bin\Debug\netcoreapp3.1\AdvWeb_VN.ViewModels.pdb
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\obj\Debug\netcoreapp3.1\AdvWeb_VN.Application.csproj.AssemblyReference.cache
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\obj\Debug\netcoreapp3.1\AdvWeb_VN.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\obj\Debug\netcoreapp3.1\AdvWeb_VN.Application.AssemblyInfoInputs.cache
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\obj\Debug\netcoreapp3.1\AdvWeb_VN.Application.AssemblyInfo.cs
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\obj\Debug\netcoreapp3.1\AdvWeb_VN.Application.csproj.CoreCompileInputs.cache
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\obj\Debug\netcoreapp3.1\AdvWeb_VN.Application.csproj.CopyComplete
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\obj\Debug\netcoreapp3.1\AdvWeb_VN.Application.dll
+D:\Project\Website\SciAdvWeb\AdvWeb_VN.Application\obj\Debug\netcoreapp3.1\AdvWeb_VN.Application.pdb
