@@ -1,0 +1,383 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN\\AdvWeb_VN.WebApp.csproj": {}
+  },
+  "projects": {
+    "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Application\\AdvWeb_VN.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Application\\AdvWeb_VN.Application.csproj",
+        "projectName": "AdvWeb_VN.Application",
+        "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Application\\AdvWeb_VN.Application.csproj",
+        "packagesPath": "C:\\Users\\hoang\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hoang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj": {
+                "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj"
+              },
+              "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\AdvWeb_VN.Utilities.csproj": {
+                "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\AdvWeb_VN.Utilities.csproj"
+              },
+              "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.ViewModels\\AdvWeb_VN.ViewModels.csproj": {
+                "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.ViewModels\\AdvWeb_VN.ViewModels.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[6.7.1, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.7.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj",
+        "projectName": "AdvWeb_VN.Data",
+        "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj",
+        "packagesPath": "C:\\Users\\hoang\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hoang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.Extensions.Configuration.FileExtensions": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\AdvWeb_VN.Utilities.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\AdvWeb_VN.Utilities.csproj",
+        "projectName": "AdvWeb_VN.Utilities",
+        "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\AdvWeb_VN.Utilities.csproj",
+        "packagesPath": "C:\\Users\\hoang\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hoang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Authorization": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.ViewModels\\AdvWeb_VN.ViewModels.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.ViewModels\\AdvWeb_VN.ViewModels.csproj",
+        "projectName": "AdvWeb_VN.ViewModels",
+        "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.ViewModels\\AdvWeb_VN.ViewModels.csproj",
+        "packagesPath": "C:\\Users\\hoang\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.ViewModels\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hoang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj": {
+                "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN\\AdvWeb_VN.WebApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN\\AdvWeb_VN.WebApp.csproj",
+        "projectName": "AdvWeb_VN.WebApp",
+        "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN\\AdvWeb_VN.WebApp.csproj",
+        "packagesPath": "C:\\Users\\hoang\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hoang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Application\\AdvWeb_VN.Application.csproj": {
+                "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Application\\AdvWeb_VN.Application.csproj"
+              },
+              "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj": {
+                "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Data\\AdvWeb_VN.Data.csproj"
+              },
+              "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\AdvWeb_VN.Utilities.csproj": {
+                "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\AdvWeb_VN.Utilities.csproj"
+              },
+              "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.ViewModels\\AdvWeb_VN.ViewModels.csproj": {
+                "projectPath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.ViewModels\\AdvWeb_VN.ViewModels.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.11.38, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[3.1.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

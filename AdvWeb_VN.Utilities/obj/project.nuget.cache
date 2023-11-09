@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "vyLl4muBG+audFUhYPxkBzyBXLPea8A/yaVpcfSutP2XZH2Nxl0rHNAfB1RSAaeVu3i7k5iwlYzA1lGEacZ1yg==",
+  "success": true,
+  "projectFilePath": "D:\\Project\\Website\\test\\SciADV-VN\\AdvWeb_VN.Utilities\\AdvWeb_VN.Utilities.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hoang\\.nuget\\packages\\microsoft.aspnetcore.authorization\\3.1.6\\microsoft.aspnetcore.authorization.3.1.6.nupkg.sha512",
+    "C:\\Users\\hoang\\.nuget\\packages\\microsoft.aspnetcore.metadata\\3.1.6\\microsoft.aspnetcore.metadata.3.1.6.nupkg.sha512",
+    "C:\\Users\\hoang\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\3.1.6\\microsoft.extensions.dependencyinjection.abstractions.3.1.6.nupkg.sha512",
+    "C:\\Users\\hoang\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.6\\microsoft.extensions.logging.abstractions.3.1.6.nupkg.sha512",
+    "C:\\Users\\hoang\\.nuget\\packages\\microsoft.extensions.options\\3.1.6\\microsoft.extensions.options.3.1.6.nupkg.sha512",
+    "C:\\Users\\hoang\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.6\\microsoft.extensions.primitives.3.1.6.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,10 @@
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\bin\Release\netcoreapp3.1\AdvWeb_VN.Utilities.deps.json
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\bin\Release\netcoreapp3.1\AdvWeb_VN.Utilities.dll
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\bin\Release\netcoreapp3.1\AdvWeb_VN.Utilities.pdb
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\obj\Release\netcoreapp3.1\AdvWeb_VN.Utilities.csproj.AssemblyReference.cache
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\obj\Release\netcoreapp3.1\AdvWeb_VN.Utilities.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\obj\Release\netcoreapp3.1\AdvWeb_VN.Utilities.AssemblyInfoInputs.cache
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\obj\Release\netcoreapp3.1\AdvWeb_VN.Utilities.AssemblyInfo.cs
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\obj\Release\netcoreapp3.1\AdvWeb_VN.Utilities.csproj.CoreCompileInputs.cache
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\obj\Release\netcoreapp3.1\AdvWeb_VN.Utilities.dll
+D:\Project\Website\test\SciADV-VN\AdvWeb_VN.Utilities\obj\Release\netcoreapp3.1\AdvWeb_VN.Utilities.pdb
