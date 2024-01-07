@@ -109,6 +109,9 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			DateTime writeTime = DateTime.ParseExact(request.TimePicker, "MM/dd/yyyy h:mm tt",
 									   System.Globalization.CultureInfo.InvariantCulture);
 			request.WriteTime = writeTime;
+			
+			//Replace url thật bằng placeholder để tránh lu cứng url vào nội dung bài viết
+			request.Contents = request.Contents.Replace(_configuration["BaseAddress"], "{{BaseAddress}}");
 
 			var result = await _postApiClient.CreatePost(request);
             
@@ -117,11 +120,11 @@ namespace AdvWeb_VN.ManageApp.Controllers
 				var postID = result.ResultObj.PostID;
                 
 				////Sửa lại url Hình ảnh trong bài viết thành url của server mình
-				//await _postApiClient.UpdateContents(postID, new PostUpdateContentsRequest
-				//{
-				//	id = result.ResultObj.PostID,
-				//	Contents = await ConvertImage(postID, oldContents)
-				//});
+				// await _postApiClient.UpdateContents(postID, new PostUpdateContentsRequest
+				// {
+				// 	id = result.ResultObj.PostID,
+				// 	Contents = await ConvertImage(postID, oldContents)
+				// });
 
 				//Gán Tag cho bài viết
 				var tagAssignRequest = await GetTagAssignRequest();

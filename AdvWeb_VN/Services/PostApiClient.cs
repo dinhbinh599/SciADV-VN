@@ -112,8 +112,7 @@ namespace AdvWeb_VN.WebApp.Services
 
         public async Task<ApiResult<PagedResult<PostViewModel>>> GetPostsPagings(GetPublicPostPagingRequestSearch request)
         {
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var client = _httpClientFactory.CreateClient("backendapi");
             var response = await client.GetAsync($"/api/posts/public-paging?pageIndex=" +
                 $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");
             var body = await response.Content.ReadAsStringAsync();

@@ -1,13 +1,9 @@
-﻿using AdvWeb_VN.ViewModels.Catalog.Categories;
-using AdvWeb_VN.ViewModels.Catalog.Comments;
+﻿using AdvWeb_VN.ViewModels.Catalog.Comments;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.ViewModels.Common;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,13 +14,11 @@ namespace AdvWeb_VN.WebApp.Services
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IConfiguration _configuration;
-		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public CommentApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+		public CommentApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration)
 		{
 			_httpClientFactory = httpClientFactory;
 			_configuration = configuration;
-			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public async Task<ApiResult<bool>> CreateComment(CommentCreatePublicRequest createRequest)
@@ -44,8 +38,7 @@ namespace AdvWeb_VN.WebApp.Services
 		}
 		public async Task<ApiResult<PagedResult<CommentViewModel>>> GetPagingByPostID(GetPublicPostPagingRequest request)
 		{
-			var client = _httpClientFactory.CreateClient();
-			client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+			var client = _httpClientFactory.CreateClient("backendapi");
 			var response = await client.GetAsync($"/api/comments/post?pageIndex=" +
 				$"{request.PageIndex}&pageSize={request.PageSize}&id={request.Id}");
 			var body = await response.Content.ReadAsStringAsync();
