@@ -45,7 +45,7 @@ namespace AdvWeb_VN.WebApp.Controllers
             ViewBag.keywords = "Visual Novel, Science Adventure, CHAOS; HEAD, STEINS; GATE, ROBOTICS; NOTES, MAGES, CHAO; CHILD";
             ViewBag.ogtype = "Website";
             ViewBag.ogtitle = "Blog | Gero Saga";
-            ViewBag.ogimage = ViewData["BaseAddress"] + "/user-content/" + resultPost.ResultObj.Items[0].Thumbnail;
+            //ViewBag.ogimage = ViewData["BaseAddress"] + "/user-content/" + resultPost.ResultObj.Items[0].Thumbnail;
             ViewBag.ogdescription = "Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science Adventure (\"CHAOS; HEAD\", \"STEINS; GATE\", \"ROBOTICS; NOTES\"...) của 5pb./MAGES";
             ViewBag.ogurl = ViewData["PortalAddress"] + "/post-list";
 

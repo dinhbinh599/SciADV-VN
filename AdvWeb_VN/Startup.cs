@@ -25,7 +25,10 @@ namespace AdvWeb_VN
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddHttpClient();
+			services.AddHttpClient("backendapi", client =>
+			{
+				client.BaseAddress = new Uri(Configuration["BaseAddress"]);
+			});
 			services.AddControllersWithViews();
 
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

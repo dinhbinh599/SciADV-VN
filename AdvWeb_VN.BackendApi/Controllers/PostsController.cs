@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AdvWeb_VN.Application.Catalog.Posts;
 using AdvWeb_VN.Application.System.Users;
@@ -42,9 +43,9 @@ namespace AdvWeb_VN.BackendApi.Controllers
 
         [HttpGet("public-paging")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPaging([FromQuery]GetPublicPostPagingRequestSearch request)
+        public async Task<IActionResult> GetPaging([FromQuery]GetPublicPostPagingRequestSearch request, CancellationToken cancellationToken)
         {
-            var posts = await _postService.GetPaging(request);
+            var posts = await _postService.GetPaging(request, cancellationToken);
             return Ok(posts);
         }
 

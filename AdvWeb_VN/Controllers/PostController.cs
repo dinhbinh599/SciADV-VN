@@ -48,6 +48,9 @@ namespace AdvWeb_VN.WebApp.Controllers
 
             var addViewCount = await _postApiClient.AddViewCount(id);
             var resultPost = await _postApiClient.GetByID(id);
+            //Replace placeholder urls trong nội dung bài viết với url thật của host
+            resultPost.ResultObj.Contents =
+                resultPost.ResultObj.Contents.Replace("{{BaseAddress}}", _configuration["BaseAddress"]);
             var comments = await _commentApiClient.GetPagingByPostID(request);
             var postVM = new PostPageViewModel()
             {

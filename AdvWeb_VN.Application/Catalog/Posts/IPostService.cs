@@ -4,6 +4,7 @@ using AdvWeb_VN.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AdvWeb_VN.Application.Catalog.Posts
@@ -42,6 +43,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPagingSubCategory(GetPublicPostPagingRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTag(GetPublicPostPagingRequest request);
 		Task<ApiResult<PagedResult<PostViewModel>>> GetPagingTagByName(GetPublicPostPagingRequestSearch request);
-		Task<ApiResult<PagedResult<PostViewModel>>> GetPaging(GetPublicPostPagingRequestSearch request);
+		Task<ApiResult<PagedResult<PostViewModel>>> GetPaging(GetPublicPostPagingRequestSearch request,
+			CancellationToken cancellationToken = default);
 	}
 }

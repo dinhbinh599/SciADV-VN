@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using AdvWeb_VN.Application.Catalog.Tags;
 using AdvWeb_VN.ViewModels.Catalog.Tags;
 
@@ -1106,7 +1107,8 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<PagedResult<PostViewModel>>(pagedResult);
 		}
 
-		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPaging(GetPublicPostPagingRequestSearch request)
+		public async Task<ApiResult<PagedResult<PostViewModel>>> GetPaging(GetPublicPostPagingRequestSearch request,
+			CancellationToken cancellationToken = default)
 		{
 			var timeNow = DateTime.Now.ToUniversalTime();
 
@@ -1122,11 +1124,11 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				query = query.Where(x => x.p.PostName.Contains(request.Keyword));
 			}
 
-			int totalRow = await query.CountAsync();
+			int totalRow = await query.CountAsync(cancellationToken: cancellationToken);
 
 			var postVMs = await query.Where(x => x.p.IsShow == true
 				&& x.p.WriteTime.CompareTo(timeNow) < 0)
-				.OrderByDescending(x=>x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
+				.OrderByDescending(x=> x.p.WriteTime).Skip((request.PageIndex - 1) * request.PageSize)
 				.Take(request.PageSize)
 				.Select(x => new PostViewModel()
 				{
@@ -1142,7 +1144,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 					SubCategoryName = x.CategoryName,
 					CategoryName = x.c.CategoryName,
 					CategoryID = x.c.CategoryID
-				}).ToListAsync();
+				}).ToListAsync(cancellationToken: cancellationToken);
 
 			var pagedResult = new PagedResult<PostViewModel>()
 			{
