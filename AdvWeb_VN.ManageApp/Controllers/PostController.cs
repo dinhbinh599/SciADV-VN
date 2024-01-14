@@ -110,7 +110,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 									   System.Globalization.CultureInfo.InvariantCulture);
 			request.WriteTime = writeTime;
 			
-			//Replace url thật bằng placeholder để tránh lu cứng url vào nội dung bài viết
+			//Replace url thật bằng placeholder để tránh lưu cứng url vào nội dung bài viết
 			request.Contents = request.Contents.Replace(_configuration["BaseAddress"], "{{BaseAddress}}");
 
 			var result = await _postApiClient.CreatePost(request);
@@ -153,6 +153,9 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			var result = await _postApiClient.GetByID(id);
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
 			var convert = new ConvertTime();
+			//Replace placeholder bằng url thật để hiển thị nội dung bài viết
+			result.ResultObj.Contents = result.ResultObj.Contents.Replace("{{BaseAddress}}", _configuration["BaseAddress"]);
+			
 			if (result.IsSuccessed)
 			{
 				var post = result.ResultObj;
@@ -191,6 +194,9 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			DateTime writeTime = DateTime.ParseExact(request.TimePicker, "MM/dd/yyyy h:mm tt",
 									   System.Globalization.CultureInfo.InvariantCulture);
 			request.WriteTime = writeTime;
+			
+			//Replace url thật bằng placeholder để tránh lưu cứng url vào nội dung bài viết
+			request.Contents = request.Contents.Replace(_configuration["BaseAddress"], "{{BaseAddress}}");
 
 			var result = await _postApiClient.UpdatePost(request.PostID, request);
 			if (result.IsSuccessed)
