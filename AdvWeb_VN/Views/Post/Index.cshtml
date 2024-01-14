@@ -41,7 +41,7 @@
 			<div class="col-md-10 col-lg-8 p-b-30">
 				<div class="p-r-10 p-r-0-sr991">
 					<!-- Blog Detail -->
-					<div class="p-b-70">
+					<div class="p-b-70 blog-content">
 						<a href="/subcategory/subcategory-@Model.Post.SubCategoryID" class="f1-s-10 cl2 hov-cl10 trans-03 text-uppercase">
 							@Model.Post.SubCategoryName
 						</a>
@@ -309,6 +309,16 @@
 				margin-left: 0;
 				margin-right: 0;
 				font-weight: bold;
+			}
+			
+			/* Use this in order for li and ul tags to work properly */
+			.blog-content {
+				li {
+					list-style-type: initial;				 
+				  }
+				ul {
+				    padding: revert;
+				  }
 			}
 	</style>
 }

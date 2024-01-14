@@ -546,7 +546,7 @@ namespace AdvWeb_VN.Application.Catalog.Comments
 					LikeCount = x.c.LikeCount,
 					PostID = x.c.PostID,
 					IsOwnerPost = true,
-					IsOwner = (x.c.UserID.Equals(id)) ? true : false,
+					IsOwner = (x.c.UserID.Equals(id)),
 					DislikeCount = x.c.DislikeCount,
 					SubComments = _context.Comments.Where(p => p.ParentID.Equals(x.c.CommentID))
 									.Select(p => new SubCommentViewModel()
