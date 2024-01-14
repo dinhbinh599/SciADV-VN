@@ -156,7 +156,14 @@ namespace AdvWeb_VN.BackendApi
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				//app.UseHsts();
 			}
-			//app.UseHttpsRedirection();
+
+			// Migrate database on startup
+			using (var scope = app.ApplicationServices.CreateScope())
+			{
+				scope.ServiceProvider.GetRequiredService<AdvWebDbContext>().Database.Migrate();
+			}
+			
+			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
 			app.UseAuthentication();
