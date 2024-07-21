@@ -12,5 +12,6 @@ namespace AdvWeb_VN.WebApp.Models
 	{
 		public PagedResult<PostViewModel> PostHeaders { set; get; }
 		public List<CategoryMenuViewModel> CategoryMenus { set; get; }
+		public List<string> Donors { get; set; }
 	}
 }

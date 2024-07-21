@@ -7,10 +7,8 @@ namespace AdvWeb_VN.Utilities.Settings
 {
 	public class UrlRewrite
 	{
-        private static readonly string[] VietnameseSigns = new string[]
+        private static readonly string[] VietnameseChars =
         {
-
-            "aAeEoOuUiIdDyY",
 
             "áàạảãâấầậẩẫăắằặẳẵ",
 
@@ -40,20 +38,17 @@ namespace AdvWeb_VN.Utilities.Settings
 
             "ÝỲỴỶỸ"
         };
+
+        private static readonly string UnicodeChars = "aAeEoOuUiIdDyY";
         private static string RemoveSignForVietnameseString(string str)
 
         {
-
             //Tiến hành thay thế , lọc bỏ dấu cho chuỗi
-
-            for (int i = 1; i < VietnameseSigns.Length; i++)
-
+            for (int i = 0; i < VietnameseChars.Length; i++)
             {
+                for (int j = 0; j < VietnameseChars[i].Length; j++)
 
-                for (int j = 0; j < VietnameseSigns[i].Length; j++)
-
-                    str = str.Replace(VietnameseSigns[i][j], VietnameseSigns[0][i - 1]);
-
+                    str = str.Replace(VietnameseChars[i][j], UnicodeChars[i]);
             }
 
             return str;

@@ -11,7 +11,7 @@
     <option name="SEND_DEBUG_REQUEST" value="1" />
     <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="AdvWeb_VN.BackendApi" run_configuration_type="LaunchSettings" />
+      <option name="RunConfigurationTask" enabled="false" run_configuration_name="AdvWeb_VN.BackendApi" run_configuration_type="LaunchSettings" />
       <option name="Build" />
     </method>
   </configuration>

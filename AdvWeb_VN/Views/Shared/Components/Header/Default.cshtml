@@ -15,18 +15,20 @@
             <div class="content-topbar h-100 p-rl-30">
                 <div class="align-self-stretch size-w-0 pos-relative m-r-30">
                     <div class="f2-s-1 flex-wr-s-c s-full ab-t-l p-b-2">
-                        <span class="text-uppercase cl0 p-r-8">
-                            Mới:
+                        <span class="f1-s-1 cl0 p-r-8">
+                            <strong>Danh sách người ủng hộ trong tháng:</strong>
                         </span>
-
                         <span class="dis-inline-block cl16 slide100-txt pos-relative size-w-0" data-in="fadeInDown" data-out="fadeOutDown">
-                            @foreach (var item in Model.PostHeaders.Items)
-							{
-                            <span class="dis-inline-block slide100-txt-item animated visible-false">
-                                <a style="color:unset" href="/post/@(rewrite.Rewrite(item.PostName) +  item.PostID)">@split.NormalizeName(item.PostName, 30)</a>
-                            </span>
-							}
+                            <a style="color:unset" href="#donors">@split.NormalizeName(string.Join(", ", Model.Donors), 100)</a>
                         </span>
+       @*                  <span class="dis-inline-block cl16 slide100-txt pos-relative size-w-0" data-in="fadeInDown" data-out="fadeOutDown"> *@
+       @*                      @foreach (var item in Model.PostHeaders.Items) *@
+							@* { *@
+       @*                      <span class="dis-inline-block slide100-txt-item animated visible-false"> *@
+       @*                          <a style="color:unset" href="/post/@(rewrite.Rewrite(item.PostName) +  item.PostID)">@split.NormalizeName(item.PostName, 30)</a> *@
+       @*                      </span> *@
+							@* } *@
+       @*                  </span> *@
                     </div>
                 </div>
 

@@ -11,5 +11,6 @@ namespace AdvWeb_VN.WebApp.Models
 	{
 		public List<CategoryViewModel> CategoryFooters { set; get; }
 		public List<PostViewModel> PostFooters { set; get; }
+		public List<string> Donors { get; set; }
 	}
 }

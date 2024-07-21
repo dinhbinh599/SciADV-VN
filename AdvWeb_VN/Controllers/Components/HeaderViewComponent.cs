@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using AdvWeb_VN.Application.Common;
 
 namespace AdvWeb_VN.WebApp.Controllers.Components
 {
@@ -44,7 +45,8 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
             var headerViewModel = new HeaderViewModel()
             {
                 CategoryMenus = categories,
-                PostHeaders = posts
+                PostHeaders = posts,
+                Donors = GeneralInformation.Donors
             };
 
             return View("Default", headerViewModel);
