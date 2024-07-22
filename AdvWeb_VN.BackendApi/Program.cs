@@ -163,10 +163,15 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
 
 app.UseSwagger();
-app.UseSwaggerUI(c =>
+
+if (!app.Environment.IsProduction())
 {
-	c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger SciAdvWeb V1");
-});
+	app.UseSwaggerUI(c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger SciAdvWeb V1");
+	});
+}
+
 app.UseEndpoints(endpoints =>
 {
 	endpoints.MapControllerRoute(
