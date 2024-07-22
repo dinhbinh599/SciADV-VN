@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+<!--    Use this to workaround the bu g when publishing with dotnet 6, remember to copy the content of this folder manually to the publish folder-->
+<!--    <DefaultItemExcludes>$(DefaultItemExcludes);wwwroot\dist\**</DefaultItemExcludes>-->
   </PropertyGroup>
 
   <ItemGroup>
