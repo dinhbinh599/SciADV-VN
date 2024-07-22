@@ -1,9 +1,11 @@
-﻿using AdvWeb_VN.WebApp.Models;
+﻿using System.Linq;
+using AdvWeb_VN.WebApp.Models;
 using AdvWeb_VN.WebApp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using AdvWeb_VN.Application.Common;
 
 namespace AdvWeb_VN.WebApp.Controllers.Components
 {
@@ -34,7 +36,8 @@ namespace AdvWeb_VN.WebApp.Controllers.Components
             var footerViewModel = new FooterViewModel()
             {
                 CategoryFooters = categories,
-                PostFooters = posts
+                PostFooters = posts,
+                Donors = GeneralInformation.Donors
             };
 
             return View("Default", footerViewModel);
