@@ -18,6 +18,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Login";
         options.AccessDeniedPath = "/User/Forbidden/";
+        options.ExpireTimeSpan = TimeSpan.FromDays(30); // Set cookie expiration time
+        options.SlidingExpiration = true; // Extend expiration on activity
     });
 builder.Services.AddControllersWithViews();
 
@@ -40,6 +42,7 @@ builder.Services.AddTransient<ISubCategoryApiClient, SubCategoryApiClient>();
 builder.Services.AddTransient<ICommentApiClient, CommentApiClient>();
 builder.Services.AddTransient<IProductImageApiClient, ProductImageApiClient>();
 
+builder.Services.AddHttpContextAccessor();
 
 IMvcBuilder razorBuilder = builder.Services.AddRazorPages();
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");

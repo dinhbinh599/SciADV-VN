@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,8 +7,6 @@ using AdvWeb_VN.WebApp.Services;
 using Microsoft.Extensions.Configuration;
 using AdvWeb_VN.ViewModels.Catalog.Posts;
 using AdvWeb_VN.WebApp.Models;
-using AdvWeb_VN.ViewModels.Catalog.Tags;
-using AdvWeb_VN.ViewModels.Catalog.Comments;
 
 namespace AdvWeb_VN.WebApp.Controllers
 {

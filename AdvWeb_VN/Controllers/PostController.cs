@@ -46,7 +46,7 @@ namespace AdvWeb_VN.WebApp.Controllers
                 PageSize = pageSize
             };
 
-            var addViewCount = await _postApiClient.AddViewCount(id);
+            await _postApiClient.AddViewCount(id);
             var resultPost = await _postApiClient.GetByID(id);
             //Replace placeholder urls trong nội dung bài viết với url thật của host
             resultPost.ResultObj.Contents =

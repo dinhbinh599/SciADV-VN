@@ -22,11 +22,13 @@ namespace AdvWeb_VN.ManageApp.Controllers
     {
 		private readonly IUserApiClient _userApiClient;
 		private readonly IConfiguration _configuration;
+		private readonly IHttpContextAccessor _contextAccessor;
 
-		public LoginController(IUserApiClient userApiClient, IConfiguration configuration)
+		public LoginController(IUserApiClient userApiClient, IConfiguration configuration, IHttpContextAccessor contextAccessor)
 		{
 			_userApiClient = userApiClient;
 			_configuration = configuration;
+			_contextAccessor = contextAccessor;
 		}
 
 		[HttpGet]
@@ -52,8 +54,10 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			var userPrincipal = this.ValidateToken(result.ResultObj);
 			var authProperties = new AuthenticationProperties
 			{
-				ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-				IsPersistent = false
+				ExpiresUtc = request.RememberMe 
+				? DateTimeOffset.UtcNow.AddDays(30)
+				: DateTimeOffset.UtcNow.AddMinutes(30),
+				IsPersistent = request.RememberMe
 			};
 			HttpContext.Session.SetString(SystemConstants.AppSettings.Token, result.ResultObj);
 			await HttpContext.SignInAsync(
@@ -62,6 +66,12 @@ namespace AdvWeb_VN.ManageApp.Controllers
 						authProperties);
 
 			return RedirectToAction("Index", "Home");
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> KeepAlive()
+		{
+			return Ok("Session is active");
 		}
 
 		private ClaimsPrincipal ValidateToken(string jwtToken)

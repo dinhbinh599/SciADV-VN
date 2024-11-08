@@ -27,16 +27,12 @@ namespace AdvWeb_VN.ManageApp.Controllers
 	{
 		private readonly IPostApiClient _postApiClient;
 		private readonly IConfiguration _configuration;
-		private readonly ISubCategoryApiClient _subCategegoryApiClient;
-		private readonly ICategoryApiClient _categegoryApiClient;
 		private readonly ITagApiClient _tagApiClient;
 
 		public PostController(IPostApiClient postApiClient, IConfiguration configuration, ISubCategoryApiClient subCategegoryApiClient, ICategoryApiClient categegoryApiClient, ITagApiClient tagApiClient)
 		{
 			_postApiClient = postApiClient;
 			_configuration = configuration;
-			_subCategegoryApiClient = subCategegoryApiClient;
-			_categegoryApiClient = categegoryApiClient;
 			_tagApiClient = tagApiClient;
 		}
 
@@ -82,6 +78,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			//Dẫn hướng đến trang khởi tạo bài viết mới
 			//Lấy UserID hiện hành
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+			ViewData["ManageAddress"] = _configuration["ManageAddress"];
 			var userID = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
 			var postCreateRequest = new PostCreateRequest()
@@ -98,6 +95,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			//Khởi tạo bài viết mới nếu request truyền lên đầy đủ
 			//Lấy hình ảnh từ trang Web khác rồi upload lên Server mình đồng thời sửa lại đường dẫn vào bài viết
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+			ViewData["ManageAddress"] = _configuration["ManageAddress"];
 
 			if (!ModelState.IsValid)
 				return View();
@@ -152,6 +150,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			//Dẫn hướng đến trang chỉnh sửa bài viết
 			var result = await _postApiClient.GetByID(id);
 			ViewData["BaseAddress"] = _configuration["BaseAddress"];
+			ViewData["PortalAddress"] = _configuration["PortalAddress"];
 			var convert = new ConvertTime();
 			//Replace placeholder bằng url thật để hiển thị nội dung bài viết
 			result.ResultObj.Contents = result.ResultObj.Contents.Replace("{{BaseAddress}}", _configuration["BaseAddress"]);

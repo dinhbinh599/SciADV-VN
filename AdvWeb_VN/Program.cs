@@ -4,6 +4,8 @@ using AdvWeb_VN.Application.Common;
 using AdvWeb_VN.WebApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -39,7 +41,8 @@ var app = builder.Build();
 // Configure method in Startup
 
 // Cập nhật danh sách người donate
-GeneralInformation.Donors = app.Configuration["Donors"]!.Split(",").ToList();
+GeneralInformation.Donors = app.Configuration.GetValue<string>("Donors")!
+    .Split(",").ToList();
 			
 if (app.Environment.IsDevelopment())
 {
@@ -48,10 +51,10 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHttpsRedirection();
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     //app.UseHsts();
 }
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();

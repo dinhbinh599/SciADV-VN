@@ -2064,4 +2064,8 @@ img.image-item-post {
 i.switch{
     color: green;
 }
- 
+
+ul.other-vn-groups {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}

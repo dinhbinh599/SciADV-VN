@@ -140,7 +140,17 @@
 			},
 		});
         
-		let endpoint = "@ViewData["BaseAddress"]"
+		let endpoint = "@ViewData["BaseAddress"]";
+		let manageAddress = "@ViewData["ManageAddress"]";
+
+		// Keep the session alive to bypass IIS hosting default 5-minute idle time by pinging the server every 4 minutes (4 * 60 * 1000 ms)
+		fetch(manageAddress + "/login/keepalive")
+			.catch(error => console.error('Error in keep-alive:', error));
+			
+		setInterval(() => {
+			fetch(manageAddress + "/login/keepalive")
+				.catch(error => console.error('Error in keep-alive:', error));
+		}, 4 * 60 * 1000); // 4 minutes
 		        
 		//Bắt sự kiện chọn File Thumbnail Image thì hiển thị tên của File ra.
 		$(".custom-file-input").on("change", function () {
