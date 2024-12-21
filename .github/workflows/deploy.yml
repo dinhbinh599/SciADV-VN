@@ -1,0 +1,40 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build the project
+        run: dotnet publish AdvWeb_VN/AdvWeb_VN.WebApp.csproj -c Release -o publish
+
+      - name: Clean up unwanted files
+        run: |
+          rm -f publish/appsettings.json
+          rm -f publish/appsettings.Development.json
+          rm -f publish/appsettings.Production.json
+          rm -f publish/web.config
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./publish
+          server-dir: httpdocs  # Upload to /root/httpdocs
