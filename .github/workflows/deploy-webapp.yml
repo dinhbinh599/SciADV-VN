@@ -1,9 +1,7 @@
-name: Deploy to FTP
+name: Deploy Web app to FTP
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -17,13 +15,10 @@ jobs:
         with:
           dotnet-version: 6.0
 
-      - name: Restore dependencies
-        run: dotnet restore
-
       - name: Build the project
         run: dotnet publish AdvWeb_VN/AdvWeb_VN.WebApp.csproj -c Release -o publish
 
-      - name: Clean up unwanted files
+      - name: Clean up production settings-related files
         run: |
           rm -f publish/appsettings.json
           rm -f publish/appsettings.Development.json

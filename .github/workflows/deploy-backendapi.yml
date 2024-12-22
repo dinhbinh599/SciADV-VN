@@ -1,0 +1,35 @@
+name: Deploy Backend Api to FTP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0
+
+      - name: Build the project
+        run: dotnet publish AdvWeb_VN.BackendApi/AdvWeb_VN.BackendApi.csproj -c Release -o publish
+
+      - name: Clean up production settings-related files
+        run: |
+          rm -f publish/appsettings.json
+          rm -f publish/appsettings.Development.json
+          rm -f publish/appsettings.Production.json
+          rm -f publish/web.config
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./publish/
+          server-dir: api.gerosaga.me/  # Upload to /root/api.gerosaga.me
