@@ -32,7 +32,7 @@ namespace AdvWeb_VN.Application.Common
         public async Task SaveFileAsync(Stream mediaBinaryStream, string fileName)
         {
             var filePath = Path.Combine(_userContentFolder, fileName);
-            using var output = new FileStream(filePath, FileMode.Create);
+            await using var output = new FileStream(filePath, FileMode.Create);
             await mediaBinaryStream.CopyToAsync(output);
         }
 

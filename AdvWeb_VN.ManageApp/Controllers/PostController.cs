@@ -107,16 +107,16 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			DateTime writeTime = DateTime.ParseExact(request.TimePicker, "MM/dd/yyyy h:mm tt",
 									   System.Globalization.CultureInfo.InvariantCulture);
 			request.WriteTime = writeTime;
-			
+
 			//Replace url thật bằng placeholder để tránh lưu cứng url vào nội dung bài viết
 			request.Contents = request.Contents.Replace(_configuration["BaseAddress"], "{{BaseAddress}}");
 
 			var result = await _postApiClient.CreatePost(request);
-            
+
 			if (result.IsSuccessed)
 			{
 				var postID = result.ResultObj.PostID;
-                
+
 				////Sửa lại url Hình ảnh trong bài viết thành url của server mình
 				// await _postApiClient.UpdateContents(postID, new PostUpdateContentsRequest
 				// {
@@ -131,10 +131,10 @@ namespace AdvWeb_VN.ManageApp.Controllers
 				await _postApiClient.TagAssign(postID, requestConvert);
 
 				await _postApiClient.ImageAssign(new ImageAssignRequest()
-				{ 
+				{
 					postImages = getPostImages(postID, request.Contents)
 				});
-         
+
 				TempData["result"] = "Thêm mới bài viết thành công";
 				return RedirectToAction("Index");
 			}
@@ -154,7 +154,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			var convert = new ConvertTime();
 			//Replace placeholder bằng url thật để hiển thị nội dung bài viết
 			result.ResultObj.Contents = result.ResultObj.Contents.Replace("{{BaseAddress}}", _configuration["BaseAddress"]);
-			
+
 			if (result.IsSuccessed)
 			{
 				var post = result.ResultObj;
@@ -169,7 +169,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 					SubCategoryName = post.SubCategoryName,
 					IsShow = post.IsShow ?? false,
 					CategoryID = post.CategoryID,
-					TimePicker = convert.ConvertToGMT7(post.WriteTime).ToString("MM/dd/yyyy hh:mm tt"),
+					TimePicker = convert.ConvertToGMT7(post.WriteTime).ToString("MM'/'dd'/'yyyy hh:mm tt"),
 					TagAssignRequest = SelectConvertByTags(await GetTagAssignRequest(post.PostID))
 				};
 				return View(updateRequest);
@@ -193,7 +193,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			DateTime writeTime = DateTime.ParseExact(request.TimePicker, "MM/dd/yyyy h:mm tt",
 									   System.Globalization.CultureInfo.InvariantCulture);
 			request.WriteTime = writeTime;
-			
+
 			//Replace url thật bằng placeholder để tránh lưu cứng url vào nội dung bài viết
 			request.Contents = request.Contents.Replace(_configuration["BaseAddress"], "{{BaseAddress}}");
 
@@ -202,11 +202,11 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			{
 				var requestConvert = SelectConvertBySelectedTags(request.TagAssignRequest);
 				await _postApiClient.TagAssign(request.PostID, requestConvert);
-                await _postApiClient.ImageAssign(new ImageAssignRequest()
-                {
-                    postImages = getPostImages(request.PostID, request.Contents)
-                });
-                TempData["result"] = "Cập nhật bài viết thành công";
+				await _postApiClient.ImageAssign(new ImageAssignRequest()
+				{
+					postImages = getPostImages(request.PostID, request.Contents)
+				});
+				TempData["result"] = "Cập nhật bài viết thành công";
 				return RedirectToAction("Index");
 			}
 			var resultEdit = await _postApiClient.GetByID(request.PostID);
@@ -243,7 +243,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			var result = await _postApiClient.Delete(request.PostID);
 			if (result.IsSuccessed)
 			{
-                var resultUnassign = await _postApiClient.ImageUnassignAll(request.PostID);
+				var resultUnassign = await _postApiClient.ImageUnassignAll(request.PostID);
 				TempData["result"] = "Xóa bài viết thành công";
 				return RedirectToAction("Index");
 			}
@@ -425,25 +425,25 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			return result;
 		}
 
-        private List<PostImage> getPostImages(int postID, string contents)
-        {
-            var postImages = new List<PostImage>();
+		private List<PostImage> getPostImages(int postID, string contents)
+		{
+			var postImages = new List<PostImage>();
 			MatchCollection matchCollImage = Regex.Matches(contents, "<img.+?src=[\"'](.+?)[\"'].*?>", RegexOptions.IgnoreCase);
-			
+
 			foreach (Match match in matchCollImage)
 			{
 				var image = match.Groups[1].Value;
 				if (image.Contains(_configuration["BaseAddress"]))
 				{
-                    postImages.Add(new PostImage
-                    {
-                        PostID = postID,
-                        DateCreated = DateTime.Now,
-                        ImagePath = image.Replace(_configuration["BaseAddress"] + "/user-content/", "")
-                    });
-                }
+					postImages.Add(new PostImage
+					{
+						PostID = postID,
+						DateCreated = DateTime.Now,
+						ImagePath = image.Replace(_configuration["BaseAddress"] + "/user-content/", "")
+					});
+				}
 			}
-            return postImages;
-        }
-    }
+			return postImages;
+		}
+	}
 }

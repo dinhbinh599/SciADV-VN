@@ -1,11 +1,12 @@
-﻿@model AdvWeb_VN.ViewModels.Catalog.Posts.PostUpdateRequest
+﻿@using AdvWeb_VN.Utilities.Dtos
+@model AdvWeb_VN.ViewModels.Catalog.Posts.PostUpdateRequest
 @{
 	ViewData["Title"] = "Cập nhật";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
-	var thumbnail = ViewData["BaseAddress"] + "/user-content/" + Model.Thumbnail;
+	var thumbnail = DomainAddresses.BaseAddress + "/user-content/" + Model.Thumbnail;
 }
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -55,14 +56,18 @@
 								</div>
 								<div class="form-group">
 									<label class="control-label">Chuyên mục cha</label>
-									<select asp-for="CategoryID" class="form-control category-select" id="category-select">
-										<option value="@Model.CategoryID" selected="selected">@Model.CategoryName</option>
+									<select asp-for="CategoryID" class="form-control category-select"
+										id="category-select">
+										<option value="@Model.CategoryID" selected="selected">@Model.CategoryName
+										</option>
 									</select>
 								</div>
 								<div class="form-group">
 									<label asp-for="SubCategoryID" class="control-label"></label>
-									<select asp-for="SubCategoryID" class="form-control category-select" id="subcategory-select">
-										<option value="@Model.SubCategoryID" selected="selected">@Model.SubCategoryName</option>
+									<select asp-for="SubCategoryID" class="form-control category-select"
+										id="subcategory-select">
+										<option value="@Model.SubCategoryID" selected="selected">@Model.SubCategoryName
+										</option>
 									</select>
 								</div>
 								@for (int i = 0; i < Model.TagAssignRequest.Tags.Count; i++)
@@ -72,7 +77,8 @@
 								}
 								<div class="form-group">
 									<label class="control-label">Tags</label>
-									<select asp-for="TagAssignRequest.SelectedTags" class="form-control tag-select" multiple="multiple">
+									<select asp-for="TagAssignRequest.SelectedTags" class="form-control tag-select"
+										multiple="multiple">
 										@foreach (var tag in Model.TagAssignRequest.Tags)
 										{
 											<option value="@tag.Name">@tag.Name</option>
@@ -82,31 +88,36 @@
 								<input type="hidden" asp-for="PostID" />
 								<!-- Date -->
 								<div class="form-group col-md-6 col-sm-12">
-									<label asp-for="TimePicker" class="control-label"></label>
+									<label class="control-label">Ngày tạo</label>
 									<div class="input-group date" id="reservationdate" data-target-input="nearest">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="far fa-clock"></i></span>
 										</div>
-										<input asp-for="TimePicker" id="datepicker" type="text" class="form-control float-right" />
-										<div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-											<div id="#datetimepicker" class="input-group-text"><i class="fa fa-calendar"></i></div>
+										<input asp-for="TimePicker" type="text"
+											class="form-control datetimepicker-input" data-target="#reservationdate"
+											data-toggle="datetimepicker" />
+										<div class="input-group-append" data-target="#reservationdate"
+											data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 										</div>
 									</div>
 									<span asp-validation-for="TimePicker" class="text-danger"></span>
 								</div>
 
 								<div class="form-group">
-									<label asp-for="IsShow" class="control-label col-12"></label>
+									<label class="control-label col-12">Hiển thị</label>
 									@{
-										if (Model.IsShow == true)
+										if (Model.IsShow)
 										{
-											<input asp-for="IsShow" class="form-control" type="checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+											<input asp-for="IsShow" class="form-control" type="checkbox" checked
+												data-bootstrap-switch data-off-color="danger" data-on-color="success">
 										}
 										else
 										{
-											<input asp-for="IsShow" class="form-control" type="checkbox" data-bootstrap-switch data-off-color="danger" data-on-color="success">
+											<input asp-for="IsShow" class="form-control" type="checkbox" data-bootstrap-switch
+												data-off-color="danger" data-on-color="success">
 										}
-									}									
+									}
 									<span asp-validation-for="IsShow" class="text-danger"></span>
 								</div>
 
@@ -115,7 +126,8 @@
 									<label asp-for="ThumbnailFile">Thumbnail</label>
 									<div class="input-group">
 										<div class="custom-file">
-											<input asp-for="ThumbnailFile" type="file" class="custom-file-input" id="custom-file">
+											<input asp-for="ThumbnailFile" type="file" class="custom-file-input"
+												id="custom-file">
 											<label class="custom-file-label" for="custom-file">@Model.Thumbnail</label>
 										</div>
 										<div class="input-group-append">
@@ -150,17 +162,16 @@
 	</section>
 	<!-- /.content -->
 </div>
-@section scripts{
+@section scripts {
 	<script type="text/javascript">
-        
 		var editor = new FroalaEditor('.contents',
-		{
-            imageUploadURL: '/UploadFiles',
-			imageUploadParams: {
-				id: 'my_editor'
-			},
-		});
-        
+			{
+				imageUploadURL: '/UploadFiles',
+				imageUploadParams: {
+					id: 'my_editor'
+				},
+			});
+
 		let endpoint = "@ViewData["BaseAddress"]"
 		let manageAddress = "@ViewData["ManageAddress"]"
 
@@ -183,17 +194,17 @@
 			readData(this);
 		});
 
-        $("select#category-select").change(function () {
+		$("select#category-select").change(function () {
 			var selectedCategory = $(this).children("option:selected").val();
 			showSubCategory(selectedCategory);
 		});
 
-        $("#previewDiv").dialog({
+		$("#previewDiv").dialog({
 			title: "Xem trước",
 			height: 800,
-			width:800,
+			width: 800,
 			autoOpen: false,
-			open: function () {},
+			open: function () { },
 			show: "blind",
 			hide: "explode"
 		});
@@ -205,10 +216,10 @@
 			return false;
 		});
 
-        showCategory();
+		showCategory();
 
 
-        function showCategory() {
+		function showCategory() {
 			fetch(endpoint + "/api/categories")
 				.then(response => response.json())
 				.then(data => _displayItemCategory(data))
@@ -221,7 +232,7 @@
 			})
 		}
 
-        function showSubCategory(id) {
+		function showSubCategory(id) {
 			$("#subcategory-select").empty()
 			fetch(endpoint + "/api/subcategories/category/" + id)
 				.then(response => response.json())
@@ -235,7 +246,7 @@
 			})
 		}
 
-        function readData(input) {
+		function readData(input) {
 			if (input.files && input.files[0]) {
 				var reader = new FileReader();
 				reader.onload = function (e) {
@@ -246,4 +257,3 @@
 		}
 	</script>
 }
-

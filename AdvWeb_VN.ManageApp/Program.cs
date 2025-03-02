@@ -1,5 +1,6 @@
 using System;
 using AdvWeb_VN.ManageApp.Services;
+using AdvWeb_VN.Utilities.Settings;
 using AdvWeb_VN.ViewModels.System.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -53,6 +54,8 @@ if (environment == Environments.Development)
 }
 
 var app = builder.Build();
+
+DomainAddressHelper.ConfigureDomainAddresses(app.Configuration);
 
 // Configure method in Startup
 if (app.Environment.IsDevelopment())

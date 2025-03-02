@@ -27,7 +27,8 @@
 		</div>
 
 		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
-			<input id="search" class="f1-s-1 cl6 plh9 s-full p-l-25 p-r-45" type="text" name="search" placeholder="Search">
+			<input id="search" class="f1-s-1 cl6 plh9 s-full p-l-25 p-r-45" type="text" name="search"
+				placeholder="Search">
 			<button id="search" class="flex-c-c size-a-1 ab-t-r fs-20 cl2 hov-cl10 trans-03">
 				<i class="zmdi zmdi-search"></i>
 			</button>
@@ -43,7 +44,8 @@
 				<div class="p-r-10 p-r-0-sr991">
 					<!-- Blog Detail -->
 					<div class="p-b-70 blog-content">
-						<a href="/subcategory/subcategory-@Model.Post.SubCategoryID" class="f1-s-10 cl2 hov-cl10 trans-03 text-uppercase">
+						<a href="/subcategory/subcategory-@Model.Post.SubCategoryID"
+							class="f1-s-10 cl2 hov-cl10 trans-03 text-uppercase">
 							@Model.Post.SubCategoryName
 						</a>
 
@@ -82,7 +84,8 @@
 								<span class="m-rl-3">-</span>
 
 								<span>
-									@(Model.Post.WriteTime.Day + "/" + Model.Post.WriteTime.Month + "/" + Model.Post.WriteTime.Year)
+									@(Model.Post.WriteTime.Day + "/" + Model.Post.WriteTime.Month + "/" +
+																		Model.Post.WriteTime.Year)
 								</span>
 							</span>
 
@@ -99,7 +102,7 @@
 
 						<!-- Post Content-->
 						<div class="fr-view">
-						@Html.Raw(Model.Post.Contents)
+							@Html.Raw(Model.Post.Contents)
 						</div>
 
 						<!-- Tag -->
@@ -125,19 +128,16 @@
 							</span>
 
 							<div class="flex-wr-s-s size-w-0">
-								<button id="fbShare" class="dis-block f1-s-13 cl0 bg-facebook borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								<button id="fbShare"
+									class="dis-block f1-s-13 cl0 bg-facebook borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
 									<i class="fab fa-facebook-f m-r-7"></i>
 									Facebook
 								</button>
 
-								<button id="twitterShare" class="dis-block f1-s-13 cl0 bg-twitter borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								<button id="twitterShare"
+									class="dis-block f1-s-13 cl0 bg-twitter borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
 									<i class="fab fa-twitter m-r-7"></i>
 									Twitter
-								</button>
-
-								<button id="gplusShare" class="dis-block f1-s-13 cl0 bg-google borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
-									<i class="fab fa-google-plus-g m-r-7"></i>
-									Google+
 								</button>
 							</div>
 						</div>
@@ -166,6 +166,13 @@
 				<h4 class="f1-l-4 cl3 p-b-12">
 					Bình Luận
 				</h4>
+			</div>
+
+			<div class="col-12 col-md-10 col-lg-12 p-b-100">
+				<!-- Facebook Comments Plugin -->
+				<div class="fb-comments"
+					data-href="@(ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID)"
+					data-width="100%" data-numposts="5" data-order-by="reverse_time"></div>
 			</div>
 
 			<div class="col-12 col-md-10 col-lg-12 p-b-100">
@@ -203,35 +210,54 @@
 					{
 						<div data-id="@comment.CommentID" class="comment-box main-comment">
 							<span class="commenter-pic">
-								@if (comment.Avatar != null) { avatar = imageFolder + comment.Avatar; } else { avatar = defaultAvatar; }
+								@if (comment.Avatar != null) { avatar = imageFolder + comment.Avatar; }
+								else
+								{
+									avatar =
+									defaultAvatar;
+								}
 								<img src=@avatar class="img-fluid img-avatar-comment">
 							</span>
 							@if (comment.IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
 							<span class="commenter-name">
-								<a @adminColor href="#">@comment.Commentator</a> <span class="comment-time">@convertTime.Convert(comment.CommentTime)</span>
+								<a @adminColor href="#">@comment.Commentator</a> <span
+									class="comment-time">@convertTime.Convert(comment.CommentTime)</span>
 							</span>
 							<p class="comment-txt more">@comment.Commenter</p>
 							<div class="comment-meta">
-								<button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @comment.LikeCount</button>
-								<button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @comment.DislikeCount</button>
-								<button parent-id="@comment.CommentID" data-id="@comment.CommentID" class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>
+								<button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+									@comment.LikeCount</button>
+								<button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+									@comment.DislikeCount</button>
+								<button parent-id="@comment.CommentID" data-id="@comment.CommentID"
+									class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i>
+									Reply</button>
 							</div>
 							@foreach (var subComment in comment.SubComments)
 							{
 								<div data-id="@subComment.SubCommentID" class="comment-box replied">
 									<span class="commenter-pic">
-										@if (subComment.Avatar != null) { avatar = imageFolder + subComment.Avatar; } else { avatar = defaultAvatar; }
+										@if (subComment.Avatar != null) { avatar = imageFolder + subComment.Avatar; }
+										else
+										{
+											avatar = defaultAvatar;
+										}
 										<img src=@avatar class="img-fluid img-avatar-comment">
 									</span>
 									@if (subComment.IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
 									<span class="commenter-name">
-										<a @adminColor href="#">@subComment.Commentator</a> <span class="comment-time">@convertTime.Convert(subComment.CommentTime)</span>
+										<a @adminColor href="#">@subComment.Commentator</a> <span
+											class="comment-time">@convertTime.Convert(subComment.CommentTime)</span>
 									</span>
 									<p class="comment-txt more">@subComment.Commenter</p>
 									<div class="comment-meta">
-										<button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @subComment.LikeCount</button>
-										<button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @subComment.DislikeCount</button>
-										<button parent-id="@comment.CommentID" data-id="@subComment.SubCommentID" class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>
+										<button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+											@subComment.LikeCount</button>
+										<button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+											@subComment.DislikeCount</button>
+										<button parent-id="@comment.CommentID" data-id="@subComment.SubCommentID"
+											class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i>
+											Reply</button>
 									</div>
 								</div>
 							}
@@ -248,92 +274,104 @@
 	</div>
 </section>
 
-@section style{
+@section style {
 	<style>
 		.contents {
 			font-size: 18px;
 		}
 
-			.contents h1 {
-				display: block;
-				font-size: 2em;
-				margin-top: 0.67em;
-				margin-bottom: 0.67em;
-				margin-left: 0;
-				margin-right: 0;
-				font-weight: bold;
+		.contents h1 {
+			display: block;
+			font-size: 2em;
+			margin-top: 0.67em;
+			margin-bottom: 0.67em;
+			margin-left: 0;
+			margin-right: 0;
+			font-weight: bold;
+		}
+
+		.contents h2 {
+			display: block;
+			font-size: 1.5em;
+			margin-top: 0.83em;
+			margin-bottom: 0.83em;
+			margin-left: 0;
+			margin-right: 0;
+			font-weight: bold;
+		}
+
+		.contents h3 {
+			display: block;
+			font-size: 1.17em;
+			margin-top: 1em;
+			margin-bottom: 1em;
+			margin-left: 0;
+			margin-right: 0;
+			font-weight: bold;
+		}
+
+		.contents h4 {
+			display: block;
+			font-size: 1em;
+			margin-top: 1.33em;
+			margin-bottom: 1.33em;
+			margin-left: 0;
+			margin-right: 0;
+			font-weight: bold;
+		}
+
+		.contents h5 {
+			display: block;
+			font-size: .83em;
+			margin-top: 1.67em;
+			margin-bottom: 1.67em;
+			margin-left: 0;
+			margin-right: 0;
+			font-weight: bold;
+		}
+
+		.contents h6 {
+			display: block;
+			font-size: .67em;
+			margin-top: 2.33em;
+			margin-bottom: 2.33em;
+			margin-left: 0;
+			margin-right: 0;
+			font-weight: bold;
+		}
+
+		/* Use this in order for li and ul tags to work properly */
+		.blog-content {
+			li {
+				list-style-type: initial;
 			}
 
-			.contents h2 {
-				display: block;
-				font-size: 1.5em;
-				margin-top: 0.83em;
-				margin-bottom: 0.83em;
-				margin-left: 0;
-				margin-right: 0;
-				font-weight: bold;
+			ul {
+				padding: revert;
 			}
-
-			.contents h3 {
-				display: block;
-				font-size: 1.17em;
-				margin-top: 1em;
-				margin-bottom: 1em;
-				margin-left: 0;
-				margin-right: 0;
-				font-weight: bold;
-			}
-
-			.contents h4 {
-				display: block;
-				font-size: 1em;
-				margin-top: 1.33em;
-				margin-bottom: 1.33em;
-				margin-left: 0;
-				margin-right: 0;
-				font-weight: bold;
-			}
-
-			.contents h5 {
-				display: block;
-				font-size: .83em;
-				margin-top: 1.67em;
-				margin-bottom: 1.67em;
-				margin-left: 0;
-				margin-right: 0;
-				font-weight: bold;
-			}
-
-			.contents h6 {
-				display: block;
-				font-size: .67em;
-				margin-top: 2.33em;
-				margin-bottom: 2.33em;
-				margin-left: 0;
-				margin-right: 0;
-				font-weight: bold;
-			}
-			
-			/* Use this in order for li and ul tags to work properly */
-			.blog-content {
-				li {
-					list-style-type: initial;				 
-				  }
-				ul {
-				    padding: revert;
-				  }
-			}
+		}
 	</style>
 }
 
-@section scripts{
+@section scripts {
+	<!-- Facebook SDK -->
+	<div id="fb-root"></div>
+	<script>
+		(function (d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+
 	<script type="text/javascript">
 		var isReply = false;
 		var fbShare = document.getElementById("fbShare");
-		var gplusShare = document.getElementById("gplusShare");
 		var twitterShare = document.getElementById("twitterShare");
 
-		var form  = document.getElementById('commentForm');
+		//var form  = document.getElementById('commentForm');
 		var error = document.querySelector('.error');
 		var commentator = document.getElementById('Commentator');
 		var commentator = document.getElementById('Commenter');
@@ -352,7 +390,7 @@
 				var parentID = $(this).attr("parent-id");
 				var box = $("div[data-id='" + dataID + "']");
 				box.append('<form class="reply" action="/post/CreateComment" role="form" method="post"><div class="comment-box add-comment reply"><span class="commenter-pic"><img src="/images/user-icon.jpg" class="img-fluid img-avatar-comment"></span><span class="commenter-name"><input oninput="this.setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'Tên bắt buộc phải có, dài tối đa 50 kí tự!\')" maxlength="50"  id="commentator" type="text" placeholder="Tên" name="commentator" required><input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID"><input value="@Model.Post.PostName" id="PostName" type="hidden" placeholder="Name" name="PostName"><input value="' + parentID + '" id="ParentID" type="hidden" placeholder="ID" name="ParentID"></span><textarea oninput="this.setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'Bình luận bắt buộc phải có, dài tối đa 250 kí tự!\')" maxlength="250"  id="commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="commenter" required></textarea><button type="submit" class="btn btn-default">Reply</button><button type="cancel" class="btn btn-default reply-popup-cancel">Cancel</button></form>');
-					$(".reply-popup-cancel").click(function () {
+				$(".reply-popup-cancel").click(function () {
 					$(".reply").remove();
 				});
 			});
@@ -381,11 +419,6 @@
 				return false;
 			}
 
-			gplusShare.onclick = function () {
-				window.open("https://plus.google.com/share?url=@postUrl", "", "height=550,width=525,left=100,top=100,menubar=0");
-				return false;
-			}
-
 			twitterShare.onclick = function () {
 				window.open("https://twitter.com/share?url=@postUrl" + "&text=@Model.Post.PostName", "", "height=260,width=500,left=100,top=100,menubar=0");
 				return false;
@@ -393,7 +426,7 @@
 
 			form.addEventListener("submit", function (event) {
 				// kiểm tra khi user click submit.
-				if (!commentator.validity.valid||!commenter.validity.valid) {
+				if (!commentator.validity.valid || !commenter.validity.valid) {
 					alert("Tên hoặc bình luận không hợp lệ!");
 					// chặn việc submit form
 					event.preventDefault();
@@ -401,7 +434,7 @@
 			}, false);
 
 
-			@*//FB share
+							@*//FB share
 			$(".fbShare").click(function () {
 				alert("https://www.facebook.com/sharer.php?u=@postUrl");
 				window.open("https://www.facebook.com/sharer.php?u=@postUrl", "", "height=368,width=600,left=100,top=100,menubar=0");
@@ -417,8 +450,6 @@
 				window.open("https://twitter.com/share?url=@postUrl" + "&text=@Model.Post.PostName", "", "height=260,width=500,left=100,top=100,menubar=0");
 			});*@
 
-		});
+						});
 	</script>
 }
-
-

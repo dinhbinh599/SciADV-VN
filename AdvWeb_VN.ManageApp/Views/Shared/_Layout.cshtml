@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,8 +27,9 @@
 	<!-- Google Font: Source Sans Pro -->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-		
-	<link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet'type='text/css' />
+
+	<link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet'
+		type='text/css' />
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/start/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="~/dist/css/comment.css">
 
@@ -102,6 +104,7 @@ to get the desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
+
 <body class="hold-transition sidebar-mini sidebar-collapse">
 	<div class="wrapper">
 		<!-- Navbar -->
@@ -119,7 +122,8 @@ to get the desired effect
 			@*SEARCH FORM*@
 			<form class="form-inline ml-3">
 				<div class="input-group input-group-sm">
-					<input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+					<input class="form-control form-control-navbar" type="search" placeholder="Search"
+						aria-label="Search">
 					<div class="input-group-append">
 						<button class="btn btn-navbar" type="submit">
 							<i class="fas fa-search"></i>
@@ -175,15 +179,15 @@ to get the desired effect
 	<!-- Filterizr-->
 	<script src="~/plugins/filterizr/jquery.filterizr.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>	
+	<script src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 	<!-- Page script -->
 	<script>
-        
+
 		$(function () {
-			$("input[data-bootstrap-switch]").each(function(){
-			  $(this).bootstrapSwitch('state', $(this).prop('checked'));
+			$("input[data-bootstrap-switch]").each(function () {
+				$(this).bootstrapSwitch('state', $(this).prop('checked'));
 			});
 
 			//Datemask dd/mm/yyyy
@@ -194,13 +198,7 @@ to get the desired effect
 			$('[data-mask]').inputmask()
 
 			//Date range picker
-			$('#reservationdate').datetimepicker({
-				timePicker: true,
-				timePickerIncrement: 30,
-				locale: {
-					format: 'dd/mm/yyyy hh:mm A'
-				}
-			});
+			$('#reservationdate').datetimepicker();
 
 			//Date range picker
 			$('#reservation').daterangepicker()
@@ -208,11 +206,12 @@ to get the desired effect
 			$('#reservationtime').daterangepicker({
 				timePicker: true,
 				timePickerIncrement: 30,
+				format: 'DD/MM/YYYY HH:mm A',
 				locale: {
-					format: 'dd/mm/yyyy hh:mm A'
-				}
+					format: 'DD/MM/YYYY HH:mm A',
+				},
 			});
-			 //Bootstrap Duallistbox
+			//Bootstrap Duallistbox
 			$('.duallistbox').bootstrapDualListbox()
 		})
 	</script>
@@ -226,4 +225,5 @@ to get the desired effect
 	</script>
 	@RenderSection("scripts", required: false);
 </body>
+
 </html>

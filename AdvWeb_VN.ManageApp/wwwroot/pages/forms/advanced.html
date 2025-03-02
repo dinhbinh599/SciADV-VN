@@ -1405,7 +1405,7 @@
 
     //Date range picker
     $('#reservationdate').datetimepicker({
-        format: 'L'
+      format: 'DD/MM/YYYY HH:mm A',
     });
     //Date range picker
     $('#reservation').daterangepicker()
@@ -1413,9 +1413,10 @@
     $('#reservationtime').daterangepicker({
       timePicker: true,
       timePickerIncrement: 30,
+      format: 'DD/MM/YYYY HH:mm A',
       locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
+        format: 'DD/MM/YYYY HH:mm A'
+      },
     })
     //Date range as a button
     $('#daterange-btn').daterangepicker(

@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
 using AdvWeb_VN.Application.Common;
+using AdvWeb_VN.Utilities.Dtos;
+using AdvWeb_VN.Utilities.Settings;
+using AdvWeb_VN.ViewModels.Common;
 using AdvWeb_VN.WebApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -43,6 +46,8 @@ var app = builder.Build();
 // Cập nhật danh sách người donate
 GeneralInformation.Donors = app.Configuration.GetValue<string>("Donors")!
     .Split(",").ToList();
+
+DomainAddressHelper.ConfigureDomainAddresses(app.Configuration);
 			
 if (app.Environment.IsDevelopment())
 {

@@ -1,8 +1,9 @@
-﻿@using AdvWeb_VN.Utilities.Settings
+﻿@using AdvWeb_VN.Utilities.Dtos
+@using AdvWeb_VN.Utilities.Settings
 @model AdvWeb_VN.WebApp.Models.FooterViewModel
 
 @{
-	var imageFolder = ViewData["BaseAddress"] + "/user-content/";
+	var imageFolder = DomainAddresses.BaseAddress + "/user-content/";
 	Split split = new Split();
 	UrlRewrite rewrite = new UrlRewrite();
 }
@@ -20,7 +21,8 @@
 
 					<div>
 						<p class="f1-s-1 cl11 p-b-16 footer">
-							Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science Adventure ("CHAOS;HEAD", "STEINS;GATE", "ROBOTICS;NOTES"...) của 5pb./MAGES
+							Website của nhóm dịch Gero Saga, mục tiêu của nhóm là series Visual Novel mang tên Science
+							Adventure ("CHAOS;HEAD", "STEINS;GATE", "ROBOTICS;NOTES"...) của 5pb./MAGES
 						</p>
 
 						<p class="f1-s-1 cl11 p-b-16">
@@ -28,7 +30,8 @@
 						</p>
 
 						<div class="p-t-15 p-b-16">
-							<a href="https://www.facebook.com/GeroSagaSciADV" class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
+							<a href="https://www.facebook.com/GeroSagaSciADV"
+								class="fs-18 cl11 hov-cl10 trans-03 m-r-8">
 								<span class="fab fa-facebook-f"></span>
 							</a>
 
@@ -48,11 +51,11 @@
 								<span class="fab fa-youtube"></span>
 							</a>
 						</div>
-						
+
 						<p id="donors" class="f1-s-1 cl11 p-b-16">
 							<strong>Danh sách người ủng hộ trong tháng:</strong> @string.Join(", ", Model.Donors)
-                        </p>
-						
+						</p>
+
 					</div>
 				</div>
 
@@ -64,25 +67,28 @@
 					</div>
 
 					<ul>
-						@for (int i=0;i<((Model.PostFooters.Count>=5) ? 4: Model.PostFooters.Count); i++)
+						@for (int i = 0; i < ((Model.PostFooters.Count >= 5) ? 4 : Model.PostFooters.Count); i++)
 						{
-						<li class="flex-wr-sb-s p-b-20">
-							<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + Model.PostFooters[i].PostID)" class="size-w-4 wrap-pic-w hov1 trans-03">
-								<img class="image-post-footer" src="@imageFolder@Model.PostFooters[i].Thumbnail" alt="IMG">
-							</a>
+							<li class="flex-wr-sb-s p-b-20">
+								<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + Model.PostFooters[i].PostID)"
+									class="size-w-4 wrap-pic-w hov1 trans-03">
+									<img class="image-post-footer" src="@imageFolder@Model.PostFooters[i].Thumbnail"
+										alt="IMG">
+								</a>
 
-							<div class="size-w-5">
-								<h6 class="p-b-5">
-									<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + Model.PostFooters[i].PostID)" class="f1-s-5 cl11 hov-cl10 trans-03">
-										@split.NormalizeName(Model.PostFooters[i].PostName, 12)
-									</a>
-								</h6>
+								<div class="size-w-5">
+									<h6 class="p-b-5">
+										<a href="/post/@(rewrite.Rewrite(Model.PostFooters[i].PostName) + Model.PostFooters[i].PostID)"
+											class="f1-s-5 cl11 hov-cl10 trans-03">
+											@split.NormalizeName(Model.PostFooters[i].PostName, 12)
+										</a>
+									</h6>
 
-								<span class="f1-s-3 cl6">
-									@(Model.PostFooters[i].WriteTime.Day + "/" + Model.PostFooters[i].WriteTime.Month)
-								</span>
-							</div>
-						</li>
+									<span class="f1-s-3 cl6">
+										@(Model.PostFooters[i].WriteTime.Day + "/" + Model.PostFooters[i].WriteTime.Month)
+									</span>
+								</div>
+							</li>
 						}
 
 					</ul>
@@ -98,11 +104,11 @@
 					<ul class="m-t--12">
 						@foreach (var item in Model.CategoryFooters)
 						{
-						<li class="how-bor1 p-rl-5 p-tb-10">
-							<a href="/category/category-@item.CategoryID" class="f1-s-5 cl11 hov-cl10 trans-03 p-tb-8">
-								@item.CategoryName (@item.PostCount)
-							</a>
-						</li>
+							<li class="how-bor1 p-rl-5 p-tb-10">
+								<a href="/category/category-@item.CategoryID" class="f1-s-5 cl11 hov-cl10 trans-03 p-tb-8">
+									@item.CategoryName (@item.PostCount)
+								</a>
+							</li>
 						}
 					</ul>
 				</div>
