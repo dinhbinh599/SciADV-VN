@@ -1,4 +1,5 @@
 ﻿@model AdvWeb_VN.WebApp.Models.PostPageViewModel
+@using AdvWeb_VN.Utilities.Dtos
 @using AdvWeb_VN.Utilities.Settings
 @{
 	ViewData["Title"] = Model.Post.PostName;
@@ -9,7 +10,7 @@
 	var defaultAvatar = imageFolder + "user-icon.jpg";
 	string adminColor, avatar = "";
 	UrlRewrite rewrite = new UrlRewrite();
-	var postUrl = ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID;
+	var postUrl = DomainAddresses.PortalAddress + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID;
 }
 
 <!-- Breadcrumb -->
@@ -171,8 +172,8 @@
 			<div class="col-12 col-md-10 col-lg-12 p-b-100">
 				<!-- Facebook Comments Plugin -->
 				<div class="fb-comments"
-					data-href="@(ViewData["PortalAddress"] + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID)"
-					data-width="100%" data-numposts="5" data-order-by="reverse_time"></div>
+					data-href="@postUrl"
+					data-width="100%" data-numposts="5" data-order-by="reverse_time" data-appid="1198766781604854"></div>
 			</div>
 
 			<div class="col-12 col-md-10 col-lg-12 p-b-100">
@@ -360,8 +361,9 @@
 		(function (d, s, id) {
 			var js, fjs = d.getElementsByTagName(s)[0];
 			if (d.getElementById(id)) return;
-			js = d.createElement(s); js.id = id;
-			js.src = "https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0";
+			js = d.createElement(s); 
+			js.id = id;
+			js.src = "https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0&appId=1198766781604854";
 			fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));
 	</script>
