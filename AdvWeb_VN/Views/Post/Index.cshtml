@@ -174,8 +174,7 @@
 					<li class="nav-item" role="presentation">
 						<button class="nav-link @(!isNativeTabActive ? "active" : "")" id="facebook-tab"
 						        data-toggle="tab" data-target="#facebook-comments" type="button" role="tab">
-							<i class="fab fa-facebook"></i> Bình luận Facebook <span id="fb-comment-count"
-							                                                         class="comment-counter">(0)</span>
+							<i class="fab fa-facebook"></i> Bình luận Facebook
 						</button>
 					</li>
 					<li class="nav-item" role="presentation">
@@ -190,7 +189,7 @@
 				<!-- Tab Content -->
 				<div class="tab-content" id="commentTabsContent">
 					<!-- Native Comments Tab -->
-					<div class="tab-pane fade show active" id="native-comments" role="tabpanel">
+					<div class="tab-pane fade" id="native-comments" role="tabpanel">
 						<div class="col-12 col-md-10 col-lg-12 p-b-100">
 							<div class="comments">
 								<div class="comments-details">
@@ -321,7 +320,7 @@
 					</div>
 
 					<!-- Facebook Comments Tab -->
-					<div class="tab-pane fade" id="facebook-comments" role="tabpanel">
+					<div class="tab-pane fade show active" id="facebook-comments" role="tabpanel">
 						<div class="col-12 col-md-10 col-lg-12 p-b-100">
 							<!-- Facebook Comments Plugin -->
 							<div class="fb-comments"
