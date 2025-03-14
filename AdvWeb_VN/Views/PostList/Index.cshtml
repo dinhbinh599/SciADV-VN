@@ -13,9 +13,15 @@
 
 }
 
-@section style{
+@section style {
 	<style>
-		h1, h2, h3, h4, h5, h6, p {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		p {
 			margin: 0px;
 			line-height: unset;
 			font-weight: 400;
@@ -38,7 +44,8 @@
 		</div>
 
 		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
-			<input id="search" class="f1-s-1 cl6 plh9 s-full p-l-25 p-r-45" type="text" name="search" placeholder="Search">
+			<input id="search" class="f1-s-1 cl6 plh9 s-full p-l-25 p-r-45" type="text" name="search"
+				placeholder="Search">
 			<button id="search" class="flex-c-c size-a-1 ab-t-r fs-20 cl2 hov-cl10 trans-03">
 				<i class="zmdi zmdi-search"></i>
 			</button>
@@ -73,13 +80,15 @@
 						<div class="col-sm-6 p-r-25 p-r-15-sr991">
 							<!-- Item latest -->
 							<div class="m-b-45">
-								<a href="/post/@(rewrite.Rewrite(item.PostName) + item.PostID)" class="wrap-pic-w hov1 trans-03">
+								<a href="/post/@(rewrite.Rewrite(item.PostName) + item.PostID)"
+									class="wrap-pic-w hov1 trans-03">
 									<img class="image-post" src="@imageFolder@item.Thumbnail" alt="IMG">
 								</a>
 
 								<div class="p-t-16">
 									<h5 class="p-b-5">
-										<a href="/post/@(rewrite.Rewrite(item.PostName) + item.PostID)" class="f1-m-3 cl2 hov-cl10 trans-03">
+										<a href="/post/@(rewrite.Rewrite(item.PostName) + item.PostID)"
+											class="f1-m-3 cl2 hov-cl10 trans-03">
 											@split.NormalizeName(item.PostName, 12)
 										</a>
 									</h5>
@@ -104,7 +113,7 @@
 				</div>
 
 				<!-- Pagination -->
-				@await Component.InvokeAsync("Pager", Model.Posts)
+				@await Component.InvokeAsync("Pager", new { result = Model.Posts })
 
 				@*<div class="flex-wr-s-c m-rl--7 p-t-15">
 					<a href="#" class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7 pagi-active">1</a>
@@ -117,4 +126,3 @@
 		</div>
 	</div>
 </section>
-

@@ -1,6 +1,11 @@
 ﻿@model AdvWeb_VN.ViewModels.Common.PagedResultBase
 @{
+    var anchor = ViewData["Anchor"] as string;
     var urlTemplate = Url.Action() + "?pageIndex={0}";
+    if (!string.IsNullOrEmpty(anchor))
+    {
+        urlTemplate += "#" + anchor;
+    }
     var request = ViewContext.HttpContext.Request;
     foreach (var key in request.Query.Keys)
     {
@@ -31,23 +36,28 @@
         @if (Model.PageIndex != startIndex)
         {
             <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7" title="1" href="@urlTemplate.Replace("{0}", "1")">Đầu</a>
-            <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7" href="@urlTemplate.Replace("{0}", (Model.PageIndex-1).ToString())">Trước</a>
+            <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7"
+                href="@urlTemplate.Replace("{0}", (Model.PageIndex - 1).ToString())">Trước</a>
         }
         @for (var i = startIndex; i <= finishIndex; i++)
         {
             if (i == Model.PageIndex)
             {
-                <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7 pagi-active" href="#">@i <span class="sr-only">(current)</span></a>
+                <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7 pagi-active" href="#">@i <span
+                        class="sr-only">(current)</span></a>
             }
             else
             {
-                <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7" title="Trang @i.ToString()" href="@urlTemplate.Replace("{0}", i.ToString())">@i</a>
+                <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7" title="Trang @i.ToString()"
+                    href="@urlTemplate.Replace("{0}", i.ToString())">@i</a>
             }
         }
         @if (Model.PageIndex != finishIndex)
         {
-            <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7" title="@Model.PageCount.ToString()" href="@urlTemplate.Replace("{0}", (Model.PageIndex+1).ToString())">Sau</a>
-            <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7" href="@urlTemplate.Replace("{0}", Model.PageCount.ToString())">Cuối</a>
+            <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7" title="@Model.PageCount.ToString()"
+                href="@urlTemplate.Replace("{0}", (Model.PageIndex + 1).ToString())">Sau</a>
+            <a class="flex-c-c pagi-item hov-btn1 trans-03 m-all-7"
+                href="@urlTemplate.Replace("{0}", Model.PageCount.ToString())">Cuối</a>
         }
     </div>
 }

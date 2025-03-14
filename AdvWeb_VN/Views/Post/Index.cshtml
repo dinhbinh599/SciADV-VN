@@ -11,6 +11,9 @@
 	string adminColor, avatar = "";
 	UrlRewrite rewrite = new UrlRewrite();
 	var postUrl = DomainAddresses.PortalAddress + "/post/" + rewrite.Rewrite(Model.Post.PostName) + Model.Post.PostID;
+
+	var pageIndex = Context.Request.Query["pageIndex"].ToString();
+	var isNativeTabActive = !string.IsNullOrEmpty(pageIndex);
 }
 
 <!-- Breadcrumb -->
@@ -29,7 +32,7 @@
 
 		<div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
 			<input id="search" class="f1-s-1 cl6 plh9 s-full p-l-25 p-r-45" type="text" name="search"
-				placeholder="Search">
+			       placeholder="Search">
 			<button id="search" class="flex-c-c size-a-1 ab-t-r fs-20 cl2 hov-cl10 trans-03">
 				<i class="zmdi zmdi-search"></i>
 			</button>
@@ -46,7 +49,7 @@
 					<!-- Blog Detail -->
 					<div class="p-b-70 blog-content">
 						<a href="/subcategory/subcategory-@Model.Post.SubCategoryID"
-							class="f1-s-10 cl2 hov-cl10 trans-03 text-uppercase">
+						   class="f1-s-10 cl2 hov-cl10 trans-03 text-uppercase">
 							@Model.Post.SubCategoryName
 						</a>
 
@@ -86,7 +89,7 @@
 
 								<span>
 									@(Model.Post.WriteTime.Day + "/" + Model.Post.WriteTime.Month + "/" +
-																		Model.Post.WriteTime.Year)
+										  Model.Post.WriteTime.Year)
 								</span>
 							</span>
 
@@ -130,13 +133,13 @@
 
 							<div class="flex-wr-s-s size-w-0">
 								<button id="fbShare"
-									class="dis-block f1-s-13 cl0 bg-facebook borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								        class="dis-block f1-s-13 cl0 bg-facebook borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
 									<i class="fab fa-facebook-f m-r-7"></i>
 									Facebook
 								</button>
 
 								<button id="twitterShare"
-									class="dis-block f1-s-13 cl0 bg-twitter borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
+								        class="dis-block f1-s-13 cl0 bg-twitter borad-3 p-tb-4 p-rl-18 hov-btn1 m-r-3 m-b-3 trans-03">
 									<i class="fab fa-twitter m-r-7"></i>
 									Twitter
 								</button>
@@ -158,119 +161,180 @@
 				</div>
 			</div>
 
-
 			<!-- Sidebar -->
 			@await Component.InvokeAsync("Sidebar")
 
 			<!-- Show Comment -->
 			<div class="col-12 col-md-10 col-lg-12">
-				<h4 class="f1-l-4 cl3 p-b-12">
+				<h4 id="commentHeader" class="f1-l-4 cl3 p-b-12">
 					Bình Luận
 				</h4>
-			</div>
 
-			<div class="col-12 col-md-10 col-lg-12 p-b-100">
-				<!-- Facebook Comments Plugin -->
-				<div class="fb-comments"
-					data-href="@postUrl"
-					data-width="100%" data-numposts="5" data-order-by="reverse_time" data-appid="1198766781604854"></div>
-			</div>
+				<ul class="nav nav-tabs" id="commentTabs" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link @(!isNativeTabActive ? "active" : "")" id="facebook-tab"
+						        data-toggle="tab" data-target="#facebook-comments" type="button" role="tab">
+							<i class="fab fa-facebook"></i> Bình luận Facebook <span id="fb-comment-count"
+							                                                         class="comment-counter">(0)</span>
+						</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link @(isNativeTabActive ? "active" : "")" id="native-tab" data-toggle="tab"
+						        data-target="#native-comments" type="button" role="tab">
+							<i class="fa fa-comments"></i> Bình luận hệ thống <span
+								class="comment-counter">(@Model.Comments.TotalRecords)</span>
+						</button>
+					</li>
+				</ul>
 
-			<div class="col-12 col-md-10 col-lg-12 p-b-100">
-				<div class="comments">
-					<div class="comments-details">
-						<span class="total-comments comments-sort">@Model.Comments.TotalRecords Bình luận</span>
-						@*<span class="dropdown">
-							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Sort By <span class="caret"></span></button>
-							<div class="dropdown-menu">
-								<a href="#" class="dropdown-item">Top Comments</a>
-								<a href="#" class="dropdown-item">Newest First</a>
-							</div>
-						</span>*@
-					</div>
+				<!-- Tab Content -->
+				<div class="tab-content" id="commentTabsContent">
+					<!-- Native Comments Tab -->
+					<div class="tab-pane fade show active" id="native-comments" role="tabpanel">
+						<div class="col-12 col-md-10 col-lg-12 p-b-100">
+							<div class="comments">
+								<div class="comments-details">
+									<span
+										class="total-comments comments-sort">@Model.Comments.TotalRecords Bình luận</span>
+									@*<span class="dropdown">
+										<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Sort By <span class="caret"></span></button>
+										<div class="dropdown-menu">
+											<a href="#" class="dropdown-item">Top Comments</a>
+											<a href="#" class="dropdown-item">Newest First</a>
+										</div>
+									</span>*@
+								</div>
 
-					<!-- Form Add Comment đầu -->
-					@*<form id="commentForm" asp-action="CreateComment" role="form" method="post">
-						<div asp-validation-summary="All" class="text-danger"></div>
-						<div class="comment-box add-comment">
-							<span class="commenter-pic">
-								<img src="~/images/user-icon.jpg" class="img-fluid">
-							</span>
-							<span class="commenter-name">
-								<input oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Tên bắt buộc phải có, dài tối đa 50 kí tự!')" maxlength="50" id="Commentator" type="text" placeholder="Tên" name="Commentator" required>
-								<input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID">
-								<input value="@Model.Post.PostName" id="PostName" type="hidden" placeholder="Name" name="PostName">
-							</span>
-							<textarea oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Bình luận bắt buộc phải có, dài tối đa 250 kí tự!')" maxlength="250" id="Commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="Commenter" required></textarea>
-							<button type="submit" class="btn btn-default">Gửi</button>
-						</div>
-					</form>
+								<!-- Form Add Comment đầu -->
+								@*<form id="commentForm" asp-action="CreateComment" role="form" method="post">
+									<div asp-validation-summary="All" class="text-danger"></div>
+									<div class="comment-box add-comment">
+										<span class="commenter-pic">
+											<img src="~/images/user-icon.jpg" class="img-fluid">
+										</span>
+										<span class="commenter-name">
+											<input oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Tên bắt buộc phải có, dài tối đa 50 kí tự!')" maxlength="50" id="Commentator" type="text" placeholder="Tên" name="Commentator" required>
+											<input value="@ViewData["PostID"]" id="PostID" type="hidden" placeholder="ID" name="PostID">
+											<input value="@Model.Post.PostName" id="PostName" type="hidden" placeholder="Name" name="PostName">
+										</span>
+										<textarea oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Bình luận bắt buộc phải có, dài tối đa 250 kí tự!')" maxlength="250" id="Commenter" class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" type="text" placeholder="Vui lòng nhập bình luận" name="Commenter" required></textarea>
+										<button type="submit" class="btn btn-default">Gửi</button>
+									</div>
+								</form>
 *@
-					<!-- List Comment Hiện ở đây -->
-					@foreach (var comment in Model.Comments.Items)
-					{
-						<div data-id="@comment.CommentID" class="comment-box main-comment">
-							<span class="commenter-pic">
-								@if (comment.Avatar != null) { avatar = imageFolder + comment.Avatar; }
-								else
+								<!-- List Comment Hiện ở đây -->
+								@foreach (var comment in Model.Comments.Items)
 								{
-									avatar =
-									defaultAvatar;
-								}
-								<img src=@avatar class="img-fluid img-avatar-comment">
-							</span>
-							@if (comment.IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
-							<span class="commenter-name">
-								<a @adminColor href="#">@comment.Commentator</a> <span
-									class="comment-time">@convertTime.Convert(comment.CommentTime)</span>
-							</span>
-							<p class="comment-txt more">@comment.Commenter</p>
-							<div class="comment-meta">
-								<button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-									@comment.LikeCount</button>
-								<button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
-									@comment.DislikeCount</button>
-								<button parent-id="@comment.CommentID" data-id="@comment.CommentID"
-									class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i>
-									Reply</button>
-							</div>
-							@foreach (var subComment in comment.SubComments)
-							{
-								<div data-id="@subComment.SubCommentID" class="comment-box replied">
-									<span class="commenter-pic">
-										@if (subComment.Avatar != null) { avatar = imageFolder + subComment.Avatar; }
+									<div data-id="@comment.CommentID" class="comment-box main-comment">
+										<span class="commenter-pic">
+											@if (comment.Avatar != null)
+											{
+												avatar = imageFolder + comment.Avatar;
+											}
+											else
+											{
+												avatar =
+													defaultAvatar;
+											}
+											<img src=@avatar class="img-fluid img-avatar-comment">
+										</span>
+										@if (comment.IsManaged)
+										{
+											adminColor = "style=color:red";
+										}
 										else
 										{
-											avatar = defaultAvatar;
+											adminColor = "";
 										}
-										<img src=@avatar class="img-fluid img-avatar-comment">
-									</span>
-									@if (subComment.IsManaged) { adminColor = "style=color:red"; } else { adminColor = ""; }
-									<span class="commenter-name">
-										<a @adminColor href="#">@subComment.Commentator</a> <span
-											class="comment-time">@convertTime.Convert(subComment.CommentTime)</span>
-									</span>
-									<p class="comment-txt more">@subComment.Commenter</p>
-									<div class="comment-meta">
-										<button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-											@subComment.LikeCount</button>
-										<button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
-											@subComment.DislikeCount</button>
-										<button parent-id="@comment.CommentID" data-id="@subComment.SubCommentID"
-											class="comment-reply reply-popup"><i class="fa fa-reply-all" aria-hidden="true"></i>
-											Reply</button>
+										<span class="commenter-name">
+											<a @adminColor href="#">@comment.Commentator</a> <span
+												class="comment-time">@convertTime.Convert(comment.CommentTime)</span>
+										</span>
+										<p class="comment-txt more">@comment.Commenter</p>
+										<div class="comment-meta">
+											<button class="comment-like"><i class="fa fa-thumbs-o-up"
+											                                aria-hidden="true"></i>
+												@comment.LikeCount</button>
+											<button class="comment-dislike"><i class="fa fa-thumbs-o-down"
+											                                   aria-hidden="true"></i>
+												@comment.DislikeCount</button>
+											<button parent-id="@comment.CommentID" data-id="@comment.CommentID"
+											        class="comment-reply reply-popup"><i class="fa fa-reply-all"
+											                                             aria-hidden="true"></i>
+												Reply
+											</button>
+										</div>
+										@foreach (var subComment in comment.SubComments)
+										{
+											<div data-id="@subComment.SubCommentID" class="comment-box replied">
+												<span class="commenter-pic">
+													@if (subComment.Avatar != null)
+													{
+														avatar = imageFolder + subComment.Avatar;
+													}
+													else
+													{
+														avatar = defaultAvatar;
+													}
+													<img src=@avatar class="img-fluid img-avatar-comment">
+												</span>
+												@if (subComment.IsManaged)
+												{
+													adminColor = "style=color:red";
+												}
+												else
+												{
+													adminColor = "";
+												}
+												<span class="commenter-name">
+													<a @adminColor href="#">@subComment.Commentator</a> <span
+														class="comment-time">@convertTime.Convert(subComment.CommentTime)</span>
+												</span>
+												<p class="comment-txt more">@subComment.Commenter</p>
+												<div class="comment-meta">
+													<button class="comment-like"><i class="fa fa-thumbs-o-up"
+													                                aria-hidden="true"></i>
+														@subComment.LikeCount</button>
+													<button class="comment-dislike"><i class="fa fa-thumbs-o-down"
+													                                   aria-hidden="true"></i>
+														@subComment.DislikeCount</button>
+													<button parent-id="@comment.CommentID"
+													        data-id="@subComment.SubCommentID"
+													        class="comment-reply reply-popup"><i class="fa fa-reply-all"
+													                                             aria-hidden="true"></i>
+														Reply
+													</button>
+												</div>
+											</div>
+										}
 									</div>
-								</div>
-							}
+								}
+							</div>
+							<!-- Pagination -->
+							@await Component.InvokeAsync("Pager", new
+							{
+								result = Model.Comments,
+								anchor = "commentHeader"
+							})
 						</div>
-					}
+
+					</div>
+
+					<!-- Facebook Comments Tab -->
+					<div class="tab-pane fade" id="facebook-comments" role="tabpanel">
+						<div class="col-12 col-md-10 col-lg-12 p-b-100">
+							<!-- Facebook Comments Plugin -->
+							<div class="fb-comments"
+							     data-href="@postUrl"
+							     data-width="100%"
+							     data-numposts="5"
+							     data-order-by="reverse_time"
+							     data-appid="1198766781604854">
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-
-			<!-- Pagination -->
-			@await Component.InvokeAsync("Pager", Model.Comments)
-
-
 		</div>
 	</div>
 </section>
@@ -351,23 +415,37 @@
 				padding: revert;
 			}
 		}
+
+		#commentTabs {
+			margin-bottom: 20px;
+		}
+
+		#commentTabs .nav-link {
+			color: #666;
+			border: 1px solid #ddd;
+			border-radius: 0;
+			padding: 10px 20px;
+		}
+
+		#commentTabs .nav-link.active {
+			color: #000;
+			background-color: #fff;
+			border-bottom-color: transparent;
+		}
+
+		.tab-content {
+			padding-top: 20px;
+		}
+
+		.comment-counter {
+			font-size: 0.9em;
+			color: #666;
+			margin-left: 5px;
+		}
 	</style>
 }
 
 @section scripts {
-	<!-- Facebook SDK -->
-	@* <div id="fb-root"></div> *@
-	@* <script> *@
-	@* 	(function (d, s, id) { *@
-	@* 		var js, fjs = d.getElementsByTagName(s)[0]; *@
-	@* 		if (d.getElementById(id)) return; *@
-	@* 		js = d.createElement(s);  *@
-	@* 		js.id = id; *@
-	@* 		js.src = "https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0&appId=1198766781604854"; *@
-	@* 		fjs.parentNode.insertBefore(js, fjs); *@
-	@* 	}(document, 'script', 'facebook-jssdk')); *@
-	@* </script> *@
-
 	<script type="text/javascript">
 		var isReply = false;
 		var fbShare = document.getElementById("fbShare");
@@ -436,7 +514,7 @@
 			}, false);
 
 
-							@*//FB share
+			@*//FB share
 			$(".fbShare").click(function () {
 				alert("https://www.facebook.com/sharer.php?u=@postUrl");
 				window.open("https://www.facebook.com/sharer.php?u=@postUrl", "", "height=368,width=600,left=100,top=100,menubar=0");
@@ -452,6 +530,52 @@
 				window.open("https://twitter.com/share?url=@postUrl" + "&text=@Model.Post.PostName", "", "height=260,width=500,left=100,top=100,menubar=0");
 			});*@
 
-						});
+			// Make sure Facebook comments are properly loaded when switching tabs
+			$(document).ready(function () {
+				$('#commentTabs button[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+					if (e.target.id === 'facebook-tab') {
+						// Reload Facebook comments when tab is shown
+						if (FB) {
+							FB.XFBML.parse();
+						}
+					}
+				});
+			});
+		});
+
+		function updateFacebookCommentCount() {
+			FB.api(
+				'@postUrl/comments',
+				'GET',
+				function (response) {
+					if (response && !response.error) {
+						// Update the counter
+						const count = response.summary ? response.summary.total_count : 0;
+						document.getElementById('fb-comment-count').textContent = `(${count})`;
+					}
+				}
+			);
+		}
+
+		// When document is ready
+		$(document).ready(function () {
+			// Initialize Facebook comment count when FB SDK is loaded
+			if (typeof FB !== 'undefined') {
+				FB.Event.subscribe('xfbml.render', function () {
+					updateFacebookCommentCount();
+				});
+			}
+
+			// Update counts when switching tabs
+			$('#commentTabs button[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				if (e.target.id === 'facebook-tab') {
+					// Reload Facebook comments and update count
+					if (FB) {
+						FB.XFBML.parse();
+						updateFacebookCommentCount();
+					}
+				}
+			});
+		});
 	</script>
 }

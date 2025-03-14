@@ -215,7 +215,7 @@
 				</div>
 			</div>
 			<!-- Pagination -->
-			@await Component.InvokeAsync("Pager", Model.Comments)
+			@await Component.InvokeAsync("Pager", new { result = Model.Comments})
 		</div>
 	</div>
 </section>

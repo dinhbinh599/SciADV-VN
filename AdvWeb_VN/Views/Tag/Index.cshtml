@@ -152,7 +152,7 @@
 
 				<!-- Pagination -->
 				<div class="flex-wr-s-c m-rl--7 p-t-15">
-					@await Component.InvokeAsync("Pager", Model.Posts)
+					@await Component.InvokeAsync("Pager", new { result = Model.Posts})
 				</div>
 			</div>
 
