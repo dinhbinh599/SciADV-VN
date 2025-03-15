@@ -14,6 +14,7 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 		[Display(Name = "Nội dung")]
 		public string Contents { set; get; }
 		[Display(Name = "Nội dung tóm tắt (dùng để hiển thị trên trang nhúng)")]
+		[MaxLength(255, ErrorMessage = "Tóm tắt chỉ được phép chứa tối đa 255 ký tự")]
 		public string Summary { set; get; }
 
 		[Display(Name = "Thumbnail")]
