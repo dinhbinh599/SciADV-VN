@@ -98,7 +98,10 @@ namespace AdvWeb_VN.ManageApp.Services
             requestContent.Add(new StringContent(createRequest.SubCategoryID.ToString()), "subCategoryID");
             requestContent.Add(new StringContent(createRequest.UserID.ToString()), "userID");
             requestContent.Add(new StringContent(createRequest.Contents), "contents");
-            requestContent.Add(new StringContent(createRequest.Summary), "summary");
+            if (createRequest.Summary is not null)
+            {
+                requestContent.Add(new StringContent(createRequest.Summary), "summary");
+            }
             requestContent.Add(new StringContent(createRequest.WriteTime.ToString()), "writeTime");
             requestContent.Add(new StringContent(createRequest.IsShow.ToString()), "isShow");
 
@@ -168,7 +171,10 @@ namespace AdvWeb_VN.ManageApp.Services
             requestContent.Add(new StringContent(request.CategoryID.ToString()), "categoryID");
             requestContent.Add(new StringContent(request.SubCategoryID.ToString()), "subCategoryID");
             requestContent.Add(new StringContent(request.Contents), "contents");
-            requestContent.Add(new StringContent(request.Summary), "summary");
+            if (request.Summary is not null)
+            {
+                requestContent.Add(new StringContent(request.Summary), "summary");
+            }
             requestContent.Add(new StringContent(request.WriteTime.ToString()), "writeTime");
             requestContent.Add(new StringContent(request.IsShow.ToString()), "isShow");
 
