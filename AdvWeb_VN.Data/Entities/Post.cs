@@ -10,6 +10,7 @@ namespace AdvWeb_VN.Data.Entities
 		public string PostName { set; get; }
 		public DateTime WriteTime { set; get; }
 		public string Contents { set; get; }
+		public string Summary { get; set; }
 		public string Thumbnail { set; get; }
 		public int SubCategoryID { set; get; }
 		public int CategoryID { set; get; }

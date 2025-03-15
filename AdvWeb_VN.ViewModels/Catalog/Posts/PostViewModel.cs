@@ -13,6 +13,8 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 
 		[Display(Name = "Nội dung")]
 		public string Contents { set; get; }
+		[Display(Name = "Nội dung tóm tắt")]
+		public string Summary { set; get; }
 		public string Thumbnail { set; get; }
 
 		[Display(Name = "Người viết")]

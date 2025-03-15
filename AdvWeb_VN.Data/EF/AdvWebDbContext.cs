@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
 
 namespace AdvWeb_VN.Data.EF;
 
@@ -16,17 +17,9 @@ public class AdvWebDbContext : IdentityDbContext<User,Role,Guid>
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		//Thiết lập thêm tùy chỉnh cho các bảng
-		modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-		modelBuilder.ApplyConfiguration(new TagConfiguration());
-		modelBuilder.ApplyConfiguration(new PostConfiguration());
-		modelBuilder.ApplyConfiguration(new CommentConfiguration());
-		modelBuilder.ApplyConfiguration(new PostTagConfiguration());
-		modelBuilder.ApplyConfiguration(new PostImageConfiguration());
-		modelBuilder.ApplyConfiguration(new UserConfiguration());
-		modelBuilder.ApplyConfiguration(new RoleConfiguration());
-		modelBuilder.ApplyConfiguration(new SubCategoryConfiguration()); 
+		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 		modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
-		modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x=>new { x.UserId, x.RoleId});
+		modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x=> new { x.UserId, x.RoleId});
 		modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x=>x.UserId);
 		modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
 		modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);

@@ -55,6 +55,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			{
 				PostName = request.PostName,
 				Contents = request.Contents,
+				Summary = request.Summary,
 				View = 0,
 				UserID = request.UserID,
 				CategoryID = request.CategoryID,
@@ -168,6 +169,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 				IsShow = post.IsShow,
 				Thumbnail = post.Thumbnail,
 				Contents = post.Contents,
+				Summary = post.Summary,
 				SubCategoryID = post.SubCategoryID,
 				UserName = user.UserName,
 				SubCategoryName = subCategory.CategoryName,
@@ -179,7 +181,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 			return new ApiSuccessResult<PostViewModel>(postViewModel);
 		}
 
-		public async Task<ApiResult<bool>> Update(int id,PostUpdateRequest request)
+		public async Task<ApiResult<bool>> Update(int id, PostUpdateRequest request)
 		{
 			//Chỉnh sửa thông tin bài viết
 			var post = await _context.Posts.FindAsync(id);
@@ -187,6 +189,7 @@ namespace AdvWeb_VN.Application.Catalog.Posts
 
 			post.PostName = request.PostName;
 			post.Contents = request.Contents;
+			post.Summary = request.Summary;
 			post.WriteTime = request.WriteTime.ToUniversalTime();
 			post.SubCategoryID = request.SubCategoryID;
 			post.CategoryID = request.CategoryID;

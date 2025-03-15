@@ -7,13 +7,15 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ConfigureServices method in Startup
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("GeroSaga_BackEnd",
+    client => client.BaseAddress = new Uri(builder.Configuration.GetSection("BaseAddress").Get<string>()));
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

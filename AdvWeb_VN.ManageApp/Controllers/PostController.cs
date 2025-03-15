@@ -64,13 +64,13 @@ namespace AdvWeb_VN.ManageApp.Controllers
 		// GET: /<controller>/
 
 
-		[HttpGet]
-		public async Task<IActionResult> Details(int id)
-		{
-			//Để đây cho vui, sau xem chi tiết dẫn hẳn đến WebApp của bài viết
-			var result = await _postApiClient.GetByID(id);
-			return View(result.ResultObj);
-		}
+		// [HttpGet]
+		// public async Task<IActionResult> Details(int id)
+		// {
+		// 	//Để đây cho vui, sau xem chi tiết dẫn hẳn đến WebApp của bài viết
+		// 	var result = await _postApiClient.GetByID(id);
+		// 	return View(result.ResultObj);
+		// }
 
 		[HttpGet]
 		public IActionResult Create()
@@ -110,6 +110,9 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 			//Replace url thật bằng placeholder để tránh lưu cứng url vào nội dung bài viết
 			request.Contents = request.Contents.Replace(_configuration["BaseAddress"], "{{BaseAddress}}");
+			
+			//Remove froala editor trademark
+			request.Contents = request.Contents.Replace(_configuration["FroalaEditorTrademark"], "");
 
 			var result = await _postApiClient.CreatePost(request);
 
@@ -163,6 +166,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 					PostID = post.PostID,
 					PostName = post.PostName,
 					SubCategoryID = post.SubCategoryID,
+					Summary = post.Summary,
 					Contents = post.Contents,
 					Thumbnail = post.Thumbnail,
 					CategoryName = post.CategoryName,
@@ -196,6 +200,9 @@ namespace AdvWeb_VN.ManageApp.Controllers
 
 			//Replace url thật bằng placeholder để tránh lưu cứng url vào nội dung bài viết
 			request.Contents = request.Contents.Replace(_configuration["BaseAddress"], "{{BaseAddress}}");
+			
+			//Remove froala editor trademark
+			request.Contents = request.Contents.Replace(_configuration["FroalaEditorTrademark"], "");
 
 			var result = await _postApiClient.UpdatePost(request.PostID, request);
 			if (result.IsSuccessed)
@@ -213,6 +220,7 @@ namespace AdvWeb_VN.ManageApp.Controllers
 			var post = resultEdit.ResultObj;
 
 			request.Thumbnail = post.Thumbnail;
+			request.Summary = post.Summary;
 			request.CategoryID = post.CategoryID;
 			request.SubCategoryID = post.SubCategoryID;
 			request.IsShow = post.IsShow ?? false;

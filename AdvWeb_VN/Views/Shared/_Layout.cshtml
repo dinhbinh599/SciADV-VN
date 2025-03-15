@@ -1,9 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<title>@ViewData["Title"]</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	@{
+		var description = ViewBag.summary ?? ViewBag.description;
+	}
 	<!--===============================================================================================-->
 	<link rel="icon" type="image/png" href="~/images/icons/favicon.png" />
 	<!--===============================================================================================-->
@@ -25,33 +27,40 @@
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="~/css/comment.css">
 	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css"
+		href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css'/>
-	
-	<!-- HTML Meta Tags -->
-	<meta content="@ViewBag.description" name="description">
-	<meta content="@ViewBag.keywords" name="description">
-	<meta name="Author" content="Hoang Thuan, nguyenhoangthuan2092003@gmail.com">
+	<link rel="stylesheet" type="text/css"
+		href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' />
+
+	<!-- Basic SEO Meta Tags -->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="@description">
+	<meta name="keywords" content="@ViewBag.keywords">
+	<meta name="Author" content="Resker">
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="@ViewBag.ogurl">
 
 	<!-- Google / Search Engine Tags -->
 	<meta itemprop="name" content="@ViewBag.ogtitle">
-	<meta itemprop="description" content="@ViewBag.ogdescription">
+	<meta itemprop="description" content="@description">
 	<meta itemprop="image" content="@ViewBag.ogimage">
 
 	<!-- [ Social Media meta tag ] -->
-	<!-- Facebook Meta Tags -->
-	<meta content="@ViewBag.ogtype" property="og:type">
+	<!-- Open Graph Meta Tags (Facebook & Social Media) -->
+	<meta property="og:type" content="@ViewBag.ogtype">
 	<meta property="og:title" content="@ViewBag.ogtitle">
 	<meta property="og:url" content="@ViewBag.ogurl">
 	<meta property="og:image" content="@ViewBag.ogimage">
 	<meta property="fb:app_id" content="1198766781604854" />
-	<meta content="@ViewBag.ogdescription" property="og:description">
-	<meta content="Gero Saga" property="og:site_name">
+	<meta property="og:description" content="@description">
+	<meta property="og:site_name" content="Gero Saga">
 
 	<!-- Twitter Meta Tags -->
 	<meta property="twitter:title" content="@ViewBag.ogtitle">
-	<meta property="twitter:description" content="@ViewBag.description">
+	<meta property="twitter:description" content="@description">
 	<meta property="twitter:image" content="@ViewBag.ogimage">
 	<meta property="twitter:card" content="summary_large_image">
 	<meta property="twitter:url" content="@ViewBag.ogurl">
@@ -68,6 +77,7 @@
 	@RenderSection("Style", required: false)
 
 </head>
+
 <body class="animsition">
 
 	<!-- Header -->
@@ -115,7 +125,8 @@
 	</script>
 	<div id="fb-root"></div>
 	<script async defer crossorigin="anonymous"
-	        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v22.0&appId=1198766781604854&autoLogAppEvents=1">
-	</script>
+		src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v22.0&appId=1198766781604854&autoLogAppEvents=1">
+		</script>
 </body>
+
 </html>

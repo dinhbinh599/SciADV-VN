@@ -4,6 +4,7 @@ using AdvWeb_VN.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvWeb_VN.Data.Migrations
 {
     [DbContext(typeof(AdvWebDbContext))]
-    partial class AdvWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250315055258_add-summary-column-to-post-table")]
+    partial class addsummarycolumntoposttable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

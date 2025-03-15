@@ -31,7 +31,7 @@ namespace AdvWeb_VN.ManageApp.Services
 
         public async Task<ApiResult<bool>> Delete(int id)
         {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var sessions = _httpContextAccessor.HttpContext?.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
@@ -45,9 +45,8 @@ namespace AdvWeb_VN.ManageApp.Services
 
         public async Task<ApiResult<PostViewModel>> GetByID(int id)
         {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var sessions = _httpContextAccessor.HttpContext?.Session.GetString("Token");
+            var client = _httpClientFactory.CreateClient("GeroSaga_BackEnd");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/posts/{id}");
             var body = await response.Content.ReadAsStringAsync();
@@ -78,8 +77,7 @@ namespace AdvWeb_VN.ManageApp.Services
                 .Session
                 .GetString(SystemConstants.AppSettings.Token);
 
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            var client = _httpClientFactory.CreateClient("GeroSaga_BackEnd");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
 
             var requestContent = new MultipartFormDataContent();
@@ -100,6 +98,7 @@ namespace AdvWeb_VN.ManageApp.Services
             requestContent.Add(new StringContent(createRequest.SubCategoryID.ToString()), "subCategoryID");
             requestContent.Add(new StringContent(createRequest.UserID.ToString()), "userID");
             requestContent.Add(new StringContent(createRequest.Contents), "contents");
+            requestContent.Add(new StringContent(createRequest.Summary), "summary");
             requestContent.Add(new StringContent(createRequest.WriteTime.ToString()), "writeTime");
             requestContent.Add(new StringContent(createRequest.IsShow.ToString()), "isShow");
 
@@ -148,8 +147,7 @@ namespace AdvWeb_VN.ManageApp.Services
                             .Session
                             .GetString(SystemConstants.AppSettings.Token);
 
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            var client = _httpClientFactory.CreateClient("GeroSaga_BackEnd");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
 
             var requestContent = new MultipartFormDataContent();
@@ -170,6 +168,7 @@ namespace AdvWeb_VN.ManageApp.Services
             requestContent.Add(new StringContent(request.CategoryID.ToString()), "categoryID");
             requestContent.Add(new StringContent(request.SubCategoryID.ToString()), "subCategoryID");
             requestContent.Add(new StringContent(request.Contents), "contents");
+            requestContent.Add(new StringContent(request.Summary), "summary");
             requestContent.Add(new StringContent(request.WriteTime.ToString()), "writeTime");
             requestContent.Add(new StringContent(request.IsShow.ToString()), "isShow");
 

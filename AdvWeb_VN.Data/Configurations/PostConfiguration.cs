@@ -21,6 +21,7 @@ namespace AdvWeb_VN.Data.Configurations
 			builder.Property(x => x.PostName).IsRequired()
 				.HasMaxLength(200).IsUnicode();
 			builder.Property(x => x.Contents).IsRequired().IsUnicode();
+			builder.Property(x => x.Summary).HasMaxLength(255).IsUnicode();
 			builder.Property(x => x.View).IsRequired().HasDefaultValue(0);
 			builder.Property(x => x.IsShow).IsRequired().HasDefaultValue(true);
 			builder.HasOne(x => x.SubCategory).WithMany(x => x.Posts).HasForeignKey(x => x.SubCategoryID);

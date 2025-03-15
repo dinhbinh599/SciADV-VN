@@ -12,6 +12,8 @@ namespace AdvWeb_VN.ViewModels.Catalog.Posts
 
 		[Display(Name = "Nội dung")]
 		public string Contents { set; get; }
+		[Display(Name = "Nội dung tóm tắt (dùng để hiển thị trên trang nhúng)")]
+		public string Summary { set; get; }
 		[Display(Name = "Chuyên mục cha")]
 		public int CategoryID { set; get; }
 

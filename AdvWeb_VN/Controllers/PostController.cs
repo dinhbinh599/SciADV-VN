@@ -76,6 +76,7 @@ namespace AdvWeb_VN.WebApp.Controllers
                 }
             }
 
+            ViewBag.summary = resultPost.ResultObj.Summary;
             ViewBag.description = split.Truncate(description,30);
             ViewBag.keywords = resultPost.ResultObj.PostName;
             ViewBag.ogtype = "Article";
