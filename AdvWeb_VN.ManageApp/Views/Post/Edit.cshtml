@@ -169,13 +169,15 @@
 </div>
 @section scripts {
 	<script type="text/javascript">
-		var editor = new FroalaEditor('.contents',
-			{
-				imageUploadURL: '/UploadFiles',
-				imageUploadParams: {
-					id: 'my_editor'
-				},
-			});
+		
+		$('.contents').summernote({
+			height: 600,
+			callbacks: {
+				onImageUpload: function (files) {
+					uploadImage(files[0]);
+				}
+			},
+		});
 
 		let endpoint = "@ViewData["BaseAddress"]"
 		let manageAddress = "@ViewData["ManageAddress"]"
@@ -260,5 +262,26 @@
 				reader.readAsDataURL(input.files[0]);
 			}
 		}
+
+		function uploadImage(file) {
+			var formData = new FormData();
+			formData.append("file", file);
+			formData.append("id", "my_editor"); // same as Froala's imageUploadParams
+
+			$.ajax({
+				url: '/UploadFiles',  // same as Froala's imageUploadURL
+				method: 'POST',
+				data: formData,
+				contentType: false,
+				processData: false,
+				success: function(response) {
+					$('.contents').summernote('insertImage', response.link);
+				},
+				error: function(xhr, status, err) {
+					console.error('Upload failed', status, err, xhr.responseText);
+				}
+			});
+		}
+	
 	</script>
 }
