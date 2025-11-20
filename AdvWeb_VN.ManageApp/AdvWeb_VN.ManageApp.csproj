@@ -11,6 +11,10 @@
     <Content Remove="wwwroot\NewFolder\**" />
     <EmbeddedResource Remove="wwwroot\NewFolder\**" />
     <None Remove="wwwroot\NewFolder\**" />
+    <Compile Remove="wwwroot\dist\**" />
+    <EmbeddedResource Remove="wwwroot\dist\**" />
+    <Content Remove="wwwroot\dist\**" />
+    <None Remove="wwwroot\dist\**" />
   </ItemGroup>
 
   <ItemGroup>
